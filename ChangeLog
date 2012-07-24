@@ -1,0 +1,18 @@
+2012-03-14  Jun Yan  <jun.yan@uconn.edu>
+
+	* Removed tiCox.h and tiCox.cpp. Functions there are covered
+	by bayesCox.
+
+	* Cleaned the style of the code under src with astyle -s2.
+
+2012-03-10  Jun Yan  <jun.yan@uconn.edu>
+
+	* Added system dependence on the boost library, which allows
+	removal of the boost headers files from the src directory.
+	The configure.ac file was adapted from that in package
+	RQuantLib; thank Dirk Eddelbuettel <edd@debian.org>.
+
+	* Removed std:cout lines (Xiaojing Wang).
+
+	* Replaced exit with return whenever possible. May need
+	more fix later.

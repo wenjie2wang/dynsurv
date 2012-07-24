@@ -1,0 +1,16 @@
+useDynLib(dynsurv)
+export(bayesCox, coef.bayesCox, jump, nu, jump.bayesCox, nu.bayesCox,
+       splineCox, coef.splineCox,
+       tvTran, coef.tvTran,
+       plotCoef, plotJumpTrace, plotJumpHist, plotNu)
+
+S3method(print, bayesCox)
+S3method(coef, bayesCox)
+S3method(jump, bayesCox)
+S3method(nu, bayesCox)
+
+S3method(print, splineCox)
+S3method(coef, splineCox)
+
+S3method(print, tvTran)
+S3method(coef, tvTran)
