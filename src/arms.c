@@ -1,4 +1,10 @@
+/* commented out the display (for debugging only) function;
+   added random number state control to u_random;
+   Jun Yan, 4/10/2014 */
 /* changed exit to return by Jun Yan, 3/10/2012 */
+
+#include           <R.h>
+#include           <Rmath.h>  /* unif_rand and RNG state */
 
 
 /* adaptive rejection metropolis sampling */
@@ -92,7 +98,9 @@ double logshift(double y, double y0);
 
 double perfunc(FUNBAG *lpdf, ENVELOPE *env, double x);
 
+/*
 void display(FILE *f, ENVELOPE *env);
+*/
 
 double u_random();
 
@@ -382,7 +390,9 @@ int invert(double prob, ENVELOPE *env, POINT *p)
 /* *p      : a working POINT to hold the sampled value */
 
 {
-  double u,xl,xr,yl,yr,eyl,eyr,prop; //,z;
+  double u, xl = 0.0, xr,yl,yr,eyl,eyr,prop; //,z;
+  // initialization of xl added by JYan, 4/20/2014
+  // to silence clang warining
   POINT *q;
 
   /* find rightmost point in envelope */
@@ -856,36 +866,36 @@ double perfunc(FUNBAG *lpdf, ENVELOPE *env, double x)
 
 /* *********************************************************************** */
 
-void display(FILE *f, ENVELOPE *env)
+/* void display(FILE *f, ENVELOPE *env) */
 
-/* to display envelope - for debugging only */
-{
-  POINT *q;
+/* /\* to display envelope - for debugging only *\/ */
+/* { */
+/*   POINT *q; */
 
-  /* print envelope attributes */
-  fprintf(f,"========================================================\n");
-  fprintf(f,"envelope attributes:\n");
-  fprintf(f,"points in use = %d, points available = %d\n",
-          env->cpoint,env->npoint);
-  fprintf(f,"function evaluations = %d\n",*(env->neval));
-  fprintf(f,"ymax = %f, p = %x\n",env->ymax,env->p);
-  fprintf(f,"convexity adjustment = %f\n",*(env->convex));
-  fprintf(f,"--------------------------------------------------------\n");
+/*   /\* print envelope attributes *\/ */
+/*   fprintf(f,"========================================================\n"); */
+/*   fprintf(f,"envelope attributes:\n"); */
+/*   fprintf(f,"points in use = %d, points available = %d\n", */
+/*           env->cpoint,env->npoint); */
+/*   fprintf(f,"function evaluations = %d\n",*(env->neval)); */
+/*   fprintf(f,"ymax = %f, p = %x\n",env->ymax, env->p); */
+/*   fprintf(f,"convexity adjustment = %f\n",*(env->convex)); */
+/*   fprintf(f,"--------------------------------------------------------\n"); */
 
-  /* find leftmost POINT */
-  q = env->p;
-  while(q->pl != NULL)q = q->pl;
+/*   /\* find leftmost POINT *\/ */
+/*   q = env->p; */
+/*   while(q->pl != NULL)q = q->pl; */
 
-  /* now print each POINT from left to right */
-  for(q = env->p; q != NULL; q = q->pr) {
-    fprintf(f,"point at %x, left at %x, right at %x\n",q,q->pl,q->pr);
-    fprintf(f,"x = %f, y = %f, ey = %f, cum = %f, f = %d\n",
-            q->x,q->y,q->ey,q->cum,q->f);
-  }
-  fprintf(f,"========================================================\n");
+/*   /\* now print each POINT from left to right *\/ */
+/*   for(q = env->p; q != NULL; q = q->pr) { */
+/*     fprintf(f,"point at %x, left at %x, right at %x\n",q,q->pl,q->pr); */
+/*     fprintf(f,"x = %f, y = %f, ey = %f, cum = %f, f = %d\n", */
+/*             q->x,q->y,q->ey,q->cum,q->f); */
+/*   } */
+/*   fprintf(f,"========================================================\n"); */
 
-  return;
-}
+/*   return; */
+/* } */
 
 /* *********************************************************************** */
 
@@ -893,7 +903,12 @@ double u_random()
 
 /* to return a standard uniform random number */
 {
-  return ((double)rand() + 0.5)/((double)RAND_MAX + 1.0);
+    double x;
+    GetRNGstate();
+    x = unif_rand();
+    PutRNGstate();
+    return x;
+    /* return ((double)rand() + 0.5)/((double)RAND_MAX + 1.0); */
 }
 
 /* *********************************************************************** */

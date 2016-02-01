@@ -121,13 +121,10 @@ std::ostream& GibbsSampler<M>::summaryFit(std::ostream& out,
     ublas::row(obsLikeMat, i) = pm_->likeVec(samples_[sq[i]]);
 
   /* CPO */
-  ublas::matrix<double>
-    invObsLikeMat(ublas::element_div(ublas::matrix<double>(n, N_, 1.0),
-                                     obsLikeMat));
-
-  ublas::vector<double>
-    CPO(ublas::element_div(ublas::vector<double>(N_, 1.0),
-                           ublas::col_mean(invObsLikeMat)));
+  ublas::matrix<double> invObsLikeMat(ublas::element_div(
+                                        ublas::matrix<double>(n, N_, 1.0), obsLikeMat));
+  ublas::vector<double> CPO(ublas::element_div(
+                              ublas::vector<double>(N_, 1.0), ublas::col_mean(invObsLikeMat)));
 
   /* log pseudo likelihood*/
   double LPML = ublas::sum(ublas::log(CPO));
@@ -171,8 +168,7 @@ void GibbsSampler<M>::summaryFitR(Size burn,
                                   double& DHat,
                                   double& DBar,
                                   double& pD,
-                                  double& DIC,
-                                  double& DIC3)
+                                  double& DIC)
 {
   /* Select a subset of samples_*/
   if (burn >= iter_)
@@ -193,12 +189,10 @@ void GibbsSampler<M>::summaryFitR(Size burn,
   }
 
   /* CPO */
-  ublas::matrix<double>
-    invObsLikeMat(ublas::element_div(ublas::matrix<double>(n, N_, 1.0),
-                                     obsLikeMat));
-  ublas::vector<double>
-    CPO(ublas::element_div(ublas::vector<double>(N_, 1.0),
-                           ublas::col_mean(invObsLikeMat)));
+  ublas::matrix<double> invObsLikeMat(ublas::element_div(
+                                        ublas::matrix<double>(n, N_, 1.0), obsLikeMat));
+  ublas::vector<double> CPO(ublas::element_div(
+                              ublas::vector<double>(N_, 1.0), ublas::col_mean(invObsLikeMat)));
 
   /* log pseudo likelihood*/
   LPML = ublas::sum(ublas::log(CPO));
@@ -213,14 +207,12 @@ void GibbsSampler<M>::summaryFitR(Size burn,
 
   pD = DBar - DHat;
   DIC = DBar + pD;
-
-  /* DIC3 = 2 * DBar - (- 2 log(E)) */
-  DIC3 = 2 * DBar - (- 2 * ublas::sum(ublas::log(ublas::col_mean(obsLikeMat))));
 }
 
-  /* Output samples to file */
+/* Output samples to file */
 template<class M>
-std::ofstream& GibbsSampler<M>::outputSample(std::ofstream& out) const {
+std::ofstream& GibbsSampler<M>::outputSample(std::ofstream& out) const
+{
   for (Size i = 0; i < samples_.size(); ++i) {
     samples_[i].output(out);
     out << '\n';

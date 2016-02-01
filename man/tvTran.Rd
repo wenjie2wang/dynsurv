@@ -54,12 +54,12 @@ tvTran(formula, data, control=list())
 \examples{
 \dontrun{
 # Load the veteran data from the survival package
-data <- veteran
-data$celltype <- relevel(data$celltype, ref="large")
-formula <- Surv(time, status) ~ karno + celltype
+mydata <- survival::veteran
+mydata$celltype <- relevel(mydata$celltype, ref="large")
+myformula <- Surv(time, status) ~ karno + celltype
 
 # Fit the time-varying transformation model
-fit <- tvTran(formula, data, control=list(resample=TRUE, R=30))
+fit <- tvTran(myformula, mydata, control=list(resample=TRUE, R=30))
 
 # Plot the time-varying coefficient function between two time points
 plotCoef(subset(coef(fit), Time > 15 & Time < 175))

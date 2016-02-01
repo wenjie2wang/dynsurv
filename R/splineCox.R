@@ -83,7 +83,7 @@ splineCox <- function(formula, data, control=list()) {
     names(mf) <- gsub("const[(]([A-Za-z0-9._]*)[)]", "\\1", names(mf))
 
     # First 3 columns = c("id", "time", "status")
-    DF <- cbind(id=1:N, mf[, 1][, 1:2], mf[, -1])
+    DF <- cbind(id=1:N, mf[, 1][, 1:2], mf[, -1, drop=FALSE])
 
     ########################################################
     # Prepare B-spline paramters
@@ -111,10 +111,10 @@ splineCox <- function(formula, data, control=list()) {
     # B-spline basis matrix
     Ft <- do.call("bs", c(list(x=newDF$tStop), basis))
 
-    newFml <- as.formula(paste("Surv(tStart, tStop, status) ~ ",
-                               paste(paste(FtNms, names(mf)[-1], sep=""), collapse="+"),
-                               "+ cluster(id)"))
-
+    newFml <- as.formula(paste("survival::Surv(tStart, tStop, status) ~ ",
+                               paste(paste(FtNms, names(mf)[-1], sep=""),
+                                     collapse="+"), "+ cluster(id)"))
+    
     fit <- coxph(newFml, newDF)
 
     rl <- list(call=Call, control=control, bsp.basis=basis,

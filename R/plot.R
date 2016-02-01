@@ -42,7 +42,7 @@ plotCoef <- function(object, smooth=FALSE, ...) {
         p <- p + facet_grid(Cov ~ Model, scales="free_y")
 
     p <- p + ylab("Coefficient") +
-        opts(plot.margin=unit(rep(0, 4), "lines"))
+        theme(plot.margin=unit(rep(0, 4), "lines"))
 
     p
 }
@@ -56,34 +56,39 @@ plotJumpTrace <- function(object, ...) {
         geom_line(size=0.1, alpha=0.6) +
         facet_wrap(~ Cov) +
         xlab("Iteration") + ylab("Pieces of Coefficient") +
-        opts(plot.margin=unit(rep(0, 4), "lines"))
+        theme(plot.margin=unit(rep(0, 4), "lines"))
 
     p
 }
 
 plotJumpHist <- function(object, ...) {
-    p <- ggplot(data=object, aes(x=factor(Count))) +
-        stat_bin(aes(y =..count../sum(..count..))) +
-        facet_wrap(~ Cov) +
+  ## p <- ggplot(data=object, aes(x=factor(Count))) +
+  p <- ggplot(data=object, aes_string(x="Count")) +
+    ##   stat_bin(aes(y =..count../sum(..count..))) +
+    stat_bin(aes_string(y = "..density..")) +
+      facet_wrap(~ Cov) +
         xlab("Pieces of Coefficient") + ylab("Relative Frequency") +
-        opts(plot.margin=unit(rep(0, 4), "lines"))
-
-    p
+          theme(plot.margin=unit(rep(0, 4), "lines"))
+  
+  p
 }
 
 ##############################################################################
 # Plot the latent variance nu from the bayesCox model
 ##############################################################################
 plotNu <- function(object, ...) {
-    p <- ggplot(data=object, aes_string(x="Value")) +
-        stat_bin(aes(y =..count../sum(..count..))) +
-        xlab("Nu") + ylab("Relative Frequency") +
-        opts(plot.margin=unit(rep(0, 4), "lines"))
+  cnt <- "..density.."
+  ## p <- ggplot(data=object, aes_string(x="Value")) +
+  p <- ggplot(data=object, aes_string(x="Value")) +
+    ##  stat_bin(aes(y =..count../sum(..count..))) +
+    stat_bin(aes_string(y = cnt)) +
+      xlab("Nu") + ylab("Relative Frequency") +
+        theme(plot.margin=unit(rep(0, 4), "lines"))
+  
+  if (length(levels(factor(object$Model))) == 1)
+    p <- p + facet_wrap(~ Cov)
+  else
+    p <- p + facet_grid(Cov ~ Model)
 
-    if (length(levels(factor(object$Model))) == 1)
-        p <- p + facet_wrap(~ Cov)
-    else
-        p <- p + facet_grid(Cov ~ Model)
-
-    p
+  p
 }

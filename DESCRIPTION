@@ -1,24 +1,26 @@
 Package: dynsurv
-Version: 0.1-9
-Date: 2012-07-22
+Version: 0.2-2
+Date: 2014-05-01
 Title: Dynamic models for survival data
-Author: Xiaojing Wang <wangxj03@gmail.com>, Jun Yan
-        <jun.yan@uconn.edu>, and Ming-Hui Chen
-        <ming-hui.chen@uconn.edu>
+Author: Xiaojing Wang <wangxj03@gmail.com>,
+	Jun Yan <jun.yan@uconn.edu>, and
+	Ming-Hui Chen <ming-hui.chen@uconn.edu>
 Maintainer: Jun Yan <jun.yan@uconn.edu>
-Depends: methods, survival, plyr, reshape, ggplot2, nleqslv
-Description: Functions to fit time-varying coefficient models for
-        interval censored and right censored survival data. Three major
-        approaches are implemented: 1) Bayesian Cox model with
-        time-independent, time-varying or dynamic coefficients for
-        right censored and interval censored data; 2) Spline based
-        time-varying coefficient Cox model for right censored data; 3)
-        Transformation model with time-varying coefficients for right
-        censored data using estimating equations.
-SystemRequirements: Boost library from http://www.boost.org
+Depends: R (>= 3.0.2), survival
+Imports: methods, reshape, plyr, nleqslv, ggplot2, grid
+Description: Functions to fit time-varying coefficient models for interval
+	     censored and right censored survival data. Three major
+	     approaches are implemented: 1) Bayesian Cox model with
+	     time-independent, time-varying or dynamic coefficients for
+	     right censored and interval censored data; 2) Spline based
+	     time-varying coefficient Cox model for right censored data;
+	     3) Transformation model with time-varying coefficients for
+	     right censored data using estimating equations.
+LinkingTo: BH (>= 1.54.0-2)
 License: GPL (>= 3)
 LazyLoad: Yes
 LazyData: Yes
-Packaged: 2012-05-23 17:03:18 UTC; jyan
+Packaged: 2015-11-26 05:20:01 UTC; wenjie
+NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2012-05-24 06:24:14
+Date/Publication: 2014-05-01 18:11:24

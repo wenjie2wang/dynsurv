@@ -1,4 +1,37 @@
 useDynLib(dynsurv)
+
+
+## s4 class
+importFrom("methods", setGeneric)
+
+## data manipulation
+importFrom("plyr", ddply)     ## splineCox.R
+
+importFrom("reshape",         ## jump.R: nu.bayesCox 
+           melt, melt.data.frame)  
+
+## coxph fitting for expanded data with splines
+importFrom("survival",        ## splineCox.R
+           Surv, coxph)
+
+## plotting the time-varying coefficients
+importFrom("ggplot2",
+           ggplot,
+           aes, aes_string, geom_step, geom_line,
+           facet_wrap, facet_grid,
+           stat_bin,
+           theme,
+           xlab, ylab
+           )                 ## plot.R
+
+## unit specification used by ggplot
+importFrom("grid", unit)     ## plot.R
+
+## repetitive equaltion solving in Peng and Huang (2007)
+importFrom("nleqslv", nleqslv)## tvTran.R
+
+
+
 export(bayesCox, coef.bayesCox, jump, nu, jump.bayesCox, nu.bayesCox,
        splineCox, coef.splineCox,
        tvTran, coef.tvTran,

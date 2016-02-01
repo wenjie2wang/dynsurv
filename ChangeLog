@@ -1,3 +1,30 @@
+2014-05-01 Jun Yan <jun.yan@uconn.edu>
+
+	* Changed the dependence on boost to package BH.
+
+2014-04-10 Jun Yan <jun.yan@uconn.edu>
+
+	* Fixed compiling error from clang in thg constructor LogDenPar:
+	changed this->N to static_cast<int> (this->N_).
+
+	* Fixed warnings from clang in arm.c by commenting out the
+	display function. Added random number state control to u_random.
+
+
+
+2014-03-04 Jun Yan <jun.yan@uconn.edu>
+	* Fixed the problem that splineCox did not work with a single
+	covariate by adding drop=FALSE in splineCox:
+	    DF <- cbind(id=1:N, mf[, 1][, 1:2], mf[, -1, drop=FALSE])
+
+	* changed depends to import in DESCRIPTION and NAMESPACE.
+	However, package survival is kept under "Depends"; otherwise,
+	function Surv was not found in model.matrix. This may need
+	to be fixed later.
+
+	* modified example codes to use mydata and myformula instead of
+	data and formula.
+
 2012-03-14  Jun Yan  <jun.yan@uconn.edu>
 
 	* Removed tiCox.h and tiCox.cpp. Functions there are covered

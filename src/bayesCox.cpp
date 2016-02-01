@@ -10,35 +10,15 @@ using namespace ir;
 
 extern "C" {
   /* Bayesian Cox model */
-  void bayesCox(double *p_LRX,
-                int *p_N,
-                int *p_nBeta,
-                double *p_grid,
-                int *p_K,
-                char **p_out,
-                int *p_id,
-                double *p_bp1,
-                double *p_bp2,
-                double *p_cp1,
-                double *p_cp2,
-                int *p_iter,
-                int *p_burn,
-                int *p_thin,
-                int *p_verbose,
-                int *p_nReport,
-                double *p_a0,
-                double *p_eps0,
-                double *p_lambda,
-                double *p_beta,
-                double *p_nu,
-                int *p_jump,
-                double *p_LPML,
-                double *p_DHat,
-                double *p_DBar,
-                double *p_pD,
-                double *p_DIC,
-                double *p_DIC3) {
-
+  void bayesCox(double *p_LRX, int *p_N, int *p_nBeta,
+                double *p_grid, int *p_K,
+                char **p_out, int *p_id,
+                double *p_bp1, double *p_bp2, double *p_cp1, double *p_cp2,
+                int *p_iter, int *p_burn, int *p_thin, int *p_verbose, int *p_nReport,
+                double *p_a0, double *p_eps0,
+                double *p_lambda, double *p_beta, double *p_nu, int *p_jump,
+                double *p_LPML, double *p_DHat, double *p_DBar, double *p_pD, double *p_DIC)
+  {
     const Size N = p_N[0];
     const Size nBeta = p_nBeta[0];
     const Size K = p_K[0];
@@ -62,8 +42,7 @@ extern "C" {
     // TimeIndepCox + Gamma + Normal
     if (id == 11) {
       typedef CoxPrior<GammaPrior, NormalPrior> P;
-      P prior(GammaPrior(p_bp1[0], p_bp2[0]),
-              NormalPrior(p_cp1[0], p_cp2[0]));
+      P prior(GammaPrior(p_bp1[0], p_bp2[0]), NormalPrior(p_cp1[0], p_cp2[0]));
 
       typedef TimeIndepCoxModel<P> M;
       boost::shared_ptr<M> pm(new M(pd));
@@ -73,8 +52,7 @@ extern "C" {
 
       TimeIndepCoxPar par(pm->initPar());
       gs.summaryFitR(p_burn[0], p_thin[0], par,
-                     p_LPML[0], p_DHat[0], p_DBar[0],
-                     p_pD[0], p_DIC[0], p_DIC3[0]);
+                     p_LPML[0], p_DHat[0], p_DBar[0], p_pD[0], p_DIC[0]);
 
       //par.print(std::cout);
 
@@ -92,8 +70,7 @@ extern "C" {
     // TimeIndepCox + GammaProcess + Normal
     if (id == 12) {
       typedef CoxPrior<GammaProcessPrior, NormalPrior> P;
-      P prior(GammaProcessPrior(p_bp1[0], p_bp2[0]),
-              NormalPrior(p_cp1[0], p_cp2[0]));
+      P prior(GammaProcessPrior(p_bp1[0], p_bp2[0]), NormalPrior(p_cp1[0], p_cp2[0]));
 
       typedef TimeIndepCoxModel<P> M;
       boost::shared_ptr<M> pm(new M(pd));
@@ -103,8 +80,7 @@ extern "C" {
 
       TimeIndepCoxPar par(pm->initPar());
       gs.summaryFitR(p_burn[0], p_thin[0], par,
-                     p_LPML[0], p_DHat[0], p_DBar[0],
-                     p_pD[0], p_DIC[0], p_DIC3[0]);
+                     p_LPML[0], p_DHat[0], p_DBar[0], p_pD[0], p_DIC[0]);
 
       //par.print(std::cout);
 
@@ -122,8 +98,7 @@ extern "C" {
     // TimeVaryingCox + Gamma + NormalProcess
     if (id == 21) {
       typedef CoxPrior<GammaPrior, NormalProcessPrior> P;
-      P prior(GammaPrior(p_bp1[0], p_bp2[0]),
-              NormalProcessPrior(p_cp1[0]));
+      P prior(GammaPrior(p_bp1[0], p_bp2[0]), NormalProcessPrior(p_cp1[0]));
 
       typedef TimeVaryingCoxModel<P> M;
       boost::shared_ptr<M> pm(new M(pd));
@@ -134,8 +109,7 @@ extern "C" {
 
       TimeVaryingCoxPar par(pm->initPar());
       gs.summaryFitR(p_burn[0], p_thin[0], par,
-                     p_LPML[0], p_DHat[0], p_DBar[0],
-                     p_pD[0], p_DIC[0], p_DIC3[0]);
+                     p_LPML[0], p_DHat[0], p_DBar[0], p_pD[0], p_DIC[0]);
 
       for (Size k = 0; k < K; ++k)
         p_lambda[k] = par.lambda(k);
@@ -164,8 +138,7 @@ extern "C" {
 
       TimeVaryingCoxPar par(pm->initPar());
       gs.summaryFitR(p_burn[0], p_thin[0], par,
-                     p_LPML[0], p_DHat[0], p_DBar[0],
-                     p_pD[0], p_DIC[0], p_DIC3[0]);
+                     p_LPML[0], p_DHat[0], p_DBar[0], p_pD[0], p_DIC[0]);
 
       for (Size k = 0; k < K; ++k)
         p_lambda[k] = par.lambda(k);
@@ -185,8 +158,7 @@ extern "C" {
     // TimeVaryingCox + GammaProcess + NormalProcess
     if (id == 23) {
       typedef CoxPrior<GammaProcessPrior, NormalProcessPrior> P;
-      P prior(GammaProcessPrior(p_bp1[0], p_bp2[0]),
-              NormalProcessPrior(p_cp1[0]));
+      P prior(GammaProcessPrior(p_bp1[0], p_bp2[0]), NormalProcessPrior(p_cp1[0]));
 
       typedef TimeVaryingCoxModel<P> M;
       boost::shared_ptr<M> pm(new M(pd));
@@ -197,8 +169,7 @@ extern "C" {
 
       TimeVaryingCoxPar par(pm->initPar());
       gs.summaryFitR(p_burn[0], p_thin[0], par,
-                     p_LPML[0], p_DHat[0], p_DBar[0],
-                     p_pD[0], p_DIC[0], p_DIC3[0]);
+                     p_LPML[0], p_DHat[0], p_DBar[0], p_pD[0], p_DIC[0]);
 
       for (Size k = 0; k < K; ++k)
         p_lambda[k] = par.lambda(k);
@@ -227,8 +198,7 @@ extern "C" {
 
       TimeVaryingCoxPar par(pm->initPar());
       gs.summaryFitR(p_burn[0], p_thin[0], par,
-                     p_LPML[0], p_DHat[0], p_DBar[0],
-                     p_pD[0], p_DIC[0], p_DIC3[0]);
+                     p_LPML[0], p_DHat[0], p_DBar[0], p_pD[0], p_DIC[0]);
 
       for (Size k = 0; k < K; ++k)
         p_lambda[k] = par.lambda(k);
@@ -248,8 +218,7 @@ extern "C" {
     // Dynamic + Gamma + NormalProcess
     if (id == 31) {
       typedef CoxPrior<GammaPrior, NormalProcessPrior> P;
-      P prior(GammaPrior(p_bp1[0], p_bp2[0]),
-              NormalProcessPrior(p_cp1[0]));
+      P prior(GammaPrior(p_bp1[0], p_bp2[0]), NormalProcessPrior(p_cp1[0]));
 
       typedef DynamicCoxModel<P> M;
       boost::shared_ptr<M> pm(new M(pd));
@@ -261,8 +230,7 @@ extern "C" {
 
       DynamicCoxPar par(pm->initPar());
       gs.summaryFitR(p_burn[0], p_thin[0], par,
-                     p_LPML[0], p_DHat[0], p_DBar[0],
-                     p_pD[0], p_DIC[0], p_DIC3[0]);
+                     p_LPML[0], p_DHat[0], p_DBar[0], p_pD[0], p_DIC[0]);
 
       for (Size k = 0; k < K; ++k)
         p_lambda[k] = par.lambda(k);
@@ -295,8 +263,7 @@ extern "C" {
 
       DynamicCoxPar par(pm->initPar());
       gs.summaryFitR(p_burn[0], p_thin[0], par,
-                     p_LPML[0], p_DHat[0], p_DBar[0],
-                     p_pD[0], p_DIC[0], p_DIC3[0]);
+                     p_LPML[0], p_DHat[0], p_DBar[0], p_pD[0], p_DIC[0]);
 
       for (Size k = 0; k < K; ++k)
         p_lambda[k] = par.lambda(k);
@@ -331,8 +298,7 @@ extern "C" {
 
       DynamicCoxPar par(pm->initPar());
       gs.summaryFitR(p_burn[0], p_thin[0], par,
-                     p_LPML[0], p_DHat[0], p_DBar[0],
-                     p_pD[0], p_DIC[0], p_DIC3[0]);
+                     p_LPML[0], p_DHat[0], p_DBar[0], p_pD[0], p_DIC[0]);
 
       for (Size k = 0; k < K; ++k)
         p_lambda[k] = par.lambda(k);
@@ -352,8 +318,7 @@ extern "C" {
     // DynamicCox + Const + NormalInvGammaProcess
     if (id == 34) {
       typedef CoxPrior<ConstValuePrior, NormalInvGammaProcessPrior> P;
-      P prior(ConstValuePrior(1),
-              NormalInvGammaProcessPrior(p_cp1[0], p_cp2[0]));
+      P prior(ConstValuePrior(1), NormalInvGammaProcessPrior(p_cp1[0], p_cp2[0]));
 
       typedef DynamicCoxModel_v2<P> M;
       boost::shared_ptr<M> pm(new M(pd));
@@ -365,8 +330,7 @@ extern "C" {
 
       DynamicCoxPar par(pm->initPar());
       gs.summaryFitR(p_burn[0], p_thin[0], par,
-                     p_LPML[0], p_DHat[0], p_DBar[0],
-                     p_pD[0], p_DIC[0], p_DIC3[0]);
+                     p_LPML[0], p_DHat[0], p_DBar[0], p_pD[0], p_DIC[0]);
 
       for (Size k = 0; k < K; ++k)
         p_lambda[k] = par.lambda(k);
@@ -389,8 +353,7 @@ extern "C" {
     // Dynamic + GammaProcess + NormalProcess
     if (id == 35) {
       typedef CoxPrior<GammaProcessPrior, NormalProcessPrior> P;
-      P prior(GammaProcessPrior(p_bp1[0], p_bp2[0]),
-              NormalProcessPrior(p_cp1[0]));
+      P prior(GammaProcessPrior(p_bp1[0], p_bp2[0]), NormalProcessPrior(p_cp1[0]));
 
       typedef DynamicCoxModel<P> M;
       boost::shared_ptr<M> pm(new M(pd));
@@ -402,8 +365,7 @@ extern "C" {
 
       DynamicCoxPar par(pm->initPar());
       gs.summaryFitR(p_burn[0], p_thin[0], par,
-                     p_LPML[0], p_DHat[0], p_DBar[0],
-                     p_pD[0], p_DIC[0], p_DIC3[0]);
+                     p_LPML[0], p_DHat[0], p_DBar[0], p_pD[0], p_DIC[0]);
 
       for (Size k = 0; k < K; ++k)
         p_lambda[k] = par.lambda(k);
@@ -436,8 +398,7 @@ extern "C" {
 
       DynamicCoxPar par(pm->initPar());
       gs.summaryFitR(p_burn[0], p_thin[0], par,
-                     p_LPML[0], p_DHat[0], p_DBar[0],
-                     p_pD[0], p_DIC[0], p_DIC3[0]);
+                     p_LPML[0], p_DHat[0], p_DBar[0], p_pD[0], p_DIC[0]);
 
       for (Size k = 0; k < K; ++k)
         p_lambda[k] = par.lambda(k);

@@ -106,35 +106,40 @@ bayesCox(formula, data, grid, out,
 ################################################################################
 
 # breast cancer data
-data <- bcos
-grid <- bcos.grid
-formula <- Surv(left, right, type="interval2") ~ trt
+data(bcos) ## load bcos and bcos.grid
+mydata <- bcos
+mygrid <- bcos.grid
+myformula <- Surv(left, right, type="interval2") ~ trt
 
 # tooth data
-data <- tooth
-grid <- tooth.grid
-formula <- Surv(left, right, type="interval2") ~ dmf + sex
+# data(tooth) ## load tooth and tooth.grid
+# mydata <- tooth
+# mygrid <- tooth.grid
+# myformula <- Surv(left, right, type="interval2") ~ dmf + sex
 
 ################################################################################
 # Fit Bayesian Cox models
 ################################################################################
 
 # Fit time-independent coefficient model
-fit0 <- bayesCox(formula, data, grid, out="tiCox.txt", model="TimeIndep",
+fit0 <- bayesCox(myformula, mydata, mygrid, out="tiCox.txt",
+                 model="TimeIndep",
                  base.prior=list(type="Gamma", shape=0.1, rate=0.1),
                  coef.prior=list(type="Normal", mean=0, sd=1),
                  gibbs=list(iter=100, burn=20, thin=1, verbose=TRUE, nReport=5))
 plotCoef(coef(fit0))
 
 # Fit time-varying coefficient model
-fit1 <- bayesCox(formula, data, grid, out="tvCox.txt", model="TimeVarying",
+fit1 <- bayesCox(myformula, mydata, mygrid, out="tvCox.txt",
+                 model="TimeVarying",
                  base.prior=list(type="Gamma", shape=0.1, rate=0.1),
                  coef.prior=list(type="AR1", sd=1),
                  gibbs=list(iter=100, burn=20, thin=1, verbose=TRUE, nReport=5))
 plotCoef(coef(fit1))
 
 # Fit dynamic coefficient model with time-varying baseline hazards
-fit2 <- bayesCox(formula, data, grid, out="dynCox1.txt", model="Dynamic",
+fit2 <- bayesCox(myformula, mydata, mygrid, out="dynCox1.txt",
+                 model="Dynamic",
                  base.prior=list(type="Gamma", shape=0.1, rate=0.1),
                  coef.prior=list(type="HAR1", shape=2, scale=1),
                  gibbs=list(iter=100, burn=20, thin=1, verbose=TRUE, nReport=5))
@@ -147,7 +152,8 @@ plotNu(nu(fit2))
 plotCoef(rbind(coef(fit0), coef(fit1), coef(fit2)))
 
 # Fit dynamic coefficient model with dynamic hazards (in log scales)
-fit3 <- bayesCox(formula, data, grid, out="dynCox2.txt", model="Dynamic",
+fit3 <- bayesCox(myformula, mydata, mygrid, out="dynCox2.txt",
+                 model="Dynamic",
                  base.prior=list(type="Const"),
                  coef.prior=list(type="HAR1", shape=2, scale=1),
                  gibbs=list(iter=100, burn=20, thin=1, verbose=TRUE, nReport=5),
