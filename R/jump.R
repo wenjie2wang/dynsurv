@@ -26,6 +26,31 @@
 # setGeneric("jump", function(object, ...) standardGeneric("jump"))
 jump <- function(object, ...) UseMethod("jump", object)
 
+
+
+##' Extract Jump Information from Bayesian Dyanmic Model
+##' 
+##' Extract number of coefficient pieces from \code{bayesCox} fitting results,
+##' and summarize them into a data frame. It is only applicable when
+##' \code{model="Dynamic"} is specified.
+##' 
+##' 
+##' @aliases jump jump.bayesCox
+##' @usage \method{jumpbayesCox}(object, \dots{})
+##' @param object an object returned by function \code{bayesCox}.
+##' @param \dots other arguments.
+##' @return A data.frame with 3 columns \code{("Count", "Iter", "Cov")}, where
+##' \code{"Count"} is the number of coefficient pieces (jumps) for each
+##' iteration; \code{Iter} is the iteration number; \code{Cov} contains the
+##' character values of the covariates.
+##' @seealso \code{\link{bayesCox}}, \code{\link{plotJumpTrace}}, and
+##' \code{\link{plotJumpHist}}.
+##' @keywords extract bayesCox jump
+##' @examples
+##' 
+##' # See the examples in bayesCox
+##' 
+##' @export jump.bayesCox
 jump.bayesCox <- function(object, ...) {
     # Monte Carlo samples
     ms <- as.matrix(read.table(file=object$out))
@@ -62,6 +87,29 @@ jump.bayesCox <- function(object, ...) {
 # setGeneric("nu", function(object, ...) standardGeneric("nu"))
 nu <- function(object, ...) UseMethod("nu", object)
 
+
+
+##' Extract Latent Variance from Bayesian Cox Model
+##' 
+##' Extract latent variance from \code{bayesCox} fitting results, and summarize
+##' them into a data frame. It is applicable when \code{model="TimeVarying"} or
+##' \code{model="Dynamic"}, and \code{coef.prior=list(type="HAR1")}.
+##' 
+##' 
+##' @aliases nu nu.bayesCox
+##' @usage \method{nubayesCox}(object, \dots{})
+##' @param object an object returned by function \code{bayesCox}.
+##' @param \dots other arguments.
+##' @return A data.frame with 4 columns \code{("Iter", "Model", "Cov",
+##' "Value")}, where \code{Iter} is the iteration number; \code{Model} and
+##' \code{Cov} contain the character values of the model type and covariates.
+##' @seealso \code{\link{bayesCox}}, and \code{\link{plotNu}}.
+##' @keywords extract bayesCox latent variance
+##' @examples
+##' 
+##' # See the examples in bayesCox
+##' 
+##' @export nu.bayesCox
 nu.bayesCox <- function(object, ...) {
     # Monte Carlo samples
     ms <- as.matrix(read.table(file=object$out))

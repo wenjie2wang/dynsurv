@@ -23,6 +23,38 @@
 ##############################################################################
 # Plot coefficient data frame
 ##############################################################################
+
+
+##' Plot Coefficient Function
+##' 
+##' Plot coefficient values formatted in a data frame returned by function
+##' \code{coef}.
+##' 
+##' To plot estimated coefficient functions from different models together, one
+##' can first combine the data frames returned by \code{coef}, and then call
+##' \code{plotCoef}, for example, \code{plotCoef(rbind(coef(fit1),
+##' coef(fit2)))}.
+##' 
+##' To specify the time range of the plot, one can either utilize the
+##' \code{ggplot} functionality, say \code{plotCoef(coef(fit)) + xlim(2, 10)};
+##' or manipulate the data frame first before calling \code{plotCoef}, e.g.,
+##' \code{plotCoef(subset(coef(fit), Time > 2 & Time < 10))}.
+##' 
+##' @usage plotCoef(object, smooth=FALSE, \dots{})
+##' @param object a data.frame returned by function \code{coef}.
+##' @param smooth a logical value, default \code{FALSE}. If \code{TRUE}, plot
+##' the coefficients as smooth lines; otherwise, plot the coefficients as
+##' piece-wise constant step functions.
+##' @param \dots other arguments.
+##' @return A \code{ggplot} object.
+##' @seealso \code{\link{coef.bayesCox}}, \code{\link{coef.splineCox}}, and
+##' \code{\link{coef.tvTran}}.
+##' @keywords plot coefficient
+##' @examples
+##' 
+##' # See the examples in bayesCox, splineCox, and tvTran.
+##' 
+##' @export plotCoef
 plotCoef <- function(object, smooth=FALSE, ...) {
 
     p <- ggplot(data=object, aes_string(x="Time"))
@@ -76,6 +108,28 @@ plotJumpHist <- function(object, ...) {
 ##############################################################################
 # Plot the latent variance nu from the bayesCox model
 ##############################################################################
+
+
+##' Plot Latent Variance in Bayesian Cox Model
+##' 
+##' Plot the latent variance \code{nu} when the hierarchical AR(1) process
+##' prior is used for the \code{bayesCox} model. It is applicable when
+##' \code{model="TimeVarying"} or \code{model="Dynamic"}, and
+##' \code{coef.prior=list(type="HAR1")}. The input data frame is returned by
+##' function \code{nu}.
+##' 
+##' 
+##' @usage plotNu(object, \dots{})
+##' @param object a data.frame returned by the function \code{nu}.
+##' @param \dots other arguments.
+##' @return A \code{ggplot} object.
+##' @seealso \code{\link{nu.bayesCox}}.
+##' @keywords plot latent variance
+##' @examples
+##' 
+##' # See the examples in bayesCox
+##' 
+##' @export plotNu
 plotNu <- function(object, ...) {
   cnt <- "..density.."
   ## p <- ggplot(data=object, aes_string(x="Value")) +

@@ -23,6 +23,30 @@
 ##############################################################################
 # Extract the coefficient from "bayesCox" object
 ##############################################################################
+
+
+##' Extract Coefficients from Bayesian Cox Model
+##' 
+##' Extract coefficient values from \code{bayesCox} fitting results, and
+##' summarize the posterior mean, posterior 2.5\% and 97.5\% quantiles into a
+##' data frame.
+##' 
+##' 
+##' @usage \method{coefbayesCox}(object, \dots{})
+##' @param object an object returned by function \code{bayesCox}.
+##' @param \dots other arguments.
+##' @return A data.frame with 6 columns \code{("Low", "Mid", "High", "Time",
+##' "Cov", "Model")}, where \code{"Low"} and \code{"High"} are the posterior
+##' 2.5\% and 97.5\% quantiles; \code{"Mid"} is the posterior mean;
+##' \code{"Cov"} and \code{"Model"} contain character values of the covariates
+##' and model types.
+##' @seealso \code{\link{bayesCox}}, and \code{\link{plotCoef}}.
+##' @keywords extract bayesCox coefficient
+##' @examples
+##' 
+##' # See the examples in bayesCox
+##' 
+##' @export coef.bayesCox
 coef.bayesCox <- function(object, ...) {
 
     # Monte Carlo samples
@@ -63,6 +87,29 @@ coef.bayesCox <- function(object, ...) {
 ##############################################################################
 # Extract the coefficient data from "tvTran" object
 ##############################################################################
+
+
+##' Extract Coefficients from Time-varying Transformation Model
+##' 
+##' Extract coefficient values from \code{tvTran} fitting results, and
+##' summarize the point estimate and 95\% confidence band into a data frame.
+##' 
+##' 
+##' @usage \method{coeftvTran}(object, \dots{})
+##' @param object an object returned by function \code{tvTran}.
+##' @param \dots other arguments.
+##' @return A data.frame with 6 columns \code{("Low", "Mid", "High", "Time",
+##' "Cov", "Model")}, where \code{"Mid"} is the point estimates; \code{"Low"}
+##' and \code{"High"} are the 2.5\% and 97.5\% quantiles estimates from
+##' resampling method; \code{"Cov"} and \code{"Model"} contain character values
+##' of the covariates and model type.
+##' @seealso \code{\link{tvTran}}, and \code{\link{plotCoef}}.
+##' @keywords extract tvTran coefficient
+##' @examples
+##' 
+##' # See the examples in tvTran
+##' 
+##' @export coef.tvTran
 coef.tvTran <- function(object, ...) {
     K <- object$K
     nBeta <- object$nBeta
@@ -90,6 +137,31 @@ coef.tvTran <- function(object, ...) {
 ##############################################################################
 # Extract the coefficient from "splineCox" object
 ##############################################################################
+
+
+##' Extract Coefficients from Spline Base Cox Model
+##' 
+##' Extract coefficient values from \code{splineCox} fitting results, and
+##' summarize the point estimate and 95\% confidence band into a data frame.
+##' 
+##' 
+##' @usage \method{coefsplineCox}(object, \dots{})
+##' @param object an object returned by function \code{splineCox}.
+##' @param \dots other arguments.
+##' @return A data.frame with 6 columns \code{("Low", "Mid", "High", "Time",
+##' "Cov", "Model")}, where \code{"Mid"} is the point estimates; \code{"Low"}
+##' and \code{"High"} are the point estimates plus and minus 1.96 times
+##' standard deviations; \code{"Cov"} and \code{"Model"} contain character
+##' values of the covariates and model type.
+##' @note It essentially expand the break points, and then call function
+##' \code{coxph} in package \code{survival}
+##' @seealso \code{\link{splineCox}}, and \code{\link{plotCoef}}.
+##' @keywords extract splineCox coefficient
+##' @examples
+##' 
+##' # See the examples in splineCox
+##' 
+##' @export coef.splineCox
 coef.splineCox <- function(object, ...) {
 
     fit <- object$coxph.fit
