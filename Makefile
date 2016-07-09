@@ -1,9 +1,10 @@
 pkg = dynsurv
 header = HEADER
 
-Rpkg: Rd build
+# Rpkg: Rd
+Rpkg: build
 	make check
-	make INSTALL
+#	make INSTALL
 
 Rd:
 	Rscript -e "library(methods); devtools::document();"
@@ -34,4 +35,5 @@ updateHeader:
 	sed -i "s/Date: [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/Date: $$dt/" DESCRIPTION;
 
 clean:
-	rm -rf *~ */*~ */*.Rd *.Rhistroy NAMESPACE *.tar.gz *.Rcheck/ .\#*
+	rm -rf *~ */*~ */*.Rd *.Rhistroy *.tar.gz *.Rcheck/ .\#*
+#	rm -rf *~ */*~ */*.Rd *.Rhistroy NAMESPACE *.tar.gz *.Rcheck/ .\#*
