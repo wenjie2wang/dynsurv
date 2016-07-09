@@ -1,13 +1,17 @@
 Package: dynsurv
-Version: 0.2-2
-Date: 2014-05-01
 Title: Dynamic models for survival data
-Author: Xiaojing Wang <wangxj03@gmail.com>,
-	Jun Yan <jun.yan@uconn.edu>, and
-	Ming-Hui Chen <ming-hui.chen@uconn.edu>
-Maintainer: Jun Yan <jun.yan@uconn.edu>
-Depends: R (>= 3.0.2), survival
-Imports: methods, reshape, plyr, nleqslv, ggplot2, grid
+Version: 0.2-3.9999
+Date: 2016-07-06
+Authors@R: c(
+    person(given = "Wenjie", family = "Wang",
+           email = "wenjie.2.wang@uconn.edu", role = c("cre", "ctb")),
+    person(given = "Ming-Hui", family = "Chen",
+           email = "ming-hui.chen@uconn.edu", role = "aut"),
+    person(given = "Xiaojing", family = "Wang",
+           email = "wangxj03@gmail.com", role = "aut"),
+    person(given = "Jun", family = "Yan",
+           email = "jun.yan@uconn.edu", role = "aut")
+    )
 Description: Functions to fit time-varying coefficient models for interval
 	     censored and right censored survival data. Three major
 	     approaches are implemented: 1) Bayesian Cox model with
@@ -16,11 +20,21 @@ Description: Functions to fit time-varying coefficient models for interval
 	     time-varying coefficient Cox model for right censored data;
 	     3) Transformation model with time-varying coefficients for
 	     right censored data using estimating equations.
+Depends:
+    R (>= 3.0.2),
+    survival
+Imports:
+    methods,
+    reshape,
+    plyr,
+    nleqslv,
+    ggplot2,
+    grid
 LinkingTo: BH (>= 1.54.0-2)
 License: GPL (>= 3)
 LazyLoad: Yes
 LazyData: Yes
-Packaged: 2015-11-26 05:20:01 UTC; wenjie
 NeedsCompilation: yes
-Repository: CRAN
-Date/Publication: 2014-05-01 18:11:24
+URL: https://github.com/wenjie2wang/dynsurv
+BugReports: https://github.com/wenjie2wang/dynsurv/issues
+RoxygenNote: 5.0.1

@@ -7,8 +7,8 @@ importFrom("methods", setGeneric)
 ## data manipulation
 importFrom("plyr", ddply)     ## splineCox.R
 
-importFrom("reshape",         ## jump.R: nu.bayesCox 
-           melt, melt.data.frame)  
+importFrom("reshape",         ## jump.R: nu.bayesCox
+           melt, melt.data.frame)
 
 ## coxph fitting for expanded data with splines
 importFrom("survival",        ## splineCox.R
@@ -30,7 +30,11 @@ importFrom("grid", unit)     ## plot.R
 ## repetitive equaltion solving in Peng and Huang (2007)
 importFrom("nleqslv", nleqslv)## tvTran.R
 
-
+## notes from R CMD check
+importFrom("graphics", "grid")
+importFrom("stats", "as.formula", "model.frame", "model.matrix",
+           "quantile", "rnorm")
+importFrom("utils", "head", "read.table", "tail")
 
 export(bayesCox, coef.bayesCox, jump, nu, jump.bayesCox, nu.bayesCox,
        splineCox, coef.splineCox,
