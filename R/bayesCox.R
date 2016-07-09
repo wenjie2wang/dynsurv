@@ -1,89 +1,22 @@
-##############################################################################
+################################################################################
 ##
-##   R package dynsurv by Xiaojing Wang, Jun Yan, and Ming-Hui Chen
-##   Copyright (C) 2011
+##   R package dynsurv by Wenjie Wang, Ming-Hui Chen, Xiaojing Wang, and Jun Yan
+##   Copyright (C) 2011-2016
 ##
 ##   This file is part of the R package dynsurv.
 ##
-##   The R package dynsurv is free software: you can redistribute it and/or
+##   The R package dynsurv is free software: You can redistribute it and/or
 ##   modify it under the terms of the GNU General Public License as published
 ##   by the Free Software Foundation, either version 3 of the License, or
-##   (at your option) any later version.
+##   any later version (at your option). See the GNU General Public License
+##   at <http://www.gnu.org/licenses/> for details.
 ##
 ##   The R package dynsurv is distributed in the hope that it will be useful,
-##   but WITHOUT ANY WARRANTY; without even the implied warranty of
-##   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-##   GNU General Public License for more details.
+##   but WITHOUT ANY WARRANTY without even the implied warranty of
+##   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ##
-##   You should have received a copy of the GNU General Public License
-##   along with the R package dynsurv. If not, see <http://www.gnu.org/licenses/>.
-##
-##############################################################################
+################################################################################
 
-##############################################################################
-# Baseline prior
-##############################################################################
-Gamma_fun <- function(shape=0.1, rate=0.1) {
-    list(shape=shape, rate=rate)
-}
-
-Const_fun <- function(value=1) {
-    list(value=value, value=value)
-}
-
-GammaProcess_fun <- function(mean=0.1, ctrl=1) {
-    list(mean=mean, ctrl=ctrl)
-}
-
-bp_fun <- function(type=c("Gamma", "Const", "GammaProcess"), ...) {
-    type <- match.arg(type)
-
-    if (type == "Gamma")
-        hyper <- Gamma_fun(...)
-    if (type == "Const")
-        hyper <- Const_fun(...)
-    if (type == "GammaProcess")
-        hyper <- GammaProcess_fun(...)
-
-    list(type=type, hyper=hyper)
-}
-
-##############################################################################
-# Coefficient prior
-##############################################################################
-Normal_fun <- function(mean=0, sd=1) {
-    list(mean=mean, sd=sd)
-}
-AR1_fun <- function(sd=1) {
-    list(sd=sd, sd=sd)
-}
-HAR1_fun <- function(shape=2, scale=1) {
-    list(shape=shape, scale=scale)
-}
-
-cp_fun <- function(type=c("Normal", "AR1", "HAR1"), ...) {
-    type <- match.arg(type)
-
-    if (type == "Normal")
-        hyper <- Normal_fun(...)
-    if (type == "AR1")
-        hyper <- AR1_fun(...)
-    if (type == "HAR1")
-        hyper <- HAR1_fun(...)
-
-    list(type=type, hyper=hyper)
-}
-
-##############################################################################
-# Gibbs sampler control and general control
-##############################################################################
-gibbs_fun <- function(iter=3000, burn=500, thin=1, verbose=TRUE, nReport=100) {
-    list(iter=iter, burn=burn, thin=thin, verbose=verbose, nReport=nReport)
-}
-
-control_bfun <- function(intercept=FALSE, a0=100, eps0=1) {
-    list(intercept=intercept, a0=a0, eps0=eps0)
-}
 
 ##############################################################################
 # Bayesian Cox model
@@ -96,20 +29,18 @@ control_bfun <- function(intercept=FALSE, a0=100, eps0=1) {
 #   list(type="AR1", sd=1)
 #   list(type="HAR1", shape=2, scale=1)
 
-
-
 ##' Fit Bayesian Cox Model for Interval Censored Survival Data
-##' 
+##'
 ##' Fit Bayesian Cox model with time-independent, time-varying or dynamic
 ##' covariate coefficient. The fit is done within a Gibbs sampling framework.
 ##' The reversible jump algorithm is employed for the dynamic coefficient
 ##' model. The baseline hazards are allowed to be either time-varying or
 ##' dynamic.
-##' 
+##'
 ##' To use default hyper parameters in the specification of either
 ##' \code{base.prior} or \code{coef.prior}, one only has to supply the name of
 ##' the prior, e.g., \code{list(type="Gamma")}, \code{list(type="HAR1")}.
-##' 
+##'
 ##' The \code{gibbs} argument is a list of components: \describe{
 ##' \item{list("iter")}{number of iterations, default 3000.}\item{:}{number of
 ##' iterations, default 3000.} \item{list("burn")}{number of burning, default
@@ -120,7 +51,7 @@ control_bfun <- function(intercept=FALSE, a0=100, eps0=1) {
 ##' \code{TRUE}. If \code{TRUE}, print the iteration.}
 ##' \item{list("nReport")}{print frequency, default 100.}\item{:}{print
 ##' frequency, default 100.} }
-##' 
+##'
 ##' The \code{control} argument is a list of components: \describe{
 ##' \item{list("intercept")}{a logical value, default \code{FALSE}. If
 ##' \code{TRUE}, the model will estimate the intercept, which is the log of
@@ -136,7 +67,7 @@ control_bfun <- function(intercept=FALSE, a0=100, eps0=1) {
 ##' models, default 100.} \item{list("eps0")}{size of auxiliary uniform latent
 ##' variable in dynamic model, default 1.}\item{:}{size of auxiliary uniform
 ##' latent variable in dynamic model, default 1.} }
-##' 
+##'
 ##' @usage bayesCox(formula, data, grid, out, model=c("TimeIndep",
 ##' "TimeVarying", "Dynamic"), base.prior=list(), coef.prior=list(),
 ##' gibbs=list(), control=list())
@@ -165,34 +96,34 @@ control_bfun <- function(intercept=FALSE, a0=100, eps0=1) {
 ##' \code{\link{plotJumpTrace}}, and \code{\link{plotNu}}.
 ##' @references X. Wang, M.-H. Chen, and J. Yan (2011). Bayesian dynamic
 ##' regression models for interval censored survival data. Under review.
-##' 
+##'
 ##' D. Sinha, M.-H. Chen, and S.K. Ghosh (1999). Bayesian analysis and model
 ##' selection for interval-censored survival data. \emph{Biometrics} 55(2),
 ##' 585--590.
 ##' @keywords Bayesian Cox dynamic interval censor
 ##' @examples
-##' 
+##'
 ##' \dontrun{
 ##' ################################################################################
 ##' # Load one of the following two data sets
 ##' ################################################################################
-##' 
+##'
 ##' # breast cancer data
 ##' data(bcos) ## load bcos and bcos.grid
 ##' mydata <- bcos
 ##' mygrid <- bcos.grid
 ##' myformula <- Surv(left, right, type="interval2") ~ trt
-##' 
+##'
 ##' # tooth data
 ##' # data(tooth) ## load tooth and tooth.grid
 ##' # mydata <- tooth
 ##' # mygrid <- tooth.grid
 ##' # myformula <- Surv(left, right, type="interval2") ~ dmf + sex
-##' 
+##'
 ##' ################################################################################
 ##' # Fit Bayesian Cox models
 ##' ################################################################################
-##' 
+##'
 ##' # Fit time-independent coefficient model
 ##' fit0 <- bayesCox(myformula, mydata, mygrid, out="tiCox.txt",
 ##'                  model="TimeIndep",
@@ -200,7 +131,7 @@ control_bfun <- function(intercept=FALSE, a0=100, eps0=1) {
 ##'                  coef.prior=list(type="Normal", mean=0, sd=1),
 ##'                  gibbs=list(iter=100, burn=20, thin=1, verbose=TRUE, nReport=5))
 ##' plotCoef(coef(fit0))
-##' 
+##'
 ##' # Fit time-varying coefficient model
 ##' fit1 <- bayesCox(myformula, mydata, mygrid, out="tvCox.txt",
 ##'                  model="TimeVarying",
@@ -208,7 +139,7 @@ control_bfun <- function(intercept=FALSE, a0=100, eps0=1) {
 ##'                  coef.prior=list(type="AR1", sd=1),
 ##'                  gibbs=list(iter=100, burn=20, thin=1, verbose=TRUE, nReport=5))
 ##' plotCoef(coef(fit1))
-##' 
+##'
 ##' # Fit dynamic coefficient model with time-varying baseline hazards
 ##' fit2 <- bayesCox(myformula, mydata, mygrid, out="dynCox1.txt",
 ##'                  model="Dynamic",
@@ -219,10 +150,10 @@ control_bfun <- function(intercept=FALSE, a0=100, eps0=1) {
 ##' plotJumpTrace(jump(fit2))
 ##' plotJumpHist(jump(fit2))
 ##' plotNu(nu(fit2))
-##' 
+##'
 ##' # Plot the coefficient estimates from three models together
 ##' plotCoef(rbind(coef(fit0), coef(fit1), coef(fit2)))
-##' 
+##'
 ##' # Fit dynamic coefficient model with dynamic hazards (in log scales)
 ##' fit3 <- bayesCox(myformula, mydata, mygrid, out="dynCox2.txt",
 ##'                  model="Dynamic",
@@ -235,7 +166,7 @@ control_bfun <- function(intercept=FALSE, a0=100, eps0=1) {
 ##' plotJumpHist(jump(fit3))
 ##' plotNu(nu(fit3))
 ##' }
-##' 
+##'
 ##' @export bayesCox
 bayesCox <- function(formula, data, grid, out,
                      model=c("TimeIndep", "TimeVarying", "Dynamic"),
@@ -355,4 +286,72 @@ bayesCox <- function(formula, data, grid, out,
 
     class(rl) <- "bayesCox"
     rl
+}
+
+
+### Internal functions =========================================================
+
+##############################################################################
+# Baseline prior
+##############################################################################
+Gamma_fun <- function(shape=0.1, rate=0.1) {
+    list(shape=shape, rate=rate)
+}
+
+Const_fun <- function(value=1) {
+    list(value=value, value=value)
+}
+
+GammaProcess_fun <- function(mean=0.1, ctrl=1) {
+    list(mean=mean, ctrl=ctrl)
+}
+
+bp_fun <- function(type=c("Gamma", "Const", "GammaProcess"), ...) {
+    type <- match.arg(type)
+
+    if (type == "Gamma")
+        hyper <- Gamma_fun(...)
+    if (type == "Const")
+        hyper <- Const_fun(...)
+    if (type == "GammaProcess")
+        hyper <- GammaProcess_fun(...)
+
+    list(type=type, hyper=hyper)
+}
+
+##############################################################################
+# Coefficient prior
+##############################################################################
+Normal_fun <- function(mean=0, sd=1) {
+    list(mean=mean, sd=sd)
+}
+AR1_fun <- function(sd=1) {
+    list(sd=sd, sd=sd)
+}
+HAR1_fun <- function(shape=2, scale=1) {
+    list(shape=shape, scale=scale)
+}
+
+cp_fun <- function(type=c("Normal", "AR1", "HAR1"), ...) {
+    type <- match.arg(type)
+
+    if (type == "Normal")
+        hyper <- Normal_fun(...)
+    if (type == "AR1")
+        hyper <- AR1_fun(...)
+    if (type == "HAR1")
+        hyper <- HAR1_fun(...)
+
+    list(type=type, hyper=hyper)
+}
+
+##############################################################################
+# Gibbs sampler control and general control
+##############################################################################
+gibbs_fun <- function(iter=3000, burn=500, thin=1, verbose=TRUE, nReport=100) {
+    list(iter=iter, burn=burn, thin=thin, verbose=verbose, nReport=nReport)
+}
+
+control_bfun <- function(intercept=FALSE, a0=100, eps0=1) {
+    list(intercept=intercept, a0=a0, eps0=eps0)
 }

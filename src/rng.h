@@ -13,9 +13,9 @@
 
 /* Rmath */
 #ifdef R_PACKAGE
-extern "C" {
+//extern "C" {
 #include <R.h>
-}
+//}
 extern "C" {
   namespace rmath {
 #include <Rmath.h>
@@ -41,9 +41,9 @@ extern "C" {
 # include "arms.h"
 }
 #else
-extern "C" {
+//extern "C" {
 # include <arms.h>
-}
+//}
 #endif
 
 #endif // RNG_H_

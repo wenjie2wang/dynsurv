@@ -11,9 +11,9 @@
 #ifndef GIBBS_SAMPLER_H_
 #define GIBBS_SAMPLER_H_
 
-extern "C" {
+//extern "C" {
 #include <R_ext/Print.h>
-}
+//}
 #include "ublas.h"
 #include "ublas_ext.h"
 
