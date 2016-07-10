@@ -26,7 +26,8 @@
 ##' summarize the posterior mean, posterior 2.5\% and 97.5\% quantiles into a
 ##' data frame.
 ##'
-##' @usage coef(object, ...)
+##' @usage coef.bayesCox(object, ...)
+##' @aliases coef.bayesCox
 ##' @param object an object returned by function \code{bayesCox}.
 ##' @param \dots other arguments.
 ##' @return A data.frame with 6 columns \code{("Low", "Mid", "High", "Time",
@@ -39,8 +40,9 @@
 ##' @examples
 ##'
 ##' ## See the examples in bayesCox
-##'
-##' @export coef.bayesCox
+##' @importFrom utils read.table
+##' @importFrom stats quantile
+##' @export
 coef.bayesCox <- function(object, ...) {
 
     ## Monte Carlo samples
@@ -88,7 +90,8 @@ coef.bayesCox <- function(object, ...) {
 ##' Extract coefficient values from \code{tvTran} fitting results, and
 ##' summarize the point estimate and 95\% credible band into a data frame.
 ##'
-##' @usage coef(object, ...)
+##' @usage coef.tvTran(object, ...)
+##' @aliases coef.tvTran
 ##' @param object an object returned by function \code{tvTran}.
 ##' @param \dots other arguments.
 ##' @return A data.frame with 6 columns \code{("Low", "Mid", "High", "Time",
@@ -102,7 +105,7 @@ coef.bayesCox <- function(object, ...) {
 ##'
 ##' ## See the examples in tvTran
 ##'
-##' @export coef.tvTran
+##' @export
 coef.tvTran <- function(object, ...) {
     K <- object$K
     nBeta <- object$nBeta
@@ -136,7 +139,8 @@ coef.tvTran <- function(object, ...) {
 ##' Extract coefficient values from \code{splineCox} fitting results, and
 ##' summarize the point estimate and 95\% confidence band into a data frame.
 ##'
-##' @usage coef(object, ...)
+##' @usage coef.splineCox(object, ...)
+##' @aliases coef.splineCox
 ##' @param object an object returned by function \code{splineCox}.
 ##' @param \dots other arguments.
 ##' @return A data.frame with 6 columns \code{("Low", "Mid", "High", "Time",
@@ -152,7 +156,7 @@ coef.tvTran <- function(object, ...) {
 ##'
 ##' ## See the examples in splineCox
 ##'
-##' @export coef.splineCox
+##' @export
 coef.splineCox <- function(object, ...) {
 
     fit <- object$coxph.fit

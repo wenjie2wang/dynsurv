@@ -71,7 +71,8 @@
 ##' ## Plot the time-varying coefficient function between two time points
 ##' plotCoef(subset(coef(fit), Time > 15 & Time < 175), smooth = TRUE)
 ##' }
-##'
+##' @importFrom stats model.matrix model.frame as.formula
+##' @importFrom survival coxph
 ##' @export
 splineCox <- function(formula, data, control = list()) {
 
@@ -141,6 +142,7 @@ splineCox <- function(formula, data, control = list()) {
 
 ### Utility functions ==========================================================
 ## Expand row, require package plyr
+##' @importFrom utils head
 ##' @importFrom plyr ddply
 expand <- function(data, id = "id", time = "time", status = "status") {
 

@@ -34,6 +34,7 @@
 ### Print bayesCox object ======================================================
 ##' @rdname print
 ##' @aliases print.bayesCox
+##' @importFrom graphics grid
 ##' @export
 print.bayesCox <- function(x, ...) {
 
@@ -60,8 +61,9 @@ print.bayesCox <- function(x, ...) {
         beta <- outer(rep(1, x$K), x$est$beta)
 
     cat("\nBayesian point estimates:\n")
-    est <- data.frame(paste("(", c(0, head(grid, -1)), ", ", grid, "]", sep = "")
-                      cbind(log(x$est$lambda), beta, x$est$jump))
+    est <- data.frame(paste("(", c(0, head(grid, -1)), ", ",
+                           grid, "]", sep = ""),
+                     cbind(log(x$est$lambda), beta, x$est$jump))
     estNames <- c("interval", "logLambda", paste("beta", x$cov.names, sep = "_"))
     if (!is.null(x$est$jump))
         estNames <- c(estNames, paste("jump", x$cov.names, sep = "_"))

@@ -66,7 +66,7 @@
 ##' ## Plot the time-varying coefficient function between two time points
 ##' plotCoef(subset(coef(fit), Time > 15 & Time < 175))
 ##' }
-##'
+##' @importFrom stats model.frame model.matrix rnorm
 ##' @export
 tvTran <- function(formula, data, control = list()) {
 
@@ -78,7 +78,7 @@ tvTran <- function(formula, data, control = list()) {
     rsp <- mf[, 1]
 
     ## Event subject index
-    eIndex <- which(rsp[, "status"]  =  =  1)
+    eIndex <- which(rsp[, "status"] == 1)
 
     ## Unique event time
     eTime <- sort(unique(rsp[eIndex, "time"]))
@@ -130,11 +130,12 @@ tvTran <- function(formula, data, control = list()) {
 
 
 
-### Utility functions
+### Utility functions ==========================================================
 control_tfun <- function(resample = TRUE, R = 30) {
     list(resample = resample, R = R)
 }
 
+##' @importFrom nleqslv nleqslv
 tvTran_lite <- function(X, dNMat, YMat, offSetMat) {
 
     ## Estimating function

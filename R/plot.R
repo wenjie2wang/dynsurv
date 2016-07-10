@@ -35,7 +35,7 @@
 ##' or manipulate the data frame first before calling \code{plotCoef}, e.g.,
 ##' \code{plotCoef(subset(coef(fit), Time > 2 & Time < 10))}.
 ##'
-##' @usage plotCoef(object, smooth=FALSE, \dots{})
+##' @usage plotCoef(object, smooth = FALSE, ...)
 ##' @param object a data.frame returned by function \code{coef}.
 ##' @param smooth a logical value, default \code{FALSE}. If \code{TRUE}, plot
 ##' the coefficients as smooth lines; otherwise, plot the coefficients as
@@ -48,7 +48,9 @@
 ##' @examples
 ##'
 ##' ## See the examples in bayesCox, splineCox, and tvTran.
-##'
+##' @importFrom ggplot2 ggplot aes_string geom_step geom_line facet_wrap
+##' facet_grid ylab theme
+##' @importFrom grid unit
 ##' @export
 plotCoef <- function(object, smooth = FALSE, ...) {
 
@@ -84,11 +86,8 @@ plotCoef <- function(object, smooth = FALSE, ...) {
 ##' \code{plotJumpHist} plots the histogram of the number of pieces. The input
 ##' data frame is returned by function \code{jump}.
 ##'
-##'
-##' @aliases plotJumpTrace plotJumpHist
-##' @usage plotJumpTrace(object, \dots{}) plotJumpHist(object, \dots{})
 ##' @param object a data.frame returned by function \code{jump}.
-##' @param \dots other arguments.
+##' @param ... other arguments.
 ##' @return A \code{ggplot} object.
 ##' @seealso \code{\link{jump.bayesCox}}.
 ##' @keywords plot jump
@@ -101,6 +100,8 @@ NULL
 
 
 ##' @rdname plotJump
+##' @aliases plotJumpTrace
+##' @usage plotJumpTrace(object, ...)
 ##' @importFrom ggplot2 ggplot aes_string geom_line facet_wrap xlab ylab theme
 ##' @importFrom grid unit
 ##' @export
@@ -115,6 +116,8 @@ plotJumpTrace <- function(object, ...) {
 
 
 ##' @rdname plotJump
+##' @aliases plotJumpHist
+##' @usage plotJumpHist(object, ...)
 ##' @importFrom ggplot2 ggplot aes_string stat_bin facet_wrap xlab ylab theme
 ##' @importFrom grid unit
 ##' @export
@@ -141,6 +144,7 @@ plotJumpHist <- function(object, ...) {
 ##' function \code{nu}.
 ##'
 ##' @usage plotNu(object, ...)
+##' @aliases plotNu
 ##' @param object a data.frame returned by the function \code{nu}.
 ##' @param ... other arguments.
 ##' @return A \code{ggplot} object.

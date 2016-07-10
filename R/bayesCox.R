@@ -164,7 +164,8 @@
 ##' plotJumpHist(jump(fit3))
 ##' plotNu(nu(fit3))
 ##' }
-##'
+##' @importFrom stats model.frame model.matrix
+##' @importFrom utils tail
 ##' @export bayesCox
 bayesCox <- function(formula, data, grid, out,
                     model = c("TimeIndep", "TimeVarying", "Dynamic"),

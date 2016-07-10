@@ -1,5 +1,5 @@
 Package: dynsurv
-Title: Dynamic models for survival data
+Title: Dynamic Models for Survival Data
 Version: 0.2-3.9999
 Date: 2016-07-06
 Authors@R: c(

@@ -46,7 +46,7 @@ jump <- function(object, ...) UseMethod("jump", object)
 ##' @examples
 ##'
 ##' ## See the examples in bayesCox
-##'
+##' @importFrom stats model.frame
 ##' @export
 jump.bayesCox <- function(object, ...) {
     ## Monte Carlo samples
@@ -98,8 +98,8 @@ nu <- function(object, ...) UseMethod("nu", object)
 ##' them into a data frame. It is applicable when \code{model="TimeVarying"} or
 ##' \code{model="Dynamic"}, and \code{coef.prior=list(type="HAR1")}.
 ##'
-##' @aliases nu nu.bayesCox
-##' @usage \method{nubayesCox}(object, \dots{})
+##' @aliases nu.bayesCox
+##' @usage nu.bayesCox(object, ...)
 ##' @return A data.frame with 4 columns \code{("Iter", "Model", "Cov",
 ##' "Value")}, where \code{Iter} is the iteration number; \code{Model} and
 ##' \code{Cov} contain the character values of the model type and covariates.
@@ -108,7 +108,9 @@ nu <- function(object, ...) UseMethod("nu", object)
 ##' @examples
 ##'
 ##' ## See the examples in bayesCox
-##'
+##' @importFrom utils read.table
+##' @importFrom stats model.frame
+##' @importFrom reshape melt
 ##' @export
 nu.bayesCox <- function(object, ...) {
     ## Monte Carlo samples

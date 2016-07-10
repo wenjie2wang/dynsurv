@@ -30,5 +30,6 @@
 #'
 #' @docType package
 #' @name dynsurv
+#' @importFrom survival Surv
 #' @useDynLib dynsurv
 NULL
