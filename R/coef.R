@@ -17,19 +17,16 @@
 ##
 ################################################################################
 
-##############################################################################
-# Extract the coefficient from "bayesCox" object
-##############################################################################
 
 
+### Extract the coefficient from "bayesCox" object =============================
 ##' Extract Coefficients from Bayesian Cox Model
-##' 
+##'
 ##' Extract coefficient values from \code{bayesCox} fitting results, and
 ##' summarize the posterior mean, posterior 2.5\% and 97.5\% quantiles into a
 ##' data frame.
-##' 
-##' 
-##' @usage \method{coefbayesCox}(object, \dots{})
+##'
+##' @usage coef(object, ...)
 ##' @param object an object returned by function \code{bayesCox}.
 ##' @param \dots other arguments.
 ##' @return A data.frame with 6 columns \code{("Low", "Mid", "High", "Time",
@@ -40,19 +37,19 @@
 ##' @seealso \code{\link{bayesCox}}, and \code{\link{plotCoef}}.
 ##' @keywords extract bayesCox coefficient
 ##' @examples
-##' 
-##' # See the examples in bayesCox
-##' 
+##'
+##' ## See the examples in bayesCox
+##'
 ##' @export coef.bayesCox
 coef.bayesCox <- function(object, ...) {
 
-    # Monte Carlo samples
-    ms <- as.matrix(read.table(file=object$out))
+    ## Monte Carlo samples
+    ms <- as.matrix(read.table(file = object$out))
     dimnames(ms) <- NULL
-    ms <- ms[seq(object$gibbs$burn + 1, nrow(ms), by=object$gibbs$thin), ]
+    ms <- ms[seq(object$gibbs$burn + 1, nrow(ms), by = object$gibbs$thin), ]
     iter <- nrow(ms)
 
-    # Dimension of baseline
+    ## Dimension of baseline
     grid <- object$grid
     K <- length(grid)
     cK <- ifelse(object$model == "TimeIndep", 1, K)
@@ -60,39 +57,38 @@ coef.bayesCox <- function(object, ...) {
 
     betaMat <- as.matrix(ms[, seq(K + 1, K + nBeta * cK)])
     f <- function(x) {
-        c(quantile(x, probs=0.025, names=FALSE), mean(x),
-          quantile(x, probs=0.975, names=FALSE))
+        c(quantile(x, probs = 0.025, names = FALSE), mean(x),
+          quantile(x, probs = 0.975, names = FALSE))
     }
 
     betaMatQT <- t(apply(betaMat, 2, f))
     if (object$model == "TimeIndep")
-        betaMatQT <- betaMatQT[rep(1:nBeta, each=K), ]
+        betaMatQT <- betaMatQT[rep(1:nBeta, each = K), ]
 
-    # Insert one more value at time zero
-    betaMatQT <- betaMatQT[rep(seq(1, nBeta * K), rep(c(2, rep(1, K - 1)), nBeta)), ]
+    ## Insert one more value at time zero
+    betaMatQT <- betaMatQT[rep(seq(1, nBeta * K),
+                              rep(c(2, rep(1, K - 1)), nBeta)), ]
 
-    res <- data.frame(betaMatQT, rep(c(0, grid), nBeta), rep(object$cov.names, each=K + 1),
-                      rep(object$model, nBeta * (K + 1)))
+    res <- data.frame(betaMatQT, rep(c(0, grid), nBeta),
+                     rep(object$cov.names, each = K + 1),
+                     rep(object$model, nBeta * (K + 1)))
     colnames(res) <- c("Low", "Mid", "High", "Time", "Cov", "Model")
 
-    # Make sure the Cov retains the original order
-    res$Cov <- factor(res$Cov, levels=as.character(unique(res$Cov)))
+    ## Make sure the Cov retains the original order
+    res$Cov <- factor(res$Cov, levels = as.character(unique(res$Cov)))
 
     res
 }
 
-##############################################################################
-# Extract the coefficient data from "tvTran" object
-##############################################################################
 
 
+### Extract the coefficient data from "tvTran" object ==========================
 ##' Extract Coefficients from Time-varying Transformation Model
-##' 
+##'
 ##' Extract coefficient values from \code{tvTran} fitting results, and
-##' summarize the point estimate and 95\% confidence band into a data frame.
-##' 
-##' 
-##' @usage \method{coeftvTran}(object, \dots{})
+##' summarize the point estimate and 95\% credible band into a data frame.
+##'
+##' @usage coef(object, ...)
 ##' @param object an object returned by function \code{tvTran}.
 ##' @param \dots other arguments.
 ##' @return A data.frame with 6 columns \code{("Low", "Mid", "High", "Time",
@@ -103,46 +99,44 @@ coef.bayesCox <- function(object, ...) {
 ##' @seealso \code{\link{tvTran}}, and \code{\link{plotCoef}}.
 ##' @keywords extract tvTran coefficient
 ##' @examples
-##' 
-##' # See the examples in tvTran
-##' 
+##'
+##' ## See the examples in tvTran
+##'
 ##' @export coef.tvTran
 coef.tvTran <- function(object, ...) {
     K <- object$K
     nBeta <- object$nBeta
 
     rsMat <- object$rsEst[, seq(1, nBeta * K)]
-    betaMat <- cbind(apply(rsMat, 2, quantile, probs=0.025, na.rm=TRUE, names=FALSE),
-                     object$pEst[seq(1, nBeta * K)],
-                     apply(rsMat, 2, quantile, probs=0.975, na.rm=TRUE, names=FALSE))
-    # betaMat[betaMat < -bound | betaMat > bound] <- NA
+    betaMat <- cbind(apply(rsMat, 2, quantile, probs = 0.025, na.rm = TRUE,
+                          names = FALSE),
+                    object$pEst[seq(1, nBeta * K)],
+                    apply(rsMat, 2, quantile, probs = 0.975, na.rm = TRUE,
+                          names = FALSE))
+    ## betaMat[betaMat < -bound | betaMat > bound] <- NA
 
-    # Insert one more value at time zero
+    ## Insert one more value at time zero
     betaMat <- betaMat[rep(seq(1, nBeta * K), rep(c(2, rep(1, K - 1)), nBeta)), ]
 
     res <- data.frame(betaMat, rep(c(0, object$eTime), nBeta),
-                      rep(object$cov.names, each=K + 1),
+                      rep(object$cov.names, each = K + 1),
                       rep("tvTran", nBeta * (K + 1)))
     colnames(res) <- c("Low", "Mid", "High", "Time", "Cov", "Model")
 
-    # Make sure the Cov retains the original orde
-    res$Cov <- factor(res$Cov, levels=as.character(unique(res$Cov)))
+    ## Make sure the Cov retains the original orde
+    res$Cov <- factor(res$Cov, levels = as.character(unique(res$Cov)))
 
     res
 }
 
-##############################################################################
-# Extract the coefficient from "splineCox" object
-##############################################################################
 
-
+### Extract the coefficient from "splineCox" object ============================
 ##' Extract Coefficients from Spline Base Cox Model
-##' 
+##'
 ##' Extract coefficient values from \code{splineCox} fitting results, and
 ##' summarize the point estimate and 95\% confidence band into a data frame.
-##' 
-##' 
-##' @usage \method{coefsplineCox}(object, \dots{})
+##'
+##' @usage coef(object, ...)
 ##' @param object an object returned by function \code{splineCox}.
 ##' @param \dots other arguments.
 ##' @return A data.frame with 6 columns \code{("Low", "Mid", "High", "Time",
@@ -155,9 +149,9 @@ coef.tvTran <- function(object, ...) {
 ##' @seealso \code{\link{splineCox}}, and \code{\link{plotCoef}}.
 ##' @keywords extract splineCox coefficient
 ##' @examples
-##' 
-##' # See the examples in splineCox
-##' 
+##'
+##' ## See the examples in splineCox
+##'
 ##' @export coef.splineCox
 coef.splineCox <- function(object, ...) {
 
@@ -165,8 +159,8 @@ coef.splineCox <- function(object, ...) {
     basis <- object$bsp.basis
     K <- 101
 
-    x <- seq(basis$Boundary.knots[1], basis$Boundary.knots[2], length=K)
-    bspMat <- do.call("bs", c(list(x=x), basis))
+    x <- seq(basis$Boundary.knots[1], basis$Boundary.knots[2], length = K)
+    bspMat <- do.call("bs", c(list(x = x), basis))
 
     curInd <- 1
     res <- data.frame()
@@ -183,17 +177,18 @@ coef.splineCox <- function(object, ...) {
             yVar[which(yVar < 0)] <- 0
             ySE <- sqrt(yVar)
             curInd <- curInd + basis$df
-        }
+       }
 
         yLow <- yMid - 1.96 * ySE
         yHigh <- yMid + 1.96 * ySE
 
-        res <- rbind(res, data.frame(Low=yLow, Mid=yMid, High=yHigh, Time=x,
-                                     Cov=object$cov.names[j], Model="Spline"))
+        res <- rbind(res, data.frame(Low = yLow, Mid = yMid, High = yHigh,
+                                    Time = x, Cov = object$cov.names[j],
+                                    Model = "Spline"))
     }
 
-    # Make sure the Cov retains the original orde
-    res$Cov <- factor(res$Cov, levels=as.character(unique(res$Cov)))
+    ## Make sure the Cov retains the original orde
+    res$Cov <- factor(res$Cov, levels = as.character(unique(res$Cov)))
 
     res
 }

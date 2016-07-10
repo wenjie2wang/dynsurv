@@ -17,66 +17,28 @@
 ##
 ################################################################################
 
-##############################################################################
-# Utility functions
-##############################################################################
-# Expand row, require package plyr
-expand <- function(data, id="id", time="time", status="status") {
-
-    pos <- match(c(id, time, status), names(data))
-    if (length(pos) != 3)
-        stop("Variable names not match!\n")
-
-    eventTime <- sort(unique(data[, time][data[, status] == 1]))
-
-    foo <- function(x) {
-        tStop <- union(subset(eventTime, eventTime <= max(x[, time])), max(x[, time]))
-        tStart <- c(0, head(tStop, -1))
-        st <- rep(0, length(tStop))
-        st[tStop %in% x[x[, status] == 1, time]] <- 1
-
-        cbind(x[1, -pos[2:3]], tStart=tStart, tStop=tStop, st=st, row.names=NULL)
-    }
-
-    res <- ddply(data, id, foo)
-    names(res)[ncol(res)] <- status
-    res
-}
-
-control_sfun <- function(df=5, knots=NULL, boundary=NULL) {
-    list(df=df, knots=knots, boundary=boundary)
-}
-
-const <- function(x) {
-    x
-}
-
-##############################################################################
-# Fit a time-varying coefficient Cox model, using B-splines
-##############################################################################
 
 
+### Fit a time-varying coefficient Cox model, using B-splines ==================
 ##' Fit Spline Based Cox Model for Right Censored Survival Data
-##' 
+##'
 ##' Rearrange the rignt censored survival data in a counting process style.
 ##' Model the time-varying coefficient function using B-splines. The fit is
 ##' done by introducing pseudo time-dependent covariates and then calling
-##' function \code{coxph} in \code{survival} package.
-##' 
-##' The \code{control} argument is a list of components: \describe{
-##' \item{list("df")}{degree of freedom for the B-splines, default
-##' 5.}\item{:}{degree of freedom for the B-splines, default 5.}
-##' \item{list("knots")}{interior knots point, default \code{NULL}. If
-##' \code{NULL}, the knots will be automatically choosen.}\item{:}{interior
-##' knots point, default \code{NULL}. If \code{NULL}, the knots will be
-##' automatically choosen.} \item{list("boundary")}{lower and upper boundaries
-##' for the spline function, default \code{NULL}. If \code{NULL}, the minimun
-##' and maximun finite event time or censoring time will be
-##' specified.}\item{:}{lower and upper boundaries for the spline function,
-##' default \code{NULL}. If \code{NULL}, the minimun and maximun finite event
-##' time or censoring time will be specified.} }
-##' 
-##' @usage splineCox(formula, data, control=list())
+##' function \code{coxph} in \pkg{survival} package.
+##'
+##' The \code{control} argument is a list of components:
+##' \describe{
+##'     \item{df}{
+##'         degree of freedom for the B-splines, default 5.}
+##'     \item{list("knots")}{interior knots point, default \code{NULL}. If
+##'         \code{NULL}, the knots will be automatically choosen.}
+##'     \item{list("boundary")}{lower and upper boundaries for the spline
+##'         function, default \code{NULL}. If \code{NULL}, the minimun
+##'         and maximun finite event time or censoring time will be
+##'         specified.}
+##' }
+##' @usage splineCox(formula, data, control  =  list())
 ##' @param formula a formula object, with the response on the left of a '~'
 ##' operator, and the terms on the right. The response must be a survival
 ##' object as returned by the \code{Surv} function.
@@ -96,28 +58,27 @@ const <- function(x) {
 ##' 154--161.
 ##' @keywords B-spline Cox right censor
 ##' @examples
-##' 
+##'
 ##' \dontrun{
-##' # Load the veteran data from the survival package
+##' ## Attach the veteran data from the survival package
 ##' mydata <- survival::veteran
-##' mydata$celltype <- relevel(mydata$celltype, ref="large")
+##' mydata$celltype <- relevel(mydata$celltype, ref = "large")
 ##' myformula <- Surv(time, status) ~ karno + celltype
-##' 
-##' # Fit the time-varying transformation model
-##' fit <- splineCox(myformula, mydata, control=list(df=5))
-##' 
-##' # Plot the time-varying coefficient function between two time points
-##' plotCoef(subset(coef(fit), Time > 15 & Time < 175), smooth=TRUE)
+##'
+##' ## Fit the time-varying transformation model
+##' fit <- splineCox(myformula, mydata, control = list(df = 5))
+##'
+##' ## Plot the time-varying coefficient function between two time points
+##' plotCoef(subset(coef(fit), Time > 15 & Time < 175), smooth = TRUE)
 ##' }
-##' 
-##' @export splineCox
-splineCox <- function(formula, data, control=list()) {
+##'
+##' @export
+splineCox <- function(formula, data, control = list()) {
 
     Call <- match.call()
     control <- do.call("control_sfun", control)
 
-    ########################################################
-    # Model matrix after expanding the factor covariate
+    ## Model matrix after expanding the factor covariate
     mm <- model.matrix(formula, data)
     N <- nrow(mm)
     nBeta <- ncol(mm) - 1
@@ -126,8 +87,7 @@ splineCox <- function(formula, data, control=list()) {
 
     cov.names <- gsub("const[(]([A-Za-z0-9._]*)[)]", "\\1", colnames(mm)[-1])
 
-    ########################################################
-    # Model frame before expanding the factor covariate
+    ## Model frame before expanding the factor covariate
     mf <- model.frame(formula, data)
     nCov <- ncol(mf) - 1
 
@@ -136,11 +96,10 @@ splineCox <- function(formula, data, control=list()) {
 
     names(mf) <- gsub("const[(]([A-Za-z0-9._]*)[)]", "\\1", names(mf))
 
-    # First 3 columns = c("id", "time", "status")
-    DF <- cbind(id=1:N, mf[, 1][, 1:2], mf[, -1, drop=FALSE])
+    ## First 3 columns  =  c("id", "time", "status")
+    DF <- cbind(id = 1:N, mf[, 1][, 1:2], mf[, -1, drop = FALSE])
 
-    ########################################################
-    # Prepare B-spline paramters
+    ## Prepare B-spline paramters
     boundary <- control$boundary
     if (is.null(boundary))
         boundary <- range(DF$time)
@@ -148,33 +107,67 @@ splineCox <- function(formula, data, control=list()) {
     knots <- control$knots
     df <- control$df
     if (is.null(control$knots)) {
-        insideTime <- subset(DF$time, DF$time >= boundary[1] & DF$time <= boundary[2])
+        insideTime <- subset(DF$time, DF$time >=  boundary[1] &
+                                     DF$time <=  boundary[2])
 
-        # number of interior knots = df - degree(3) - intercept(1)
-        sq <- seq.int(from=0, to=1, length.out=df-2)[-c(1, df-2)]
+        ## number of interior knots  =  df - degree(3) - intercept(1)
+        sq <- seq.int(from = 0, to = 1, length.out = df - 2)[- c(1, df-2)]
         knots <- stats::quantile(insideTime, sq)
     }
 
-    basis <- list(df=control$df, knots=knots, intercept=TRUE,
-                  Boundary.knots=boundary)
+    basis <- list(df = control$df, knots = knots, intercept = TRUE,
+                 Boundary.knots = boundary)
 
-    ########################################################
-    # Call coxph to fit the expanded data
-    newDF <- expand(DF, id="id", time="time", status="status")
+    ## Call coxph to fit the expanded data
+    newDF <- expand(DF, id = "id", time = "time", status = "status")
 
-    # B-spline basis matrix
-    Ft <- do.call("bs", c(list(x=newDF$tStop), basis))
+    ## B-spline basis matrix
+    Ft <- do.call("bs", c(list(x = newDF$tStop), basis))
 
     newFml <- as.formula(paste("survival::Surv(tStart, tStop, status) ~ ",
-                               paste(paste(FtNms, names(mf)[-1], sep=""),
-                                     collapse="+"), "+ cluster(id)"))
-    
+                              paste(paste(FtNms, names(mf)[-1], sep = ""),
+                                    collapse = "+"), "+ cluster(id)"))
+
     fit <- coxph(newFml, newDF)
 
-    rl <- list(call=Call, control=control, bsp.basis=basis,
-               N=N, nBeta=nBeta, cov.names=cov.names, is.tv=is.tv,
-               coxph.fit=fit)
+    rl <- list(call = Call, control = control, bsp.basis = basis,
+              N = N, nBeta = nBeta, cov.names = cov.names, is.tv = is.tv,
+              coxph.fit = fit)
 
     class(rl) <- "splineCox"
     rl
 }
+
+
+### Utility functions ==========================================================
+## Expand row, require package plyr
+##' @importFrom plyr ddply
+expand <- function(data, id = "id", time = "time", status = "status") {
+
+    pos <- match(c(id, time, status), names(data))
+    if (length(pos) !=  3)
+        stop("Variable names not match!\n")
+
+    eventTime <- sort(unique(data[, time][data[, status] == 1]))
+
+    foo <- function(x) {
+        tStop <- union(subset(eventTime, eventTime <= max(x[, time])),
+                      max(x[, time]))
+        tStart <- c(0, head(tStop, -1))
+        st <- rep(0, length(tStop))
+        st[tStop %in% x[x[, status] == 1, time]] <- 1
+
+        cbind(x[1, -pos[2:3]], tStart = tStart, tStop = tStop,
+              st = st, row.names = NULL)
+    }
+
+    res <- ddply(data, id, foo)
+    names(res)[ncol(res)] <- status
+    res
+}
+
+control_sfun <- function(df = 5, knots = NULL, boundary = NULL) {
+    list(df = df, knots = knots, boundary = boundary)
+}
+
+const <- function(x) x

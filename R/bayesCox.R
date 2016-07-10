@@ -18,16 +18,14 @@
 ################################################################################
 
 
-##############################################################################
-# Bayesian Cox model
-##############################################################################
-# grid: must be sorted with last number be finite
-# base.prior:
-#   list(type="Gamma", shape=0.1, rate=0.1)
-# coef.prior:
-#   list(type="Normal", mean=0, sd=1)
-#   list(type="AR1", sd=1)
-#   list(type="HAR1", shape=2, scale=1)
+### Bayesian Cox model
+## grid: must be sorted with last number be finite
+## base.prior:
+##   list(type = "Gamma", shape = 0.1, rate = 0.1)
+## coef.prior:
+##   list(type = "Normal", mean = 0, sd = 1)
+##   list(type = "AR1", sd = 1)
+##   list(type = "HAR1", shape = 2, scale = 1)
 
 ##' Fit Bayesian Cox Model for Interval Censored Survival Data
 ##'
@@ -39,38 +37,34 @@
 ##'
 ##' To use default hyper parameters in the specification of either
 ##' \code{base.prior} or \code{coef.prior}, one only has to supply the name of
-##' the prior, e.g., \code{list(type="Gamma")}, \code{list(type="HAR1")}.
+##' the prior, e.g., \code{list(type = "Gamma")}, \code{list(type = "HAR1")}.
 ##'
-##' The \code{gibbs} argument is a list of components: \describe{
-##' \item{list("iter")}{number of iterations, default 3000.}\item{:}{number of
-##' iterations, default 3000.} \item{list("burn")}{number of burning, default
-##' 500.}\item{:}{number of burning, default 500.} \item{list("thin")}{number
-##' of thinning, default 1.}\item{:}{number of thinning, default 1.}
-##' \item{list("verbose")}{a logical value, default \code{TRUE}. If
-##' \code{TRUE}, print the iteration.}\item{:}{a logical value, default
-##' \code{TRUE}. If \code{TRUE}, print the iteration.}
-##' \item{list("nReport")}{print frequency, default 100.}\item{:}{print
-##' frequency, default 100.} }
+##' The \code{gibbs} argument is a list of components:
+##' \describe{
+##'     \item{iter}{number of iterations, default 3000.}
+##'     \item{burn}{number of burning, default 500.}
+##'     \item{thin}{number of thinning, default 1.}
+##'     \item{verbose}{a logical value, default \code{TRUE}. If
+##'         \code{TRUE}, print the iteration.}
+##'     \item{nReport}{print frequency, default 100.}
+##' }
 ##'
-##' The \code{control} argument is a list of components: \describe{
-##' \item{list("intercept")}{a logical value, default \code{FALSE}. If
-##' \code{TRUE}, the model will estimate the intercept, which is the log of
-##' baseline hazards. If \code{TRUE}, please remember to turn off the direct
-##' estimation of baseline hazards, i.e.,
-##' \code{base.prior=list(type="Const")}.}\item{:}{a logical value, default
-##' \code{FALSE}. If \code{TRUE}, the model will estimate the intercept, which
-##' is the log of baseline hazards. If \code{TRUE}, please remember to turn off
-##' the direct estimation of baseline hazards, i.e.,
-##' \code{base.prior=list(type="Const")}.} \item{list("a0")}{multiplier for
-##' initial variance in time-varying or dynamic models, default
-##' 100.}\item{:}{multiplier for initial variance in time-varying or dynamic
-##' models, default 100.} \item{list("eps0")}{size of auxiliary uniform latent
-##' variable in dynamic model, default 1.}\item{:}{size of auxiliary uniform
-##' latent variable in dynamic model, default 1.} }
+##' The \code{control} argument is a list of components:
+##' \describe{
+##'     \item{intercept}{a logical value, default \code{FALSE}. If
+##'         \code{TRUE}, the model will estimate the intercept, which is the
+##'         log of baseline hazards. If \code{TRUE}, please remember to turn
+##'         off the direct estimation of baseline hazards, i.e.,
+##'         \code{base.prior = list(type = "Const")}.}
+##'     \item{a0}{multiplier for initial variance in time-varying or dynamic
+##'         models, default 100.}
+##'     \item{eps0}{size of auxiliary uniform latent variable in dynamic model,
+##'         default 1.}
+##' }
 ##'
-##' @usage bayesCox(formula, data, grid, out, model=c("TimeIndep",
-##' "TimeVarying", "Dynamic"), base.prior=list(), coef.prior=list(),
-##' gibbs=list(), control=list())
+##' @usage bayesCox(formula, data, grid, out, model = c("TimeIndep",
+##' "TimeVarying", "Dynamic"), base.prior = list(), coef.prior = list(),
+##' gibbs = list(), control = list())
 ##' @param formula a formula object, with the response on the left of a '~'
 ##' operator, and the terms on the right. The response must be a survival
 ##' object as returned by the \code{Surv} function.
@@ -80,14 +74,14 @@
 ##' @param out name of Markov chain Monte Carlo (MCMC) samples output file.
 ##' @param model model type to fit.
 ##' @param base.prior list of options for prior of baseline lambda. Use
-##' \code{list(type="Gamma", shape=0.1, rate=0.1)} for all models;
-##' \code{list(type="Const", value=1)} for \code{Dynamic} model when
-##' \code{intercept=TRUE}.
+##' \code{list(type = "Gamma", shape = 0.1, rate = 0.1)} for all models;
+##' \code{list(type = "Const", value = 1)} for \code{Dynamic} model when
+##' \code{intercept = TRUE}.
 ##' @param coef.prior list of options for prior of coefficient beta. Use
-##' \code{list(type="Normal", mean=0, sd=1)} for \code{TimeIndep} model;
-##' \code{list(type="AR1", sd=1)} for \code{TimeVarying} and \code{Dynamic}
-##' models; \code{list(type="HAR1", shape=2, scale=1)} for \code{TimeVarying}
-##' and \code{Dynamic} models.
+##' \code{list(type = "Normal", mean = 0, sd = 1)} for \code{TimeIndep} model;
+##' \code{list(type = "AR1", sd = 1)} for \code{TimeVarying} and \code{Dynamic}
+##' models; \code{list(type = "HAR1", shape = 2, scale = 1)} for
+##' \code{TimeVarying} and \code{Dynamic} models.
 ##' @param gibbs list of options for Gibbs sampler.
 ##' @param control list of general control options.
 ##' @return An object of S3 class \code{bayesCox} representing the fit.
@@ -104,63 +98,67 @@
 ##' @examples
 ##'
 ##' \dontrun{
-##' ################################################################################
-##' # Load one of the following two data sets
-##' ################################################################################
+##' ############################################################################
+##' ### Attach one of the following two data sets
+##' ############################################################################
 ##'
-##' # breast cancer data
-##' data(bcos) ## load bcos and bcos.grid
+##' ## breast cancer data
+##' data(bcos) ## attach bcos and bcos.grid
 ##' mydata <- bcos
 ##' mygrid <- bcos.grid
-##' myformula <- Surv(left, right, type="interval2") ~ trt
+##' myformula <- Surv(left, right, type = "interval2") ~ trt
 ##'
-##' # tooth data
-##' # data(tooth) ## load tooth and tooth.grid
-##' # mydata <- tooth
-##' # mygrid <- tooth.grid
-##' # myformula <- Surv(left, right, type="interval2") ~ dmf + sex
+##' ## tooth data
+##' ## data(tooth) ## load tooth and tooth.grid
+##' ## mydata <- tooth
+##' ## mygrid <- tooth.grid
+##' ## myformula <- Surv(left, right, type = "interval2") ~ dmf + sex
 ##'
-##' ################################################################################
-##' # Fit Bayesian Cox models
-##' ################################################################################
+##' ############################################################################
+##' ### Fit Bayesian Cox models
+##' ############################################################################
 ##'
-##' # Fit time-independent coefficient model
-##' fit0 <- bayesCox(myformula, mydata, mygrid, out="tiCox.txt",
-##'                  model="TimeIndep",
-##'                  base.prior=list(type="Gamma", shape=0.1, rate=0.1),
-##'                  coef.prior=list(type="Normal", mean=0, sd=1),
-##'                  gibbs=list(iter=100, burn=20, thin=1, verbose=TRUE, nReport=5))
+##' ## Fit time-independent coefficient model
+##' fit0 <- bayesCox(myformula, mydata, mygrid, out = "tiCox.txt",
+##'                  model = "TimeIndep",
+##'                  base.prior = list(type = "Gamma", shape = 0.1, rate = 0.1),
+##'                  coef.prior = list(type = "Normal", mean = 0, sd = 1),
+##'                  gibbs = list(iter = 100, burn = 20, thin = 1,
+##'                               verbose = TRUE, nReport = 5))
 ##' plotCoef(coef(fit0))
 ##'
-##' # Fit time-varying coefficient model
-##' fit1 <- bayesCox(myformula, mydata, mygrid, out="tvCox.txt",
-##'                  model="TimeVarying",
-##'                  base.prior=list(type="Gamma", shape=0.1, rate=0.1),
-##'                  coef.prior=list(type="AR1", sd=1),
-##'                  gibbs=list(iter=100, burn=20, thin=1, verbose=TRUE, nReport=5))
+##' ## Fit time-varying coefficient model
+##' fit1 <- bayesCox(myformula, mydata, mygrid, out = "tvCox.txt",
+##'                  model = "TimeVarying",
+##'                  base.prior = list(type = "Gamma", shape = 0.1, rate = 0.1),
+##'                  coef.prior = list(type = "AR1", sd = 1),
+##'                  gibbs = list(iter = 100, burn = 20, thin = 1,
+##'                               verbose = TRUE, nReport = 5))
 ##' plotCoef(coef(fit1))
 ##'
-##' # Fit dynamic coefficient model with time-varying baseline hazards
-##' fit2 <- bayesCox(myformula, mydata, mygrid, out="dynCox1.txt",
-##'                  model="Dynamic",
-##'                  base.prior=list(type="Gamma", shape=0.1, rate=0.1),
-##'                  coef.prior=list(type="HAR1", shape=2, scale=1),
-##'                  gibbs=list(iter=100, burn=20, thin=1, verbose=TRUE, nReport=5))
+##' ## Fit dynamic coefficient model with time-varying baseline hazards
+##' fit2 <- bayesCox(myformula, mydata, mygrid, out = "dynCox1.txt",
+##'                  model = "Dynamic",
+##'                  base.prior = list(type = "Gamma", shape = 0.1, rate = 0.1),
+##'                  coef.prior = list(type = "HAR1", shape = 2, scale = 1),
+##'                  gibbs = list(iter = 100, burn = 20, thin = 1,
+##'                               verbose = TRUE, nReport = 5))
 ##' plotCoef(coef(fit2))
 ##' plotJumpTrace(jump(fit2))
 ##' plotJumpHist(jump(fit2))
 ##' plotNu(nu(fit2))
 ##'
-##' # Plot the coefficient estimates from three models together
+##' ## Plot the coefficient estimates from three models together
 ##' plotCoef(rbind(coef(fit0), coef(fit1), coef(fit2)))
 ##'
-##' # Fit dynamic coefficient model with dynamic hazards (in log scales)
-##' fit3 <- bayesCox(myformula, mydata, mygrid, out="dynCox2.txt",
-##'                  model="Dynamic",
-##'                  base.prior=list(type="Const"),
-##'                  coef.prior=list(type="HAR1", shape=2, scale=1),
-##'                  gibbs=list(iter=100, burn=20, thin=1, verbose=TRUE, nReport=5),
-##'                  control=list(intercept=TRUE))
+##' ## Fit dynamic coefficient model with dynamic hazards (in log scales)
+##' fit3 <- bayesCox(myformula, mydata, mygrid, out = "dynCox2.txt",
+##'                  model = "Dynamic",
+##'                  base.prior = list(type = "Const"),
+##'                  coef.prior = list(type = "HAR1", shape = 2, scale = 1),
+##'                  gibbs = list(iter = 100, burn = 20, thin = 1,
+##'                               verbose = TRUE, nReport=5),
+##'                  control = list(intercept = TRUE))
 ##' plotCoef(coef(fit3))
 ##' plotJumpTrace(jump(fit3))
 ##' plotJumpHist(jump(fit3))
@@ -169,13 +167,12 @@
 ##'
 ##' @export bayesCox
 bayesCox <- function(formula, data, grid, out,
-                     model=c("TimeIndep", "TimeVarying", "Dynamic"),
-                     base.prior=list(), coef.prior=list(),
-                     gibbs=list(), control=list()) {
-
+                    model = c("TimeIndep", "TimeVarying", "Dynamic"),
+                    base.prior = list(), coef.prior = list(), gibbs = list(),
+                    control = list()) {
     Call <- match.call()
 
-    # Prepare prior information
+    ## Prepare prior information
     model <- match.arg(model)
     base.prior <- do.call("bp_fun", base.prior)
     coef.prior <- do.call("cp_fun", coef.prior)
@@ -183,7 +180,8 @@ bayesCox <- function(formula, data, grid, out,
     if (model == "TimeIndep") {
         if (base.prior$type == "Gamma" && coef.prior$type == "Normal")
             id <- 11
-        if (base.prior$type == "GammaProcess" && coef.prior$type == "Normal")
+        if (base.prior$type == "GammaProcess" &&
+            coef.prior$type == "Normal")
             id <- 12
     }
     if (model == "TimeVarying") {
@@ -191,9 +189,11 @@ bayesCox <- function(formula, data, grid, out,
             id <- 21
         if (base.prior$type == "Gamma" && coef.prior$type == "HAR1")
             id <- 22
-        if (base.prior$type == "GammaProcess" && coef.prior$type == "AR1")
+        if (base.prior$type == "GammaProcess" &&
+            coef.prior$type == "AR1")
             id <- 23
-        if (base.prior$type == "GammaProcess" && coef.prior$type == "HAR1")
+        if (base.prior$type == "GammaProcess" &&
+            coef.prior$type == "HAR1")
             id <- 24
 
     }
@@ -206,16 +206,18 @@ bayesCox <- function(formula, data, grid, out,
             id <- 33
         if (base.prior$type == "Const" && coef.prior$type == "HAR1")
             id <- 34
-        if (base.prior$type == "GammaProcess" && coef.prior$type == "AR1")
+        if (base.prior$type == "GammaProcess" &&
+            coef.prior$type == "AR1")
             id <- 35
-        if (base.prior$type == "GammaProcess" && coef.prior$type == "HAR1")
+        if (base.prior$type == "GammaProcess" &&
+            coef.prior$type == "HAR1")
             id <- 36
     }
 
     gibbs <- do.call("gibbs_fun", gibbs)
     control <- do.call("control_bfun", control)
 
-    # Prepare data matrix LRX
+    ## Prepare data matrix LRX
     mf <- model.frame(formula, data)
     mm <- model.matrix(formula, data)
 
@@ -235,7 +237,7 @@ bayesCox <- function(formula, data, grid, out,
 
     colnames(LRX) <- c("L", "R", cov.names)
 
-    # Prepare results holder
+    ## Prepare results holder
     K <- length(grid)
     nBeta <- length(cov.names)
     lambda <- rep(0, K)
@@ -248,22 +250,21 @@ bayesCox <- function(formula, data, grid, out,
     nu <- rep(0, nBeta)
     jump <- rep(0, nBeta * K)
 
-    # Call C++ function
-    res <- .C("bayesCox",
-              as.double(LRX), as.integer(nrow(LRX)), as.integer(ncol(LRX) - 2),
-              as.double(grid), as.integer(length(grid)),
-              as.character(out), as.integer(id),
-              as.double(base.prior$hyper[[1]]), as.double(base.prior$hyper[[2]]),
-              as.double(coef.prior$hyper[[1]]), as.double(coef.prior$hyper[[2]]),
-              as.integer(gibbs$iter), as.integer(gibbs$burn), as.integer(gibbs$thin),
-              as.integer(gibbs$verbose), as.integer(gibbs$nReport),
-              as.double(control$a0), as.double(control$eps0),
-              lambda=as.double(lambda), beta=as.double(beta), nu=as.double(nu),
-              jump=as.integer(jump),
-              LPML=as.double(0), DHat=as.double(0), DBar=as.double(0), pD=as.double(0),
-              DIC=as.double(0))
+    ## Call C++ function
+    res <- .C("bayesCox", as.double(LRX), as.integer(nrow(LRX)),
+             as.integer(ncol(LRX) - 2), as.double(grid),
+             as.integer(length(grid)), as.character(out), as.integer(id),
+             as.double(base.prior$hyper[[1]]), as.double(base.prior$hyper[[2]]),
+             as.double(coef.prior$hyper[[1]]), as.double(coef.prior$hyper[[2]]),
+             as.integer(gibbs$iter), as.integer(gibbs$burn),
+             as.integer(gibbs$thin), as.integer(gibbs$verbose),
+             as.integer(gibbs$nReport), as.double(control$a0),
+             as.double(control$eps0), lambda = as.double(lambda),
+             beta = as.double(beta), nu = as.double(nu),
+             jump = as.integer(jump), LPML = as.double(0), DHat = as.double(0),
+             DBar = as.double(0), pD = as.double(0), DIC = as.double(0))
 
-    # Post fit processing
+    ## Post fit processing
     if (model != "TimeIndep")
         res$beta <- matrix(res$beta, K, nBeta)
 
@@ -275,15 +276,15 @@ bayesCox <- function(formula, data, grid, out,
     else
         res$jump <- matrix(res$jump, K, nBeta)
 
-    # Return list
-    rl <- list(call=Call, grid=grid, out=out, model=model, LRX=LRX,
-               base.prior=base.prior, coef.prior=coef.prior,
-               gibbs=gibbs, control=control,
-               N=nrow(LRX), K=K, nBeta=nBeta, cov.names=cov.names,
-               est=list(lambda=res$lambda, beta=res$beta, nu=res$nu, jump=res$jump),
-               measure=list(LPML=res$LPML, DHat=res$DHat, DBar=res$DBar, pD=res$pD,
-               DIC=res$DIC))
-
+    ## Return list
+    rl <- list(call = Call, grid = grid, out = out, model = model, LRX = LRX,
+              base.prior = base.prior, coef.prior = coef.prior, gibbs = gibbs,
+              control = control, N = nrow(LRX), K = K, nBeta = nBeta,
+              cov.names = cov.names,
+              est = list(lambda = res$lambda, beta = res$beta, nu = res$nu,
+                         jump = res$jump),
+              measure = list(LPML = res$LPML, DHat = res$DHat, DBar = res$DBar,
+                             pD = res$pD, DIC = res$DIC))
     class(rl) <- "bayesCox"
     rl
 }
@@ -291,22 +292,20 @@ bayesCox <- function(formula, data, grid, out,
 
 ### Internal functions =========================================================
 
-##############################################################################
-# Baseline prior
-##############################################################################
-Gamma_fun <- function(shape=0.1, rate=0.1) {
-    list(shape=shape, rate=rate)
+## Baseline prior
+Gamma_fun <- function(shape = 0.1, rate = 0.1) {
+    list(shape = shape, rate = rate)
 }
 
-Const_fun <- function(value=1) {
-    list(value=value, value=value)
+Const_fun <- function(value = 1) {
+    list(value = value, value = value)
 }
 
-GammaProcess_fun <- function(mean=0.1, ctrl=1) {
-    list(mean=mean, ctrl=ctrl)
+GammaProcess_fun <- function(mean = 0.1, ctrl = 1) {
+    list(mean = mean, ctrl = ctrl)
 }
 
-bp_fun <- function(type=c("Gamma", "Const", "GammaProcess"), ...) {
+bp_fun <- function(type = c("Gamma", "Const", "GammaProcess"), ...) {
     type <- match.arg(type)
 
     if (type == "Gamma")
@@ -316,23 +315,22 @@ bp_fun <- function(type=c("Gamma", "Const", "GammaProcess"), ...) {
     if (type == "GammaProcess")
         hyper <- GammaProcess_fun(...)
 
-    list(type=type, hyper=hyper)
+    list(type = type, hyper = hyper)
 }
 
-##############################################################################
-# Coefficient prior
-##############################################################################
-Normal_fun <- function(mean=0, sd=1) {
-    list(mean=mean, sd=sd)
+
+## Coefficient prior
+Normal_fun <- function(mean = 0, sd = 1) {
+    list(mean = mean, sd = sd)
 }
-AR1_fun <- function(sd=1) {
-    list(sd=sd, sd=sd)
+AR1_fun <- function(sd = 1) {
+    list(sd = sd, sd = sd)
 }
-HAR1_fun <- function(shape=2, scale=1) {
-    list(shape=shape, scale=scale)
+HAR1_fun <- function(shape = 2, scale = 1) {
+    list(shape = shape, scale = scale)
 }
 
-cp_fun <- function(type=c("Normal", "AR1", "HAR1"), ...) {
+cp_fun <- function(type = c("Normal", "AR1", "HAR1"), ...) {
     type <- match.arg(type)
 
     if (type == "Normal")
@@ -342,16 +340,20 @@ cp_fun <- function(type=c("Normal", "AR1", "HAR1"), ...) {
     if (type == "HAR1")
         hyper <- HAR1_fun(...)
 
-    list(type=type, hyper=hyper)
+    list(type = type, hyper = hyper)
 }
 
-##############################################################################
-# Gibbs sampler control and general control
-##############################################################################
-gibbs_fun <- function(iter=3000, burn=500, thin=1, verbose=TRUE, nReport=100) {
-    list(iter=iter, burn=burn, thin=thin, verbose=verbose, nReport=nReport)
+
+## Gibbs sampler control and general control
+gibbs_fun <- function(iter = 3000, burn = 500, thin = 1, verbose = TRUE,
+                     nReport = 100) {
+    list(iter = iter,
+         burn = burn,
+         thin = thin,
+         verbose = verbose,
+         nReport = nReport)
 }
 
-control_bfun <- function(intercept=FALSE, a0=100, eps0=1) {
-    list(intercept=intercept, a0=a0, eps0=eps0)
+control_bfun <- function(intercept = FALSE, a0 = 100, eps0 = 1) {
+    list(intercept = intercept, a0 = a0, eps0 = eps0)
 }
