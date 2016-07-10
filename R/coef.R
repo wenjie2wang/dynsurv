@@ -26,10 +26,9 @@
 ##' summarize the posterior mean, posterior 2.5\% and 97.5\% quantiles into a
 ##' data frame.
 ##'
-##' @usage coef.bayesCox(object, ...)
 ##' @aliases coef.bayesCox
-##' @param object an object returned by function \code{bayesCox}.
-##' @param \dots other arguments.
+##' @param object An object returned by function \code{bayesCox}.
+##' @param ... Other arguments.
 ##' @return A data.frame with 6 columns \code{("Low", "Mid", "High", "Time",
 ##' "Cov", "Model")}, where \code{"Low"} and \code{"High"} are the posterior
 ##' 2.5\% and 97.5\% quantiles; \code{"Mid"} is the posterior mean;
@@ -39,7 +38,7 @@
 ##' @keywords extract bayesCox coefficient
 ##' @examples
 ##'
-##' ## See the examples in bayesCox
+##' ## See the examples in bayesCox.
 ##' @importFrom utils read.table
 ##' @importFrom stats quantile
 ##' @export
@@ -90,10 +89,9 @@ coef.bayesCox <- function(object, ...) {
 ##' Extract coefficient values from \code{tvTran} fitting results, and
 ##' summarize the point estimate and 95\% credible band into a data frame.
 ##'
-##' @usage coef.tvTran(object, ...)
 ##' @aliases coef.tvTran
-##' @param object an object returned by function \code{tvTran}.
-##' @param \dots other arguments.
+##' @param object An object returned by function \code{tvTran}.
+##' @param ... Other arguments.
 ##' @return A data.frame with 6 columns \code{("Low", "Mid", "High", "Time",
 ##' "Cov", "Model")}, where \code{"Mid"} is the point estimates; \code{"Low"}
 ##' and \code{"High"} are the 2.5\% and 97.5\% quantiles estimates from
@@ -103,7 +101,7 @@ coef.bayesCox <- function(object, ...) {
 ##' @keywords extract tvTran coefficient
 ##' @examples
 ##'
-##' ## See the examples in tvTran
+##' ## See the examples in tvTran.
 ##'
 ##' @export
 coef.tvTran <- function(object, ...) {
@@ -139,10 +137,9 @@ coef.tvTran <- function(object, ...) {
 ##' Extract coefficient values from \code{splineCox} fitting results, and
 ##' summarize the point estimate and 95\% confidence band into a data frame.
 ##'
-##' @usage coef.splineCox(object, ...)
 ##' @aliases coef.splineCox
-##' @param object an object returned by function \code{splineCox}.
-##' @param \dots other arguments.
+##' @param object An object returned by function \code{splineCox}.
+##' @param ... Other arguments.
 ##' @return A data.frame with 6 columns \code{("Low", "Mid", "High", "Time",
 ##' "Cov", "Model")}, where \code{"Mid"} is the point estimates; \code{"Low"}
 ##' and \code{"High"} are the point estimates plus and minus 1.96 times
@@ -154,7 +151,7 @@ coef.tvTran <- function(object, ...) {
 ##' @keywords extract splineCox coefficient
 ##' @examples
 ##'
-##' ## See the examples in splineCox
+##' ## See the examples in splineCox.
 ##'
 ##' @export
 coef.splineCox <- function(object, ...) {

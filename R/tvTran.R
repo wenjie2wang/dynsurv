@@ -41,19 +41,18 @@
 ##'     \item{R}{Number of resamplings, default 30.}
 ##' }
 ##' @usage tvTran(formula, data, control = list())
-##' @param formula a formula object, with the response on the left of a '~'
+##' @param formula A formula object, with the response on the left of a '~'
 ##' operator, and the terms on the right. The response must be a survival
 ##' object as returned by the \code{Surv} function.
-##' @param data a data.frame in which to interpret the variables named in the
+##' @param data A data.frame in which to interpret the variables named in the
 ##' \code{formula}.
-##' @param control list of control options.
+##' @param control List of control options.
 ##' @return An object of S3 class \code{tvTran} representing the fit.
 ##' @seealso \code{\link{coef.tvTran}}, \code{\link{plotCoef}}.
 ##' @references L. Peng, and Y. Huang (2007). Survival analysis with temporal
 ##' covariate effects. \emph{Biometrika} 94(3), 719--733.
 ##' @keywords transformation right censor
 ##' @examples
-##'
 ##' \dontrun{
 ##' ## Attach the veteran data from the survival package
 ##' mydata <- survival::veteran

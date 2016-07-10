@@ -29,22 +29,22 @@
 ##'
 ##' The \code{control} argument is a list of components:
 ##' \describe{
-##'     \item{df}{
-##'         degree of freedom for the B-splines, default 5.}
-##'     \item{list("knots")}{interior knots point, default \code{NULL}. If
-##'         \code{NULL}, the knots will be automatically choosen.}
-##'     \item{list("boundary")}{lower and upper boundaries for the spline
+##'     \item{df:}{
+##'         degree of freedom for the B-splines, default 5;}
+##'     \item{knots:}{interior knots point, default \code{NULL}. If
+##'         \code{NULL}, the knots will be automatically choosen;}
+##'     \item{boundary:}{lower and upper boundaries for the spline
 ##'         function, default \code{NULL}. If \code{NULL}, the minimun
 ##'         and maximun finite event time or censoring time will be
 ##'         specified.}
 ##' }
-##' @usage splineCox(formula, data, control  =  list())
-##' @param formula a formula object, with the response on the left of a '~'
+##' @usage splineCox(formula, data, control = list())
+##' @param formula A formula object, with the response on the left of a '~'
 ##' operator, and the terms on the right. The response must be a survival
 ##' object as returned by the \code{Surv} function.
-##' @param data a data.frame in which to interpret the variables named in the
+##' @param data A data.frame in which to interpret the variables named in the
 ##' \code{formula}.
-##' @param control list of control options.
+##' @param control List of control options.
 ##' @return An object of S3 class \code{splineCox} representing the fit.
 ##' @note This function is essentially a wrapper function of \code{coxph} for
 ##' the expanded data set. It does not implements the algorithm disscussed in

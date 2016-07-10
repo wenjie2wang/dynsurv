@@ -19,10 +19,10 @@
 
 
 
-##' jump generic function for jump information
+##' Generic function for jump information
 ##'
-##' @param object an object returned by function \code{bayesCox}.
-##' @param ... other arguments.
+##' @param object An object returned by function \code{bayesCox}.
+##' @param ... Other arguments.
 ##' @export
 jump <- function(object, ...) UseMethod("jump", object)
 
@@ -34,8 +34,6 @@ jump <- function(object, ...) UseMethod("jump", object)
 ##' \code{model="Dynamic"} is specified.
 ##'
 ##' @aliases jump jump.bayesCox
-##' @usage jump(object, ...)
-##'
 ##' @return A data.frame with 3 columns \code{("Count", "Iter", "Cov")}, where
 ##' \code{"Count"} is the number of coefficient pieces (jumps) for each
 ##' iteration; \code{Iter} is the iteration number; \code{Cov} contains the
@@ -84,22 +82,21 @@ jump.bayesCox <- function(object, ...) {
 
 
 ### Extract the latent variance nu from "bayesCox" object ======================
-##' nu generic function for the latent variance
+##' Generic function for the latent variance
 ##'
-##' @param object an object returned by function \code{bayesCox}.
-##' @param ... other arguments.
+##' @param object An object returned by function \code{bayesCox}.
+##' @param ... Other arguments.
 ##' @export
 nu <- function(object, ...) UseMethod("nu", object)
 
 
-##' @describeIn jump Extract Latent Variance from Bayesian Cox Model
+##' @describeIn nu Extract Latent Variance from Bayesian Cox Model
 ##'
 ##' Extract latent variance from \code{bayesCox} fitting results, and summarize
 ##' them into a data frame. It is applicable when \code{model="TimeVarying"} or
 ##' \code{model="Dynamic"}, and \code{coef.prior=list(type="HAR1")}.
 ##'
 ##' @aliases nu.bayesCox
-##' @usage nu.bayesCox(object, ...)
 ##' @return A data.frame with 4 columns \code{("Iter", "Model", "Cov",
 ##' "Value")}, where \code{Iter} is the iteration number; \code{Model} and
 ##' \code{Cov} contain the character values of the model type and covariates.
@@ -107,7 +104,7 @@ nu <- function(object, ...) UseMethod("nu", object)
 ##' @keywords extract bayesCox latent variance
 ##' @examples
 ##'
-##' ## See the examples in bayesCox
+##' ## See the examples in \code{\link{bayesCox}}.
 ##' @importFrom utils read.table
 ##' @importFrom stats model.frame
 ##' @importFrom reshape melt
@@ -126,7 +123,7 @@ nu.bayesCox <- function(object, ...) {
     nuMat <- as.matrix(ms[, seq((1 + nBeta) * K + 1, (1 + nBeta) * K + nBeta)])
     res <- data.frame(1 : iter, object$model, nuMat)
     colnames(res) <- c("Iter", "Model", covNms)
-    res <- melt(res, c("Iter", "Model"))
+    res <- reshape::melt(res, c("Iter", "Model"))
     colnames(res) <- c("Iter", "Model", "Cov", "Value")
     res
 }

@@ -34,8 +34,8 @@
 ##' @docType data
 ##' @format \code{bcos} is a data frame with 94 observations and 3 columns.
 ##' \describe{
-##'     \item{left:}{left censoring time.}
-##'     \item{right:}{right censoring time.}
+##'     \item{left:}{left censoring time;}
+##'     \item{right:}{right censoring time;}
 ##'     \item{trt:}{treatment (\code{Rad} = radiotherapy only,
 ##'          \code{RadChem} = radiotherapy plus chemotherapy).}
 ##' }
@@ -68,14 +68,14 @@ NULL
 ##' @docType data
 ##' @format \code{tooth} is a data frame with 4,386 observations and 7 columns
 ##' \describe{
-##'     \item{id:}{children's id.}
-##'     \item{left:}{left censoring time.}
+##'     \item{id:}{children's id;}
+##'     \item{left:}{left censoring time;}
 ##'     \item{right:}{right censoring time where infinity is coded as 999.}
-##'     \item{sex:}{gender of children (0 = boy, 1 = girl).}
+##'     \item{sex:}{gender of children (0 = boy, 1 = girl);}
 ##'     \item{dmf:}{status of the primary predecessor of this tooth (0 = sound,
-##'         1 = delayed, missing or filled).}
+##'         1 = delayed, missing or filled);}
 ##'     \item{rightInf:}{right censoring time where infinity is coded as
-##'         \code{Inf}.}
+##'         \code{Inf};}
 ##'     \item{rightNA:}{right censoring time where infinity is coded as
 ##'         \code{NA}.}
 ##' }

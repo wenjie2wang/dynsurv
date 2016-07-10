@@ -6,7 +6,7 @@ Rpkg: Rd build
 	make INSTALL
 
 Rd:
-	Rscript -e "library(methods); devtools::document();"
+	Rscript -e "roxygen2::roxygenise();"
 
 build:
 	R CMD build ../$(pkg)

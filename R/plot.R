@@ -19,7 +19,7 @@
 
 
 
-### Plot coefficient data frame
+### Plot coefficient data frame ================================================
 ##' Plot Coefficient Function
 ##'
 ##' Plot coefficient values formatted in a data frame returned by function
@@ -36,11 +36,11 @@
 ##' \code{plotCoef(subset(coef(fit), Time > 2 & Time < 10))}.
 ##'
 ##' @usage plotCoef(object, smooth = FALSE, ...)
-##' @param object a data.frame returned by function \code{coef}.
-##' @param smooth a logical value, default \code{FALSE}. If \code{TRUE}, plot
+##' @param object A data.frame returned by function \code{coef}.
+##' @param smooth A logical value, default \code{FALSE}. If \code{TRUE}, plot
 ##' the coefficients as smooth lines; otherwise, plot the coefficients as
 ##' piece-wise constant step functions.
-##' @param \dots other arguments.
+##' @param ... Other arguments.
 ##' @return A \code{ggplot} object.
 ##' @seealso \code{\link{coef.bayesCox}}, \code{\link{coef.splineCox}}, and
 ##' \code{\link{coef.tvTran}}.
@@ -78,16 +78,15 @@ plotCoef <- function(object, smooth = FALSE, ...) {
 
 
 
-
-### Plot iteration jump data frame returned by jump.bayesCox
+### Plot iteration jump data frame returned by jump.bayesCox ===================
 ##' Plot Jump Information in Bayesian Dynamic Model
 ##'
 ##' \code{plotJumpTrace} plots the MCMC history of the number of pieces.
 ##' \code{plotJumpHist} plots the histogram of the number of pieces. The input
 ##' data frame is returned by function \code{jump}.
 ##'
-##' @param object a data.frame returned by function \code{jump}.
-##' @param ... other arguments.
+##' @param object A data.frame returned by function \code{jump}.
+##' @param ... Other arguments.
 ##' @return A \code{ggplot} object.
 ##' @seealso \code{\link{jump.bayesCox}}.
 ##' @keywords plot jump
@@ -134,7 +133,7 @@ plotJumpHist <- function(object, ...) {
 
 
 
-### Plot the latent variance nu from the bayesCox model
+### Plot the latent variance nu from the bayesCox model ========================
 ##' Plot Latent Variance in Bayesian Cox Model
 ##'
 ##' Plot the latent variance \code{nu} when the hierarchical AR(1) process
@@ -145,8 +144,8 @@ plotJumpHist <- function(object, ...) {
 ##'
 ##' @usage plotNu(object, ...)
 ##' @aliases plotNu
-##' @param object a data.frame returned by the function \code{nu}.
-##' @param ... other arguments.
+##' @param object A data.frame returned by the function \code{nu}.
+##' @param ... Other arguments.
 ##' @return A \code{ggplot} object.
 ##' @seealso \code{\link{nu.bayesCox}}.
 ##' @keywords plot latent variance

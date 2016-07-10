@@ -41,49 +41,50 @@
 ##'
 ##' The \code{gibbs} argument is a list of components:
 ##' \describe{
-##'     \item{iter}{number of iterations, default 3000.}
-##'     \item{burn}{number of burning, default 500.}
-##'     \item{thin}{number of thinning, default 1.}
-##'     \item{verbose}{a logical value, default \code{TRUE}. If
-##'         \code{TRUE}, print the iteration.}
-##'     \item{nReport}{print frequency, default 100.}
+##'     \item{iter:}{number of iterations, default 3000;}
+##'     \item{burn:}{number of burning, default 500;}
+##'     \item{thin:}{number of thinning, default 1;}
+##'     \item{verbose:}{a logical value, default \code{TRUE}. If
+##'         \code{TRUE}, print the iteration;}
+##'     \item{nReport:}{print frequency, default 100.}
 ##' }
 ##'
 ##' The \code{control} argument is a list of components:
 ##' \describe{
-##'     \item{intercept}{a logical value, default \code{FALSE}. If
+##'     \item{intercept:}{a logical value, default \code{FALSE}. If
 ##'         \code{TRUE}, the model will estimate the intercept, which is the
 ##'         log of baseline hazards. If \code{TRUE}, please remember to turn
 ##'         off the direct estimation of baseline hazards, i.e.,
-##'         \code{base.prior = list(type = "Const")}.}
-##'     \item{a0}{multiplier for initial variance in time-varying or dynamic
-##'         models, default 100.}
-##'     \item{eps0}{size of auxiliary uniform latent variable in dynamic model,
+##'         \code{base.prior = list(type = "Const")}}
+##'     \item{a0:}{multiplier for initial variance in time-varying or dynamic
+##'         models, default 100;}
+##'     \item{eps0:}{size of auxiliary uniform latent variable in dynamic model,
 ##'         default 1.}
 ##' }
 ##'
-##' @usage bayesCox(formula, data, grid, out, model = c("TimeIndep",
-##' "TimeVarying", "Dynamic"), base.prior = list(), coef.prior = list(),
-##' gibbs = list(), control = list())
-##' @param formula a formula object, with the response on the left of a '~'
+##' @usage bayesCox(formula, data, grid, out,
+##'          model = c("TimeIndep", "TimeVarying", "Dynamic"),
+##'          base.prior = list(), coef.prior = list(),
+##'          gibbs = list(), control = list())
+##' @param formula A formula object, with the response on the left of a '~'
 ##' operator, and the terms on the right. The response must be a survival
 ##' object as returned by the \code{Surv} function.
-##' @param data a data.frame in which to interpret the variables named in the
+##' @param data A data.frame in which to interpret the variables named in the
 ##' \code{formula}.
-##' @param grid vector of pre-specified time grid points.
-##' @param out name of Markov chain Monte Carlo (MCMC) samples output file.
-##' @param model model type to fit.
-##' @param base.prior list of options for prior of baseline lambda. Use
+##' @param grid Vector of pre-specified time grid points.
+##' @param out Name of Markov chain Monte Carlo (MCMC) samples output file.
+##' @param model Model type to fit.
+##' @param base.prior List of options for prior of baseline lambda. Use
 ##' \code{list(type = "Gamma", shape = 0.1, rate = 0.1)} for all models;
 ##' \code{list(type = "Const", value = 1)} for \code{Dynamic} model when
 ##' \code{intercept = TRUE}.
-##' @param coef.prior list of options for prior of coefficient beta. Use
+##' @param coef.prior List of options for prior of coefficient beta. Use
 ##' \code{list(type = "Normal", mean = 0, sd = 1)} for \code{TimeIndep} model;
 ##' \code{list(type = "AR1", sd = 1)} for \code{TimeVarying} and \code{Dynamic}
 ##' models; \code{list(type = "HAR1", shape = 2, scale = 1)} for
 ##' \code{TimeVarying} and \code{Dynamic} models.
-##' @param gibbs list of options for Gibbs sampler.
-##' @param control list of general control options.
+##' @param gibbs List of options for Gibbs sampler.
+##' @param control List of general control options.
 ##' @return An object of S3 class \code{bayesCox} representing the fit.
 ##' @seealso \code{\link{coef.bayesCox}}, \code{\link{jump.bayesCox}},
 ##' \code{\link{nu.bayesCox}}, \code{\link{plotCoef}},

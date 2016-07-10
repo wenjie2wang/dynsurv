@@ -19,21 +19,21 @@
 
 
 
-##' Print an object.
-##'
-##' An S3 class generic function that displays certain object.
-##'
-##' For \code{bayesCox} (\code{tvTran}, or \code{splineCox}) object,
-##' it prints out the brief summary of the fitted model.
-##'
-##' @param x An object used to dispatch a method.
-##' @param ... Other arguments.
+## ##' Print an object.
+## ##'
+## ##' An S3 class generic function that displays certain object.
+## ##'
+## ##' For \code{bayesCox} (\code{tvTran}, or \code{splineCox}) object,
+## ##' it prints out the brief summary of the fitted model.
+## ##'
+## ##' @param x An object used to dispatch a method.
+## ##' @param ... Other arguments.
 
 
 
 ### Print bayesCox object ======================================================
-##' @rdname print
-##' @aliases print.bayesCox
+## ## ' @rdname print
+## ## ' @aliases print.bayesCox
 ##' @importFrom graphics grid
 ##' @export
 print.bayesCox <- function(x, ...) {
@@ -77,8 +77,8 @@ print.bayesCox <- function(x, ...) {
 
 
 ### Print tvTran object ========================================================
-##' @rdname print
-##' @aliases print.tvTran
+## ##' @rdname print
+## ##' @aliases print.tvTran
 ##' @export
 print.tvTran <- function(x, ...) {
 
@@ -99,8 +99,8 @@ print.tvTran <- function(x, ...) {
 
 
 ### Print splineCox object =====================================================
-##' @rdname print
-##' @aliases print.splineCox
+## ##' @rdname print
+## ##' @aliases print.splineCox
 ##' @export
 print.splineCox <- function(x, ...) {
 
