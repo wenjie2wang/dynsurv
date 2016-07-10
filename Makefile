@@ -1,5 +1,5 @@
 pkg = dynsurv
-header = COPYRIGHT
+cprt = COPYRIGHT
 
 Rpkg: Rd build
 	make check
