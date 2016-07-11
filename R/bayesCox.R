@@ -169,9 +169,9 @@
 ##' @importFrom utils tail
 ##' @export bayesCox
 bayesCox <- function(formula, data, grid, out,
-                    model = c("TimeIndep", "TimeVarying", "Dynamic"),
-                    base.prior = list(), coef.prior = list(), gibbs = list(),
-                    control = list()) {
+                     model = c("TimeIndep", "TimeVarying", "Dynamic"),
+                     base.prior = list(), coef.prior = list(), gibbs = list(),
+                     control = list()) {
     Call <- match.call()
 
     ## Prepare prior information
@@ -221,6 +221,7 @@ bayesCox <- function(formula, data, grid, out,
 
     ## Prepare data matrix LRX
     mf <- model.frame(formula, data)
+    mt <- attr(mf, "terms")
     mm <- model.matrix(formula, data)
 
     LRX <- cbind(mf[, 1][, 1:2], mm[, -1])
@@ -279,10 +280,11 @@ bayesCox <- function(formula, data, grid, out,
         res$jump <- matrix(res$jump, K, nBeta)
 
     ## Return list
-    rl <- list(call = Call, grid = grid, out = out, model = model, LRX = LRX,
-              base.prior = base.prior, coef.prior = coef.prior, gibbs = gibbs,
-              control = control, N = nrow(LRX), K = K, nBeta = nBeta,
-              cov.names = cov.names,
+    rl <- list(call = Call, formula = formula, grid = grid, out = out,
+              model = model, LRX = LRX, base.prior = base.prior,
+              coef.prior = coef.prior, gibbs = gibbs,
+              control = control, xlevels = .getXlevels(mt, mf),
+              N = nrow(LRX), K = K, nBeta = nBeta, cov.names = cov.names,
               est = list(lambda = res$lambda, beta = res$beta, nu = res$nu,
                          jump = res$jump),
               measure = list(LPML = res$LPML, DHat = res$DHat, DBar = res$DBar,
