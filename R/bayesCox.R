@@ -165,7 +165,7 @@
 ##' plotJumpHist(jump(fit3))
 ##' plotNu(nu(fit3))
 ##' }
-##' @importFrom stats model.frame model.matrix
+##' @importFrom stats model.frame model.matrix .getXlevels
 ##' @importFrom utils tail
 ##' @export bayesCox
 bayesCox <- function(formula, data, grid, out,

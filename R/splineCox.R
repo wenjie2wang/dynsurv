@@ -163,7 +163,7 @@ expand <- function(data, id = "id", time = "time", status = "status") {
               st = st, row.names = NULL)
     }
 
-    res <- ddply(data, id, foo)
+    res <- plyr::ddply(data, id, foo)
     names(res)[ncol(res)] <- status
     res
 }
