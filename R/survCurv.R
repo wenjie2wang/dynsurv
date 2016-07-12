@@ -29,7 +29,11 @@
 ##' control argument is specified to be \code{control = list(intercept = TRUE)}
 ##' in function \code{bayesCox}.
 ##'
-##' FIXME
+##' The estimated survival curve is a step function representing the posterior
+##' mean survival proportion at the given time grid from the posterior sample.
+##' The credible interval for the survival curve is constructed based on the
+##' quantiles of all the survival curves from posterior sample at given credible
+##' level.
 ##'
 ##' @aliases survCurve
 ##' @usage survCurve(object, newdata, type = c("survival", "cumhaz"),
@@ -37,21 +41,21 @@
 ##' @param object An object returned by function \code{bayesCox}.
 ##' @param newdata An optional data frame used to generate a design matrix.
 ##' @param type An optional character value indicating the type of function to
-##' compute. The possible values are "survival" and "cumhaz". The former
-##' means the estimated survival function; the latter represents the estimated
-##' cumulative hazard function for the given \code{newdata}.
+##'     compute. The possible values are "survival" and "cumhaz". The former
+##'     means the estimated survival function; the latter represents the
+##'     estimated cumulative hazard function for the given \code{newdata}.
 ##' @param level A numerical value between 0 and 1 indicating the level of
-##' cradible band.
-##' @param centered A logical value. If \code{TRUE}, the mean function
-##' for the given \code{newdata} will be computed. The default is \code{FALSE}.
+##'     cradible band.
+##' @param centered A logical value. If \code{TRUE}, the mean function for the
+##'     given \code{newdata} will be computed. The default is \code{FALSE}.
 ##' @param cache A logical value. If \code{TRUE}, the cache RData file will be
-##' generated in the working directory to improve the performance of function
-##' \code{survCurve} and \code{survDiff}. This option would be quite helpful if
-##' the number of MCMC samples is large.
+##'     generated in the working directory to improve the performance of
+##'     function \code{survCurve} and \code{survDiff}. This option would be
+##'     quite helpful if the number of MCMC samples is large.
 ##' @param ... Other arguments for further usage.
-##'
 ##' @return A data frame with column: "Low", "Mid", "High", "Time", "Design",
-##' and "type", and attribute named "surv".
+##' and "type", and attribute, "surv" valued as "survCurve".
+##' @seealso \code{\link{survDiff}} \code{\link{plotSurv}}
 ##' @examples
 ##'
 ##' ## See the examples in bayesCox.
@@ -189,34 +193,36 @@ survCurve <- function(object, newdata, type = c("survival", "cumhaz"),
 ##' Estimated Difference Between Survival or Cumulative Hazard Functions
 ##'
 ##' \code{survDiff} returns estimated suvival function or cumulative function
-##' from posterior estimates. Note that the function is currently only
+##' from posterior estimates. Note that currently, the function is only
 ##' applicable to the Bayesian dynamic Cox model with dynamic hazard, where the
 ##' control argument is specified to be \code{control = list(intercept = TRUE)}
 ##' in function \code{bayesCox}.
 ##'
-##' FIXME
+##' The estimated difference between survival curves is a step function
+##' representing the difference between the posterior mean survival proportion
+##' at the given time grid from the posterior sample.  Its credible interval is
+##' constructed based on the quantiles of all the pair difference between the
+##' survival curves from posterior sample at given credible level.
 ##'
-##' @aliases survCurve
-##' @usage survCurve(object, newdata, type = c("survival", "cumhaz"),
-##'          level = 0.95, centered = FALSE, cache = FALSE, ...)
+##' @aliases survDiff
+##' @usage survDiff(object, newdata, type = c("survival", "cumhaz"),
+##'          level = 0.95, cache = FALSE, ...)
 ##' @param object An object returned by function \code{bayesCox}.
 ##' @param newdata An optional data frame used to generate a design matrix.
 ##' @param type An optional character value indicating the type of function to
-##' compute. The possible values are "survival" and "cumhaz". The former
-##' means the estimated survival function; the latter represents the estimated
-##' cumulative hazard function for the given \code{newdata}.
+##'     compute. The possible values are "survival" and "cumhaz". The former
+##'     means the estimated survival function; the latter represents the
+##'     estimated cumulative hazard function for the given \code{newdata}.
 ##' @param level A numerical value between 0 and 1 indicating the level of
-##' cradible band.
-##' @param centered A logical value. If \code{TRUE}, the mean function
-##' for the given \code{newdata} will be computed. The default is \code{FALSE}.
+##'     cradible band.
 ##' @param cache A logical value. If \code{TRUE}, the cache RData file will be
-##' generated in the working directory to improve the performance of function
-##' \code{survCurve} and \code{survDiff}. This option would be quite helpful if
-##' the number of MCMC samples is large.
+##'     generated in the working directory to improve the performance of
+##'     function \code{survCurve} and \code{survDiff}. This option would be
+##'     quite helpful if the number of MCMC samples is large.
 ##' @param ... Other arguments for further usage.
-##'
 ##' @return A data frame with column: "Low", "Mid", "High", "Time", "Design",
-##' and "type", and attribute named "surv".
+##' and "type", and attribute, "surv" valued as "survDiff".
+##' @seealso \code{\link{survCurve}} \code{\link{plotSurv}}
 ##' @examples
 ##'
 ##' ## See the examples in bayesCox.
@@ -327,9 +333,39 @@ survDiff <- function (object, newdata, type = c("survival", "cumhaz"),
     StdiffQT
 }
 
-
-
-### object = object.SurvCurve or object.Survdiff
+##' Plot Survival Curves (or Cumulative Hazard Function) and their difference
+##'
+##' Plot the survival curves (or cumulative hazard) and their difference for
+##' objects returned by function \code{survCurve} or \code{survDiff}.  By using
+##' \code{ggplot2} plotting system, the plots generated are able to be further
+##' customized properly.
+##'
+##' @aliases plotSurv
+##' @usage plotSurv(object, legendName = "", conf.int = FALSE, smooth = FALSE,
+##'          lty, col, ...)
+##' @param object An object returned by function \code{survCurve} or
+##'     \code{survDiff}.
+##' @param legendName An optional name for the figure legend.
+##' @param conf.int A logical value indicating whether to plot the credible
+##'     interval(s).
+##' @param smooth A logical value, default \code{FALSE}. If \code{TRUE}, plot
+##'     the coefficients as smooth lines; otherwise, plot the coefficients as
+##'     piece-wise constant step functions.
+##' @param lty An optional numeric vector indicating line types specified to
+##'     different groups: 0 = blank, 1 = solid, 2 = dashed, 3 = dotted, 4 =
+##'     dotdash, 5 = longdash, 6 = twodash.
+##' @param col An optional character or numeric vector indicating line colors
+##'     specified to different groups.
+##' @param ... Other arguments for future usage.
+##' @return A \code{ggplot} object.
+##' @seealso \code{\link{survCurve}} \code{\link{survDiff}}
+##' @examples
+##'
+##' ## See the examples in bayesCox.
+##'
+##' @importFrom ggplot2 ggplot aes_string aes geom_step scale_color_manual
+##'     scale_linetype_manual geom_line ylab ggtitle
+##' @export
 plotSurv <- function(object, legendName = "", conf.int = FALSE,
                     smooth = FALSE, lty, col, ...){
 
