@@ -42,7 +42,6 @@ jump <- function(object, ...) UseMethod("jump", object)
 ##' \code{\link{plotJumpHist}}.
 ##' @keywords extract bayesCox jump
 ##' @examples
-##'
 ##' ## See the examples in bayesCox
 ##' @importFrom stats model.frame
 ##' @export
@@ -103,11 +102,10 @@ nu <- function(object, ...) UseMethod("nu", object)
 ##' @seealso \code{\link{bayesCox}}, and \code{\link{plotNu}}.
 ##' @keywords extract bayesCox latent variance
 ##' @examples
-##'
-##' ## See the examples in \code{\link{bayesCox}}.
+##' ## See the examples in bayesCox.
 ##' @importFrom utils read.table
 ##' @importFrom stats model.frame
-##' @importFrom reshape melt
+##' @importFrom reshape melt melt.data.frame
 ##' @export
 nu.bayesCox <- function(object, ...) {
     ## Monte Carlo samples
@@ -123,7 +121,7 @@ nu.bayesCox <- function(object, ...) {
     nuMat <- as.matrix(ms[, seq((1 + nBeta) * K + 1, (1 + nBeta) * K + nBeta)])
     res <- data.frame(1 : iter, object$model, nuMat)
     colnames(res) <- c("Iter", "Model", covNms)
-    res <- reshape::melt(res, c("Iter", "Model"))
+    res <- reshape::melt.data.frame(res, c("Iter", "Model"))
     colnames(res) <- c("Iter", "Model", "Cov", "Value")
     res
 }
