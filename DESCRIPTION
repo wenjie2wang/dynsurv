@@ -24,12 +24,14 @@ Depends:
     R (>= 3.0.2),
     survival
 Imports:
-    methods,
-    reshape,
-    plyr,
-    nleqslv,
     ggplot2,
-    grid
+    grDevices,
+    grid,
+    nleqslv,
+    plyr,
+    reshape,
+    stats,
+    utils
 LinkingTo: BH (>= 1.54.0-2)
 License: GPL (>= 3)
 LazyLoad: Yes
