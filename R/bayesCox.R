@@ -88,7 +88,9 @@
 ##' @return An object of S3 class \code{bayesCox} representing the fit.
 ##' @seealso \code{\link{coef.bayesCox}}, \code{\link{jump.bayesCox}},
 ##' \code{\link{nu.bayesCox}}, \code{\link{plotCoef}},
-##' \code{\link{plotJumpTrace}}, and \code{\link{plotNu}}.
+##' \code{\link{plotJumpTrace}}, \code{\link{plotNu}},
+##' \code{\link{survCurve}}, \code{\link{survDiff}}, and
+##' \code{\link{plotSurv}}.
 ##' @references X. Wang, M.-H. Chen, and J. Yan (2011). Bayesian dynamic
 ##' regression models for interval censored survival data. Under review.
 ##'
@@ -126,7 +128,7 @@
 ##'                  coef.prior = list(type = "Normal", mean = 0, sd = 1),
 ##'                  gibbs = list(iter = 100, burn = 20, thin = 1,
 ##'                               verbose = TRUE, nReport = 5))
-##' plotCoef(coef(fit0))
+##' plotCoef(coef(fit0, level = 0.9))
 ##'
 ##' ## Fit time-varying coefficient model
 ##' fit1 <- bayesCox(myformula, mydata, mygrid, out = "tvCox.txt",
@@ -164,7 +166,16 @@
 ##' plotJumpTrace(jump(fit3))
 ##' plotJumpHist(jump(fit3))
 ##' plotNu(nu(fit3))
+##'
+##' ## Plot the estimated survival function and hazard function
+##' newDat <- bcos[c(1, 47), ]
+##' row.names(newDat) <- c("Rad", "RadChem")
+##' plotSurv(survCurve(fit3, newdata = newDat, type = "survival"),
+##'          legendName = "Treatment", conf.int = TRUE)
+##' plotSurv(survDiff(fit3, newdata = newDat, type = "cumhaz"),
+##'          legendName = "Treatment", conf.int = TRUE, smooth = TRUE)
 ##' }
+##'
 ##' @importFrom stats model.frame model.matrix .getXlevels
 ##' @importFrom utils tail
 ##' @export bayesCox

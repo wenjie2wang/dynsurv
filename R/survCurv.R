@@ -24,7 +24,7 @@
 ##' Estimated Survival Function or Cumulative Hazard Function
 ##'
 ##' \code{survCurve} returns estimated suvival function or cumulative function
-##' from posterior estimates. Note that the function is currently only
+##' from posterior sample. Note that the function is currently only
 ##' applicable to the Bayesian dynamic Cox model with dynamic hazard, where the
 ##' control argument is specified to be \code{control = list(intercept = TRUE)}
 ##' in function \code{bayesCox}.
@@ -37,7 +37,8 @@
 ##'
 ##' @aliases survCurve
 ##' @usage survCurve(object, newdata, type = c("survival", "cumhaz"),
-##'          level = 0.95, centered = FALSE, cache = FALSE, ...)
+##'           level = 0.95, centered = FALSE, cache = FALSE, ...)
+##'
 ##' @param object An object returned by function \code{bayesCox}.
 ##' @param newdata An optional data frame used to generate a design matrix.
 ##' @param type An optional character value indicating the type of function to
@@ -51,16 +52,17 @@
 ##' @param cache A logical value. If \code{TRUE}, the cache RData file will be
 ##'     generated in the working directory to improve the performance of
 ##'     function \code{survCurve} and \code{survDiff}. This option would be
-##'     quite helpful if the number of MCMC samples is large.
+##'     quite helpful if the number of MCMC sample is large.
 ##' @param ... Other arguments for further usage.
 ##' @return A data frame with column: "Low", "Mid", "High", "Time", "Design",
 ##' and "type", and attribute, "surv" valued as "survCurve".
-##' @seealso \code{\link{survDiff}} \code{\link{plotSurv}}
+##' @seealso \code{\link{bayesCox}}, \code{\link{survDiff}}, and
+##' \code{\link{plotSurv}}.
 ##' @examples
 ##'
 ##' ## See the examples in bayesCox.
 ##'
-##' @importFrom stats model.frame model.matrix delete.response terms
+##' @importFrom stats model.frame model.matrix delete.response terms setNames
 ##' @importFrom utils read.table
 ##' @export
 survCurve <- function(object, newdata, type = c("survival", "cumhaz"),
@@ -71,7 +73,7 @@ survCurve <- function(object, newdata, type = c("survival", "cumhaz"),
     ## The construction of crediable band fails for time-varying model
     ## and dynamic model with time-varying model at reference level.
     ## This is bacause covariates at reference level are all set to be 0.
-    ## And the posterior samples of lambda is not included in outputs
+    ## And the posterior sample of lambda is not included in outputs
     ## from function bayesCox.
     ##
     ## It may be fixed later. Then this function can be expanded to other
@@ -82,6 +84,9 @@ survCurve <- function(object, newdata, type = c("survival", "cumhaz"),
         stop(paste("'survCurve' is only applicable to",
                    "Bayesian dynamic Cox model with dynamic hazard."))
     }
+
+    ## nonsense, just to suppress Note from R CMD check --as-cran
+    `(Intercept)` <- NULL
 
     ## generate design matrix from newdata
     tt <- stats::terms(object$formula)
@@ -207,8 +212,10 @@ survCurve <- function(object, newdata, type = c("survival", "cumhaz"),
 ##' @aliases survDiff
 ##' @usage survDiff(object, newdata, type = c("survival", "cumhaz"),
 ##'          level = 0.95, cache = FALSE, ...)
+##'
 ##' @param object An object returned by function \code{bayesCox}.
 ##' @param newdata An optional data frame used to generate a design matrix.
+##'     Note that it must lead to a design matrix with two different design.
 ##' @param type An optional character value indicating the type of function to
 ##'     compute. The possible values are "survival" and "cumhaz". The former
 ##'     means the estimated survival function; the latter represents the
@@ -218,11 +225,12 @@ survCurve <- function(object, newdata, type = c("survival", "cumhaz"),
 ##' @param cache A logical value. If \code{TRUE}, the cache RData file will be
 ##'     generated in the working directory to improve the performance of
 ##'     function \code{survCurve} and \code{survDiff}. This option would be
-##'     quite helpful if the number of MCMC samples is large.
+##'     quite helpful if the number of MCMC sample is large.
 ##' @param ... Other arguments for further usage.
 ##' @return A data frame with column: "Low", "Mid", "High", "Time", "Design",
-##' and "type", and attribute, "surv" valued as "survDiff".
-##' @seealso \code{\link{survCurve}} \code{\link{plotSurv}}
+##'     and "type", and attribute, "surv" valued as "survDiff".
+##' @seealso \code{\link{bayesCox}}, \code{\link{survCurve}}, and
+##' \code{\link{plotSurv}}.
 ##' @examples
 ##'
 ##' ## See the examples in bayesCox.
@@ -238,6 +246,9 @@ survDiff <- function (object, newdata, type = c("survival", "cumhaz"),
         stop(paste("'survCurve' is only applicable to",
                    "Bayesian dynamic Cox model with dynamic hazard."))
     }
+
+    ## nonsense, just to suppress Note from R CMD check --as-cran
+    `(Intercept)` <- NULL
 
     ## generate design matrix from newdata
     tt <- stats::terms(object$formula)
@@ -358,7 +369,8 @@ survDiff <- function (object, newdata, type = c("survival", "cumhaz"),
 ##'     specified to different groups.
 ##' @param ... Other arguments for future usage.
 ##' @return A \code{ggplot} object.
-##' @seealso \code{\link{survCurve}} \code{\link{survDiff}}
+##' @seealso \code{\link{bayesCox}}, \code{\link{survCurve}}, and
+##' \code{\link{survDiff}}.
 ##' @examples
 ##'
 ##' ## See the examples in bayesCox.
@@ -368,6 +380,9 @@ survDiff <- function (object, newdata, type = c("survival", "cumhaz"),
 ##' @export
 plotSurv <- function(object, legendName = "", conf.int = FALSE,
                     smooth = FALSE, lty, col, ...){
+
+    ## nonsense, just to suppress Note from R CMD check --as-cran
+    Mid <- Low <- High <- Time <- NULL
 
     ## about linetypes
     ## 0 = blank, 1 = solid, 2 = dashed, 3 = dotted,
