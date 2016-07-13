@@ -26,7 +26,7 @@
 	* Removed redundant COPYRIGHT file bundled in source package. It
 	is available online at <http://www.gnu.org/licenses/>.
 
-	* Changed package version to 0.2-4.
+	* Changed package version to 0.3-0.
 
 	* Changed maintainer from Jun Yan to Wenjie Wang.
 
