@@ -1,3 +1,35 @@
+2016-07-12 Wenjie Wang <wenjie.2.wang@uconn.edu>
+
+	* Fixed compiling error from clang v3.9 due to including R headers
+	inside extern "C" by commenting out the extern "C" in rng.h and
+	GibbsSampler.h.
+
+	* Fixed print function for bayesCox object.
+
+	* Fixed invalid url for tooth dataset.
+
+	* Added formula and xlevels to bayesCox object.
+
+	* Added optional arguement to coef.bayesCox, coef.tvTran, and
+	coef.splineCox to allow user to specify credible level by matching
+	"..." argument with possible "level" argument.
+
+	* Added function survCuvre, survDiff, and plotSurv to estimate and
+	plot the survival function, cumulative hazard function, and their
+	pair difference for Bayesian dynamic model with dynamic hazard
+	from posterior sample. Specific examples are added to bayesCox.
+
+	* Added Roxygen2 inline documentation for all exported function.
+
+	* Added citation for package to /inst.
+
+	* Removed redundant COPYRIGHT file bundled in source package. It
+	is available online at <http://www.gnu.org/licenses/>.
+
+	* Changed package version to 0.2-4.
+
+	* Changed maintainer from Jun Yan to Wenjie Wang.
+
 2014-05-01 Jun Yan <jun.yan@uconn.edu>
 
 	* Changed the dependence on boost to package BH.
@@ -10,19 +42,18 @@
 	* Fixed warnings from clang in arm.c by commenting out the
 	display function. Added random number state control to u_random.
 
-
-
 2014-03-04 Jun Yan <jun.yan@uconn.edu>
+
 	* Fixed the problem that splineCox did not work with a single
 	covariate by adding drop=FALSE in splineCox:
 	    DF <- cbind(id=1:N, mf[, 1][, 1:2], mf[, -1, drop=FALSE])
 
-	* changed depends to import in DESCRIPTION and NAMESPACE.
+	* Changed depends to import in DESCRIPTION and NAMESPACE.
 	However, package survival is kept under "Depends"; otherwise,
 	function Surv was not found in model.matrix. This may need
 	to be fixed later.
 
-	* modified example codes to use mydata and myformula instead of
+	* Modified example codes to use mydata and myformula instead of
 	data and formula.
 
 2012-03-14  Jun Yan  <jun.yan@uconn.edu>
