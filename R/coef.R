@@ -28,10 +28,11 @@
 ##'
 ##' @aliases coef.bayesCox
 ##' @param object An object returned by function \code{bayesCox}.
-##' @param ... Other arguments.
+##' @param ... Optional arguments. Currently, the only applicable arguemnt is
+##'     \code{level} for the credible level. The default value is 0.95.
 ##' @return A data.frame with 6 columns \code{("Low", "Mid", "High", "Time",
 ##' "Cov", "Model")}, where \code{"Low"} and \code{"High"} are the posterior
-##' 2.5\% and 97.5\% quantiles; \code{"Mid"} is the posterior mean;
+##' 2.5\% and 97.5\% quantiles as default; \code{"Mid"} is the posterior mean;
 ##' \code{"Cov"} and \code{"Model"} contain character values of the covariates
 ##' and model types.
 ##' @seealso \code{\link{bayesCox}}, and \code{\link{plotCoef}}.
@@ -43,6 +44,13 @@
 ##' @importFrom stats quantile
 ##' @export
 coef.bayesCox <- function(object, ...) {
+
+    ## match call for credible level specified
+    mcall <- match.call()
+    mmcall <- match("level", names(mcall), 0L)
+    mcall <- mcall[c(1L, mmcall)]
+    mcall[[1L]] <- quote(getLevel)
+    level <- eval(mcall)
 
     ## Monte Carlo samples
     ms <- as.matrix(read.table(file = object$out))
@@ -58,8 +66,8 @@ coef.bayesCox <- function(object, ...) {
 
     betaMat <- as.matrix(ms[, seq(K + 1, K + nBeta * cK)])
     f <- function(x) {
-        c(quantile(x, probs = 0.025, names = FALSE), mean(x),
-          quantile(x, probs = 0.975, names = FALSE))
+        c(quantile(x, probs = 0.5 - level / 2, names = FALSE), mean(x),
+          quantile(x, probs = 0.5 + level / 2, names = FALSE))
     }
 
     betaMatQT <- t(apply(betaMat, 2, f))
@@ -77,7 +85,7 @@ coef.bayesCox <- function(object, ...) {
 
     ## Make sure the Cov retains the original order
     res$Cov <- factor(res$Cov, levels = as.character(unique(res$Cov)))
-
+    attr(res, "level") <- level
     res
 }
 
@@ -91,12 +99,14 @@ coef.bayesCox <- function(object, ...) {
 ##'
 ##' @aliases coef.tvTran
 ##' @param object An object returned by function \code{tvTran}.
-##' @param ... Other arguments.
+##' @param ... Optional arguments. Currently, the only applicable arguemnt is
+##'     \code{level} for the credible level. The default value is 0.95.
 ##' @return A data.frame with 6 columns \code{("Low", "Mid", "High", "Time",
-##' "Cov", "Model")}, where \code{"Mid"} is the point estimates; \code{"Low"}
-##' and \code{"High"} are the 2.5\% and 97.5\% quantiles estimates from
-##' resampling method; \code{"Cov"} and \code{"Model"} contain character values
-##' of the covariates and model type.
+##'     "Cov", "Model")}, where \code{"Mid"} is the point estimates;
+##'     \code{"Low"} and \code{"High"} are the 2.5\% and 97.5\% quantiles
+##'     estimates from resampling method as default; \code{"Cov"} and
+##'     \code{"Model"} contain character values of the covariates and model
+##'     type.
 ##' @seealso \code{\link{tvTran}}, and \code{\link{plotCoef}}.
 ##' @keywords extract tvTran coefficient
 ##' @examples
@@ -105,15 +115,23 @@ coef.bayesCox <- function(object, ...) {
 ##'
 ##' @export
 coef.tvTran <- function(object, ...) {
+
+    ## match call for credible level specified
+    mcall <- match.call()
+    mmcall <- match("level", names(mcall), 0L)
+    mcall <- mcall[c(1L, mmcall)]
+    mcall[[1L]] <- quote(getLevel)
+    level <- eval(mcall)
+
     K <- object$K
     nBeta <- object$nBeta
 
     rsMat <- object$rsEst[, seq(1, nBeta * K)]
-    betaMat <- cbind(apply(rsMat, 2, quantile, probs = 0.025, na.rm = TRUE,
-                          names = FALSE),
+    betaMat <- cbind(apply(rsMat, 2, quantile, probs = 0.5 - level / 2,
+                          na.rm = TRUE, names = FALSE),
                     object$pEst[seq(1, nBeta * K)],
-                    apply(rsMat, 2, quantile, probs = 0.975, na.rm = TRUE,
-                          names = FALSE))
+                    apply(rsMat, 2, quantile, probs = 0.5 + level / 2,
+                          na.rm = TRUE, names = FALSE))
     ## betaMat[betaMat < -bound | betaMat > bound] <- NA
 
     ## Insert one more value at time zero
@@ -126,7 +144,7 @@ coef.tvTran <- function(object, ...) {
 
     ## Make sure the Cov retains the original orde
     res$Cov <- factor(res$Cov, levels = as.character(unique(res$Cov)))
-
+    attr(res, "level") <- level
     res
 }
 
@@ -139,22 +157,31 @@ coef.tvTran <- function(object, ...) {
 ##'
 ##' @aliases coef.splineCox
 ##' @param object An object returned by function \code{splineCox}.
-##' @param ... Other arguments.
+##' @param ... Optional arguments. Currently, the only applicable arguemnt is
+##'     \code{level} for the credible level. The default value is 0.95.
 ##' @return A data.frame with 6 columns \code{("Low", "Mid", "High", "Time",
-##' "Cov", "Model")}, where \code{"Mid"} is the point estimates; \code{"Low"}
-##' and \code{"High"} are the point estimates plus and minus 1.96 times
-##' standard deviations; \code{"Cov"} and \code{"Model"} contain character
-##' values of the covariates and model type.
+##'     "Cov", "Model")}, where \code{"Mid"} is the point estimates;
+##'     \code{"Low"} and \code{"High"} are the point estimates plus and minus
+##'     1.96 times standard deviations (under default level); \code{"Cov"} and
+##'     \code{"Model"} contain character values of the covariates and model
+##'     type.
 ##' @note It essentially expand the break points, and then call function
-##' \code{coxph} in package \code{survival}
+##'     \code{coxph} in package \code{survival}
 ##' @seealso \code{\link{splineCox}}, and \code{\link{plotCoef}}.
 ##' @keywords extract splineCox coefficient
 ##' @examples
 ##'
 ##' ## See the examples in splineCox.
-##'
+##' @importFrom stats qnorm
 ##' @export
 coef.splineCox <- function(object, ...) {
+
+    ## match call for credible level specified
+    mcall <- match.call()
+    mmcall <- match("level", names(mcall), 0L)
+    mcall <- mcall[c(1L, mmcall)]
+    mcall[[1L]] <- quote(getLevel)
+    level <- eval(mcall)
 
     fit <- object$coxph.fit
     basis <- object$bsp.basis
@@ -180,8 +207,9 @@ coef.splineCox <- function(object, ...) {
             curInd <- curInd + basis$df
        }
 
-        yLow <- yMid - 1.96 * ySE
-        yHigh <- yMid + 1.96 * ySE
+        criValue <- qnorm(0.5 + level / 2)
+        yLow <- yMid - criValue * ySE
+        yHigh <- yMid + criValue * ySE
 
         res <- rbind(res, data.frame(Low = yLow, Mid = yMid, High = yHigh,
                                     Time = x, Cov = object$cov.names[j],
@@ -190,6 +218,15 @@ coef.splineCox <- function(object, ...) {
 
     ## Make sure the Cov retains the original orde
     res$Cov <- factor(res$Cov, levels = as.character(unique(res$Cov)))
-
+    attr(res, "level") <- level
     res
+}
+
+
+
+### internal function ==========================================================
+## help get the possible level specified from ... argument
+getLevel <- function(level){
+    if (missing(level)) return(0.95)
+    level
 }
