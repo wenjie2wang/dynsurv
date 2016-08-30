@@ -89,7 +89,7 @@ NULL
 ##' for interval-censored data and their implementation in R. \emph{Statistical
 ##' Modeling} 9(4), 259.
 ##' @source Adapted from the data set available at
-##' \url{http://grass.upc.edu/software/tooth24/tooth24.RData/view/index.html}.
+##' \url{http://grass.upc.edu/en/software/tooth24/tooth24.RData/view/index.html}.
 ##' @keywords datasets
 ##' @examples
 ##'
