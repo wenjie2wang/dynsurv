@@ -1,3 +1,12 @@
+2016-08-30 Wenjie Wang <wenjie.2.wang@uconn.edu>
+
+	* Fixed warning on compilation flags in Makevars: "Non-portable
+	flags in variable 'PKG_CXXFLAGS': -g" by removal of "-g" flag.
+
+	* Fixed invalid URL for tooth24.RData.
+
+	* Changed package version to 0.3-2.
+
 2016-07-12 Wenjie Wang <wenjie.2.wang@uconn.edu>
 
 	* Fixed compiling error from clang v3.9 due to including R headers
