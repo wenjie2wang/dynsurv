@@ -1,7 +1,7 @@
 citHeader("To cite dynsurv in publications use:")
 
 citEntry(entry = "Manual",
-         Title = "{dynsurv}: Dynamic Models for Survival Data}",
+         Title = "{dynsurv}: {D}ynamic Models for Survival Data}",
          Author = personList(as.person("Xiaojing Wang"),
                              as.person("Ming-Hui Chen"),
                              as.person("Wenjie Wang"),
@@ -10,8 +10,8 @@ citEntry(entry = "Manual",
          Year =	"2016",
          Url = "http://CRAN.R-project.org/package=dynsurv",
 
-         textVersion = paste("Wang, X., Chen, M.-H., Wang, W., Yan, J.:",
+         textVersion = paste("Wang, X., Chen, M.-H., Wang, W., Yan, J. (2016).",
                              "dynsurv: Dynamic Models for Survival Data.",
-                             "(2016). R package version 0.3-2.",
+                             "R package version 0.3-2.",
                              "http://CRAN.R-project.org/package=dynsurv")
 )
