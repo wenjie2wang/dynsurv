@@ -123,14 +123,19 @@ gibbsKernel(const Prior& prior,
 
     /* Decide whether to accept */
     if (prop_flag == true) {
-      double prior_ratio = exp(logCoefPrior(ublas::column(prop_par.jump, j),
-                                            ublas::column(prop_par.beta, j), prior.coef_prior) -
-                               logCoefPrior(ublas::column(par.jump, j), ublas::column(par.beta, j),
-                                            prior.coef_prior));
+      double prior_ratio = std::exp(logCoefPrior(ublas::column(prop_par.jump, j),
+                                                 ublas::column(prop_par.beta, j),
+                                                 prior.coef_prior) -
+                                    logCoefPrior(ublas::column(par.jump, j),
+                                                 ublas::column(par.beta, j),
+                                                 prior.coef_prior));
 
-      double like_ratio = exp(ublas::sum(ublas::log(gorhLikeVec(tLambda,
-                                         prop_par.beta, prop_par.theta))) - ublas::sum(ublas::log(
-                                             gorhLikeVec(tLambda, par.beta, par.theta))));
+      double like_ratio = std::exp(ublas::sum(ublas::log(gorhLikeVec(tLambda,
+                                                                     prop_par.beta,
+                                                                     prop_par.theta))) -
+                                   ublas::sum(ublas::log(gorhLikeVec(tLambda,
+                                                                     par.beta,
+                                                                     par.theta))));
 
       double ratio = prop_ratio * prior_ratio * like_ratio;
 

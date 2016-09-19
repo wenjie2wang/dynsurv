@@ -84,7 +84,7 @@ protected:
 
     double ld = - (x - d->ldp_mu) * (x - d->ldp_mu) / (2.0 * d->ldp_sg2);
     for (int i = 0; i < d->ldp_N; ++i)
-      ld += - exp(d->ldp_X[i] * x) * d->ldp_dleY[i];
+      ld += - std::exp(d->ldp_X[i] * x) * d->ldp_dleY[i];
 
     return ld;
   }

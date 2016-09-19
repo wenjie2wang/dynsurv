@@ -83,12 +83,12 @@ sampleBeta(const ublas::vector<double>& lambda,
       ldp_X[i] = this->pd_->X()(i, j);
 
       ldp_dleY[i] = omega(i) * ublas::inner_prod(ublas::row(YMat, i), DL) *
-                    exp(ublas::inner_prod(ublas::row(this->pd_->X(), i), temp_beta));
+        std::exp(ublas::inner_prod(ublas::row(this->pd_->X(), i), temp_beta));
     }
 
     /* Construct object of LogDenPar_type */
     struct IntRegModel<Prior, Par>::LogDenPar data = {
-	ldp_mu, ldp_sg2, 
+	ldp_mu, ldp_sg2,
 	static_cast<int> (this->N_),
 	ldp_X, ldp_dleY
     };

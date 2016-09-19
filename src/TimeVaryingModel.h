@@ -101,9 +101,9 @@ sampleBeta(const ublas::vector<double>& tLambda,
       for (Size i = 0; i < this->N_; ++i) {
         ldp_X[i] = this->pd_->X()(i, j);
 
-        ldp_dleY[i] = omega(i) * this->delta_(k) * tLambda(k) * exp(
-                        ublas::inner_prod(ublas::row(this->pd_->X(), i), temp_beta)) *
-                      YMat(i, k);
+        ldp_dleY[i] = omega(i) * this->delta_(k) * tLambda(k) *
+          std::exp(ublas::inner_prod(ublas::row(this->pd_->X(), i), temp_beta)) *
+          YMat(i, k);
       }
 
       double cur_sg2 = sg2Mat(k, j);
@@ -194,9 +194,9 @@ sampleBeta(const ublas::vector<double>& tLambda,
       for (Size i = 0; i < this->N_; ++i) {
         ldp_X[i] = this->pd_->X()(i, j);
 
-        ldp_dleY[i] = omega(i) * this->delta_(k) * tLambda(k) * exp(
-                        ublas::inner_prod(ublas::row(this->pd_->X(), i), temp_beta)) *
-                      YMat(i, k);
+        ldp_dleY[i] = omega(i) * this->delta_(k) * tLambda(k) *
+          std::exp(ublas::inner_prod(ublas::row(this->pd_->X(), i), temp_beta)) *
+          YMat(i, k);
       }
 
       double cur_sg2 = sg2Mat(k, j);
