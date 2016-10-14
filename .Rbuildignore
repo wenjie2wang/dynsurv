@@ -1,5 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^.Rhistory$
+^.travis.yml$
 ^Makefile$
 ^README.md$
 ^NEWS.md$
