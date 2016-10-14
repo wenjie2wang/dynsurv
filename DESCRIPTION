@@ -1,6 +1,6 @@
 Package: dynsurv
 Title: Dynamic Models for Survival Data
-Version: 0.3-4
+Version: 0.3-3
 Date: 2016-10-14
 Authors@R: c(
     person(given = "Wenjie", family = "Wang",

@@ -19,22 +19,30 @@ right censored data using estimating equations.
 
 ## Installation
 
-You may install the stable version on
+You may install the released version from
 [CRAN](http://cran.rstudio.com/package=dynsurv):
 
 ```r
-install.packages("dynsurv")
+install.packages("dynsurv", dependencies = TRUE)
+```
+
+
+## Development
+
+[![Build Status](https://travis-ci.org/wenjie2wang/dynsurv.svg?branch=dev)](https://travis-ci.org/wenjie2wang/dynsurv)
+
+The latest version of package is under development
+at [GitHub](https://github.com/wenjie2wang/dynsurv) in branch 'dev'.  You may
+consider installing the latest version with the help of **devtools** if it is
+able to pass the building check by Travis CI.
+
+```R
+if (! require(devtools)) install.packages("devtools", dependencies = TRUE)
+devtools::install_git("git://github.com/wenjie2wang/dynsurv.git", branch = "dev")
 ```
 
 
 ## Usage
-
-```r
-help(pacakge = "dynsurv")
-library(dynsurv)
-## help on main function for model fitting
-?bayesCox
-```
 
 See [package help manual](https://cran.rstudio.com/web/packages/dynsurv/dynsurv.pdf)
 for details and demonstration.
