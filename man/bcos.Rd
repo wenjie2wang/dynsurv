@@ -25,9 +25,7 @@ experience deterioration were interval censored, and the other38 women who
 did not were right censored.
 }
 \examples{
-
 data(bcos)
-
 }
 \references{
 D.M. Finkelstein, and R.A. Wolfe (1985). A semiparametric model

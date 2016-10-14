@@ -21,7 +21,7 @@
 \code{tooth.grid} is a numeric vector of grid time points.}
 \source{
 Adapted from the data set available at
-\url{http://grass.upc.edu/en/software/tooth24/tooth24.RData/view/index.html}.
+\url{http://grass.upc.edu/en/software/tooth24}.
 }
 \description{
 The tooth data was from a longitudinal prospective dental study performed
@@ -32,9 +32,7 @@ interest was the time to emergence of permanent tooth 24, which was either
 interval censored (2,775, 63\%) or right censored (1,611, 37\%).
 }
 \examples{
-
 data(tooth)
-
 }
 \references{
 J. Vanobbergen, L. Martens, D. Declerck, and M. Lesaffre
