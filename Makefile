@@ -1,14 +1,14 @@
 pkg = dynsurv
 cprt = COPYRIGHT
 
-Rpkg: Rd build
+Rpkg: build
 	make check
-	make INSTALL
+##	make INSTALL
 
-Rd:
+Rd: man/
 	Rscript -e "roxygen2::roxygenise();"
 
-build:
+build: Rd
 	R CMD build ../$(pkg)
 
 check: $(pkg)_*.tar.gz
@@ -34,4 +34,4 @@ updateHeader:
 	sed -i "s/Date: [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/Date: $$dt/" DESCRIPTION;
 
 clean:
-	rm -rf *~ */*~ */*.Rd *.Rhistroy src/*.o src/*.so NAMESPACE *.tar.gz *.Rcheck/ .\#*
+	rm -rf *~ */*~ *.Rhistroy src/*.o src/*.so *.tar.gz *.Rcheck/ .\#*
