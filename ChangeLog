@@ -1,3 +1,14 @@
+2016-10-14 Wenjie Wang <wenjie.2.wang@uconn.edu>
+
+	* Fixed compilation error in Solaris: "The function "exp" must
+	have a prototype" by replacing `exp` with `std::exp`.
+
+	* Fixed possibly invalid URL for tooth24.RData.
+
+	* Changed CRAN URL into the canonical form.
+
+	* Changed package version to 0.3-3.
+
 2016-08-30 Wenjie Wang <wenjie.2.wang@uconn.edu>
 
 	* Fixed warning on compilation flags in Makevars: "Non-portable
