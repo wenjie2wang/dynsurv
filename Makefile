@@ -3,9 +3,8 @@ cprt = COPYRIGHT
 
 Rpkg: build
 	make check
-##	make INSTALL
 
-Rd: man/
+Rd: R/
 	Rscript -e "roxygen2::roxygenise();"
 
 build: Rd
