@@ -1,10 +1,10 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^.Rhistory$
-^.travis.yml$
+^\.Rhistory$
+^\.travis\.yml$
 ^Makefile$
-^README.md$
-^NEWS.md$
+^README\.md$
+^NEWS\.md$
 ^COPYRIGHT$
 ^dev$
 ^test$
