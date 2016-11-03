@@ -1,23 +1,41 @@
-pkg = dynsurv
-cprt = COPYRIGHT
+objects := $(wildcard R/*.R) DESCRIPTION
+man := $(wildcard man/*.Rd) NAMESPACE
+dir := $(shell pwd)
+version := $(shell grep "Version" DESCRIPTION | sed "s/Version: //")
+pkg := $(shell grep "Package" DESCRIPTION | sed "s/Package: //")
+tar := $(pkg)_$(version).tar.gz
+checkLog := $(pkg).Rcheck/00check.log
+rmd := vignettes/$(pkg)-intro.Rmd
+vignettes := vignettes/$(pkg)-intro.html
+cprt := COPYRIGHT
 
-Rpkg: build
-	make check
 
-Rd: R/
-	Rscript -e "roxygen2::roxygenise();"
+.PHONY: all
+all: $(tar)
 
-build: Rd
-	R CMD build ../$(pkg)
+$(tar): $(objects)
+	Rscript -e "library(methods); devtools::document();";
+	R CMD build $(dir)
 
-check: $(pkg)_*.tar.gz
-	R CMD check --as-cran $(pkg)_*.tar.gz
+.PHONY: check
+check: $(checkLog)
 
-INSTALL: $(pkg)_*.tar.gz
-	R CMD INSTALL --build $(pkg)_*.tar.gz
+.PHONY: preview
+preview: $(vignettes)
+
+$(checkLog): $(tar)
+	R CMD check --as-cran $(tar)
+
+$(vignettes): $(rmd)
+	Rscript -e "rmarkdown::render('$(rmd)')"
+
+.PHONY: INSTALL
+INSTALL: $(tar)
+	R CMD INSTALL --build $(tar)
 
 ## update copyright year in HEADER, R script and date in DESCRIPTION
-updateHeader:
+.PHONY: updateHeader
+updateHeader: $(cprt)
 	yr=$$(date +"%Y");\
 	sed -i "s/Copyright (C) 2011-[0-9]\{4\}/Copyright (C) 2011-$$yr/" $(cprt);\
 # add HEADER file if there is no header
@@ -32,5 +50,6 @@ updateHeader:
 	dt=$$(date +"%Y-%m-%d");\
 	sed -i "s/Date: [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/Date: $$dt/" DESCRIPTION;
 
+.PHONY: clean
 clean:
-	rm -rf *~ */*~ *.Rhistroy src/*.o src/*.so *.tar.gz *.Rcheck/ .\#*
+	rm -rf *~ */*~ *.Rhistroy *.tar.gz *.Rcheck/ .\#*

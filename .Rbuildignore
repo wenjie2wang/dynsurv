@@ -6,5 +6,6 @@
 ^README\.md$
 ^NEWS\.md$
 ^COPYRIGHT$
+^LICENSE$
 ^dev$
 ^test$
