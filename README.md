@@ -21,7 +21,7 @@ using estimating equations.
 
 You may install the released version from [CRAN][2].
 
-```r
+```R
 install.packages("dynsurv", dependencies = TRUE)
 ```
 
@@ -38,10 +38,12 @@ installing the latest version with the help of **devtools** by
 devtools::install_github("wenjie2wang/dynsurv", ref = "dev")
 ```
 
-Or clone this reposotory to local and install by makefile.
+or cloning this reposotory to local and install by makefile.
 
 ```
-$ make INSTALL
+git clone https://github.com/wenjie2wang/dynsurv.git
+cd dynsurv
+make install
 ```
 
 
