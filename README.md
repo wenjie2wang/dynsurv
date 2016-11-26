@@ -22,7 +22,7 @@ using estimating equations.
 You may install the released version from [CRAN][2].
 
 ```R
-install.packages("dynsurv", dependencies = TRUE)
+install.packages("dynsurv")
 ```
 
 
@@ -65,7 +65,7 @@ FITNESS FOR A PARTICULAR PURPOSE.
 
 
 [1]: http://www.r-pkg.org/badges/version/dynsurv
-[2]: http://CRAN.R-project.org/package=dynsurv
+[2]: https://CRAN.R-project.org/package=dynsurv
 [3]: https://travis-ci.org/wenjie2wang/dynsurv.svg?branch=master
 [4]: https://travis-ci.org/wenjie2wang/dynsurv.svg?branch=dev
 [5]: https://travis-ci.org/wenjie2wang/dynsurv

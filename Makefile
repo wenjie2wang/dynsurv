@@ -11,18 +11,18 @@ checkLog := $(pkg).Rcheck/00check.log
 cprt := COPYRIGHT
 
 
-.PHONY: all
+.PHONY: check
+check: $(checkLog)
+
+.PHONY: build
 all: $(tar)
+
+# .PHONY: preview
+# preview: $(vignettes)
 
 $(tar): $(objects)
 	Rscript -e "library(methods); devtools::document();";
 	R CMD build $(dir)
-
-.PHONY: check
-check: $(checkLog)
-
-.PHONY: preview
-preview: $(vignettes)
 
 $(checkLog): $(tar)
 	R CMD check --as-cran $(tar)
