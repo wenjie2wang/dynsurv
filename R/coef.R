@@ -38,7 +38,6 @@
 ##' @seealso \code{\link{bayesCox}}, and \code{\link{plotCoef}}.
 ##' @keywords extract bayesCox coefficient
 ##' @examples
-##'
 ##' ## See the examples in bayesCox.
 ##' @importFrom utils read.table
 ##' @importFrom stats quantile
@@ -76,11 +75,11 @@ coef.bayesCox <- function(object, ...) {
 
     ## Insert one more value at time zero
     betaMatQT <- betaMatQT[rep(seq(1, nBeta * K),
-                              rep(c(2, rep(1, K - 1)), nBeta)), ]
+                               rep(c(2, rep(1, K - 1)), nBeta)), ]
 
     res <- data.frame(betaMatQT, rep(c(0, grid), nBeta),
-                     rep(object$cov.names, each = K + 1),
-                     rep(object$model, nBeta * (K + 1)))
+                      rep(object$cov.names, each = K + 1),
+                      rep(object$model, nBeta * (K + 1)))
     colnames(res) <- c("Low", "Mid", "High", "Time", "Cov", "Model")
 
     ## Make sure the Cov retains the original order
@@ -110,9 +109,7 @@ coef.bayesCox <- function(object, ...) {
 ##' @seealso \code{\link{tvTran}}, and \code{\link{plotCoef}}.
 ##' @keywords extract tvTran coefficient
 ##' @examples
-##'
 ##' ## See the examples in tvTran.
-##'
 ##' @export
 coef.tvTran <- function(object, ...) {
 
@@ -128,14 +125,15 @@ coef.tvTran <- function(object, ...) {
 
     rsMat <- object$rsEst[, seq(1, nBeta * K)]
     betaMat <- cbind(apply(rsMat, 2, quantile, probs = 0.5 - level / 2,
-                          na.rm = TRUE, names = FALSE),
-                    object$pEst[seq(1, nBeta * K)],
-                    apply(rsMat, 2, quantile, probs = 0.5 + level / 2,
-                          na.rm = TRUE, names = FALSE))
+                           na.rm = TRUE, names = FALSE),
+                     object$pEst[seq(1, nBeta * K)],
+                     apply(rsMat, 2, quantile, probs = 0.5 + level / 2,
+                           na.rm = TRUE, names = FALSE))
     ## betaMat[betaMat < -bound | betaMat > bound] <- NA
 
     ## Insert one more value at time zero
-    betaMat <- betaMat[rep(seq(1, nBeta * K), rep(c(2, rep(1, K - 1)), nBeta)), ]
+    betaMat <- betaMat[rep(seq(1, nBeta * K),
+                           rep(c(2, rep(1, K - 1)), nBeta)), ]
 
     res <- data.frame(betaMat, rep(c(0, object$eTime), nBeta),
                       rep(object$cov.names, each = K + 1),
@@ -170,7 +168,6 @@ coef.tvTran <- function(object, ...) {
 ##' @seealso \code{\link{splineCox}}, and \code{\link{plotCoef}}.
 ##' @keywords extract splineCox coefficient
 ##' @examples
-##'
 ##' ## See the examples in splineCox.
 ##' @importFrom stats qnorm
 ##' @export
@@ -187,7 +184,7 @@ coef.splineCox <- function(object, ...) {
     basis <- object$bsp.basis
     K <- 101
 
-    x <- seq(basis$Boundary.knots[1], basis$Boundary.knots[2], length = K)
+    x <- seq(basis$Boundary.knots[1L], basis$Boundary.knots[2L], length = K)
     bspMat <- do.call("bs", c(list(x = x), basis))
 
     curInd <- 1
@@ -205,15 +202,15 @@ coef.splineCox <- function(object, ...) {
             yVar[which(yVar < 0)] <- 0
             ySE <- sqrt(yVar)
             curInd <- curInd + basis$df
-       }
+        }
 
         criValue <- qnorm(0.5 + level / 2)
         yLow <- yMid - criValue * ySE
         yHigh <- yMid + criValue * ySE
 
         res <- rbind(res, data.frame(Low = yLow, Mid = yMid, High = yHigh,
-                                    Time = x, Cov = object$cov.names[j],
-                                    Model = "Spline"))
+                                     Time = x, Cov = object$cov.names[j],
+                                     Model = "Spline"))
     }
 
     ## Make sure the Cov retains the original orde
@@ -226,7 +223,8 @@ coef.splineCox <- function(object, ...) {
 
 ### internal function ==========================================================
 ## help get the possible level specified from ... argument
-getLevel <- function(level){
-    if (missing(level)) return(0.95)
+getLevel <- function(level) {
+    if (missing(level))
+        return(0.95)
     level
 }

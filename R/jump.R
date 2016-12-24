@@ -64,10 +64,10 @@ jump.bayesCox <- function(object, ...) {
     csMat <- diag(1, nBeta, nBeta)
     csMat <- as.matrix(csMat[rep(1 : nBeta, each = K), ])
     iterJump <- data.frame(c(jumpMat %*% csMat), rep(1:iter, nBeta),
-                          rep(covNms, each = iter))
+                           rep(covNms, each = iter))
     colnames(iterJump) <- c("Count", "Iter", "Cov")
     iterJump$Cov <- factor(iterJump$Cov,
-                          levels = as.character(unique(iterJump$Cov)))
+                           levels = as.character(unique(iterJump$Cov)))
 
     ## Number of jumps at each time grid point
     ## timeJump <- data.frame(colMeans(jumpMat), rep(grid, nBeta),
@@ -81,7 +81,7 @@ jump.bayesCox <- function(object, ...) {
 
 
 ### Extract the latent variance nu from "bayesCox" object ======================
-##' Generic function for the latent variance
+##' Generic function for the latent variance of coefficients
 ##'
 ##' @param object An object returned by function \code{bayesCox}.
 ##' @param ... Other arguments.
@@ -91,16 +91,28 @@ nu <- function(object, ...) UseMethod("nu", object)
 
 ##' @describeIn nu Extract Latent Variance from Bayesian Cox Model
 ##'
-##' Extract latent variance from \code{bayesCox} fitting results, and summarize
-##' them into a data frame. It is applicable when \code{model="TimeVarying"} or
-##' \code{model="Dynamic"}, and \code{coef.prior=list(type="HAR1")}.
+##' Extract latent variance of coefficients from \code{bayesCox} fitting
+##' results, and summarize them into a data frame. It is applicable when
+##' \code{model="TimeVarying"} or \code{model="Dynamic"}, and
+##' \code{coef.prior=list(type="HAR1")}.
+##'
+##' For details, see section on prior model in Wang (2013) and Wang (2014).
+##' The latent variance of coefficients in prior model was denoted as omega
+##' in Wang (2013).
 ##'
 ##' @aliases nu.bayesCox
 ##' @return A data.frame with 4 columns \code{("Iter", "Model", "Cov",
 ##' "Value")}, where \code{Iter} is the iteration number; \code{Model} and
 ##' \code{Cov} contain the character values of the model type and covariates.
 ##' @seealso \code{\link{bayesCox}}, and \code{\link{plotNu}}.
-##' @keywords extract bayesCox latent variance
+##' @references
+##' X. Wang, M.-H. Chen, and J. Yan (2013). Bayesian dynamic regression
+##' models for interval censored survival data with application to children
+##' dental health. Lifetime data analysis, 19(3), 297--316.
+##'
+##' X. Wang, X. Sinha, J. Yan, and M.-H. Chen (2014). Bayesian inference of
+##' interval-censored survival data. In: D. Chen, J. Sun, and K. Peace,
+##' Interval-censored time-to-event data: Methods and applications, 167--195.
 ##' @examples
 ##' ## See the examples in bayesCox.
 ##' @importFrom utils read.table

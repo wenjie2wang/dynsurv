@@ -21,6 +21,7 @@
 
 ### Generate the surviva curves for dynamic model with dynamic hazard.
 ### read out file into R (possibly the most time-consuming part)
+
 ##' Estimated Survival Function or Cumulative Hazard Function
 ##'
 ##' \code{survCurve} returns estimated suvival function or cumulative function
@@ -33,10 +34,12 @@
 ##' mean survival proportion at the given time grid from the posterior sample.
 ##' The credible interval for the survival curve is constructed based on the
 ##' quantiles of all the survival curves from posterior sample at given credible
-##' level.
+##' level. More details were available in Section posterior computation of
+##' Wang (2016).
 ##'
 ##' @aliases survCurve
-##' @usage survCurve(object, newdata, type = c("survival", "cumhaz"),
+##' @usage
+##' survCurve(object, newdata, type = c("survival", "cumhaz"),
 ##'           level = 0.95, centered = FALSE, cache = FALSE, ...)
 ##'
 ##' @param object An object returned by function \code{bayesCox}.
@@ -56,17 +59,22 @@
 ##' @param ... Other arguments for further usage.
 ##' @return A data frame with column: "Low", "Mid", "High", "Time", "Design",
 ##' and "type", and attribute, "surv" valued as "survCurve".
-##' @seealso \code{\link{bayesCox}}, \code{\link{survDiff}}, and
+##' @seealso
+##' \code{\link{bayesCox}},
+##' \code{\link{survDiff}}, and
 ##' \code{\link{plotSurv}}.
+##' @references
+##' Wang, W., Chen, M. H., Chiou, S. H., Lai, H. C., Wang, X., Yan, J.,
+##' & Zhang, Z. (2016). Onset of persistent pseudomonas aeruginosa infection in
+##' children with cystic fibrosis with interval censored data.
+##' \emph{BMC Medical Research Methodology}, 16(1), 122.
 ##' @examples
-##'
 ##' ## See the examples in bayesCox.
-##'
 ##' @importFrom stats model.frame model.matrix delete.response terms setNames
 ##' @importFrom utils read.table
 ##' @export
 survCurve <- function(object, newdata, type = c("survival", "cumhaz"),
-                     level = 0.95, centered = FALSE, cache = FALSE, ...){
+                      level = 0.95, centered = FALSE, cache = FALSE, ...){
 
     ## NOTE:
     ##
@@ -114,7 +122,7 @@ survCurve <- function(object, newdata, type = c("survival", "cumhaz"),
 
     ## check or generate cache and ms
     cacheName <- paste(substring(object$out, 1, nchar(object$out) - 4),
-                      "cache", sep = "_")
+                       "cache", sep = "_")
     cacheOut <- paste(cacheName, ".RData", sep = "")
     if (! file.exists(cacheOut)) {
         ms <- as.matrix(read.table(file = object$out))
@@ -169,10 +177,10 @@ survCurve <- function(object, newdata, type = c("survival", "cumhaz"),
         colnames(HtQT) <- c("Low", "Mid", "High")
         HtQT$Time <- rep(bGrid, times = nDesign)
         HtQT$Design <- if (centered) {
-                          "centered"
-                      } else {
-                          factor(rep(rownames(X), each = cK + 1))
-                      }
+                           "centered"
+                       } else {
+                           factor(rep(rownames(X), each = cK + 1))
+                       }
         HtQT$type <- "cumhaz"
         attr(HtQT, "surv") <- "survCurve"
         return(HtQT)
@@ -183,10 +191,10 @@ survCurve <- function(object, newdata, type = c("survival", "cumhaz"),
     colnames(StQT) <- c("Low", "Mid", "High")
     StQT$Time <- rep(bGrid, times = nDesign)
     StQT$Design <- if (centered) {
-                      "centered"
-                  } else {
-                      factor(rep(rownames(X), each = cK + 1))
-                  }
+                       "centered"
+                   } else {
+                       factor(rep(rownames(X), each = cK + 1))
+                   }
     StQT$type <- "survival"
     attr(StQT, "surv") <- "survCurve"
     ## return
@@ -232,14 +240,12 @@ survCurve <- function(object, newdata, type = c("survival", "cumhaz"),
 ##' @seealso \code{\link{bayesCox}}, \code{\link{survCurve}}, and
 ##' \code{\link{plotSurv}}.
 ##' @examples
-##'
 ##' ## See the examples in bayesCox.
-##'
 ##' @importFrom stats model.frame model.matrix delete.response terms
 ##' @importFrom utils read.table
 ##' @export
 survDiff <- function (object, newdata, type = c("survival", "cumhaz"),
-                     level = 0.95, cache = FALSE, ...) {
+                      level = 0.95, cache = FALSE, ...) {
 
     ## ONLY applicable to Bayesian dynamic Cox model with dynamic hazard
     if (! (object$control$intercept & object$model == "Dynamic")) {
@@ -275,7 +281,7 @@ survDiff <- function (object, newdata, type = c("survival", "cumhaz"),
 
     ## check or generate cache and ms
     cacheName <- paste(substring(object$out, 1, nchar(object$out) - 4),
-                      "cache", sep = "_")
+                       "cache", sep = "_")
     cacheOut <- paste(cacheName, ".RData", sep = "")
     if (! file.exists(cacheOut)) {
         ms <- as.matrix(read.table(file = object$out))
@@ -344,6 +350,8 @@ survDiff <- function (object, newdata, type = c("survival", "cumhaz"),
     StdiffQT
 }
 
+
+
 ##' Plot Survival Curves (or Cumulative Hazard Function) and their difference
 ##'
 ##' Plot the survival curves (or cumulative hazard) and their difference for
@@ -372,14 +380,12 @@ survDiff <- function (object, newdata, type = c("survival", "cumhaz"),
 ##' @seealso \code{\link{bayesCox}}, \code{\link{survCurve}}, and
 ##' \code{\link{survDiff}}.
 ##' @examples
-##'
 ##' ## See the examples in bayesCox.
-##'
 ##' @importFrom ggplot2 ggplot aes_string aes geom_step scale_color_manual
 ##'     scale_linetype_manual geom_line ylab ggtitle
 ##' @export
 plotSurv <- function(object, legendName = "", conf.int = FALSE,
-                    smooth = FALSE, lty, col, ...){
+                     smooth = FALSE, lty, col, ...){
 
     ## nonsense, just to suppress Note from R CMD check --as-cran
     Mid <- Low <- High <- Time <- NULL
@@ -394,15 +400,15 @@ plotSurv <- function(object, legendName = "", conf.int = FALSE,
 
     ## set line types and colors
     lty <- if (missing(lty)) {
-              setNames(rep(1, nDesign), levels(Design))
-          } else {
-              setNames(lty[seq(nDesign)], levels(Design))
-          }
+               setNames(rep(1, nDesign), levels(Design))
+           } else {
+               setNames(lty[seq(nDesign)], levels(Design))
+           }
     col <- if (missing(col)) {
-              gg_color_hue(nDesign)
-          } else {
-              col[seq(nDesign)]
-          }
+               gg_color_hue(nDesign)
+           } else {
+               col[seq(nDesign)]
+           }
 
     ## initialize ggplot object
     p <- ggplot(data = object, aes_string(x = "Time"))
@@ -419,7 +425,7 @@ plotSurv <- function(object, legendName = "", conf.int = FALSE,
             }
         } else {
             p <- p + geom_step(mapping = aes(x = Time, y = Mid, color = Design,
-                                            linetype = Design)) +
+                                             linetype = Design)) +
                 scale_color_manual(values = col, name = legendName) +
                 scale_linetype_manual(values = lty, name = legendName)
             if (conf.int) {
@@ -442,7 +448,7 @@ plotSurv <- function(object, legendName = "", conf.int = FALSE,
             }
         } else {
             p <- p + geom_line(mapping = aes(x = Time, y = Mid, color = Design,
-                                            linetype = Design)) +
+                                             linetype = Design)) +
                 scale_color_manual(values = col, name = legendName) +
                 scale_linetype_manual(values = lty, name = legendName)
             if (conf.int) {
@@ -473,6 +479,7 @@ plotSurv <- function(object, legendName = "", conf.int = FALSE,
 }
 
 
+
 ### internal functions =========================================================
 ## function to compute ci and posterior mean
 ##' @importFrom stats quantile
@@ -480,6 +487,7 @@ ciBand <- function(x, level = 0.95){
     c(quantile(x, probs = (1 - level) / 2, names = FALSE), mean(x),
       quantile(x, probs = 1 - (1 - level) / 2, names = FALSE))
 }
+
 
 ## function to emulate the default colors used in ggplot2
 ##' @importFrom grDevices hcl

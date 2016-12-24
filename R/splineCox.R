@@ -58,7 +58,6 @@
 ##' 154--161.
 ##' @keywords B-spline Cox right censor
 ##' @examples
-##'
 ##' \dontrun{
 ##' ## Attach the veteran data from the survival package
 ##' mydata <- survival::veteran
@@ -109,7 +108,7 @@ splineCox <- function(formula, data, control = list()) {
     df <- control$df
     if (is.null(control$knots)) {
         insideTime <- subset(DF$time, DF$time >=  boundary[1] &
-                                     DF$time <=  boundary[2])
+                                      DF$time <=  boundary[2])
 
         ## number of interior knots  =  df - degree(3) - intercept(1)
         sq <- seq.int(from = 0, to = 1, length.out = df - 2)[- c(1, df-2)]
@@ -117,7 +116,7 @@ splineCox <- function(formula, data, control = list()) {
     }
 
     basis <- list(df = control$df, knots = knots, intercept = TRUE,
-                 Boundary.knots = boundary)
+                  Boundary.knots = boundary)
 
     ## Call coxph to fit the expanded data
     newDF <- expand(DF, id = "id", time = "time", status = "status")
@@ -126,14 +125,14 @@ splineCox <- function(formula, data, control = list()) {
     Ft <- do.call("bs", c(list(x = newDF$tStop), basis))
 
     newFml <- as.formula(paste("survival::Surv(tStart, tStop, status) ~ ",
-                              paste(paste(FtNms, names(mf)[-1], sep = ""),
-                                    collapse = "+"), "+ cluster(id)"))
+                               paste(paste(FtNms, names(mf)[-1], sep = ""),
+                                     collapse = "+"), "+ cluster(id)"))
 
     fit <- coxph(newFml, newDF)
 
     rl <- list(call = Call, control = control, bsp.basis = basis,
-              N = N, nBeta = nBeta, cov.names = cov.names, is.tv = is.tv,
-              coxph.fit = fit)
+               N = N, nBeta = nBeta, cov.names = cov.names, is.tv = is.tv,
+               coxph.fit = fit)
 
     class(rl) <- "splineCox"
     rl
@@ -154,7 +153,7 @@ expand <- function(data, id = "id", time = "time", status = "status") {
 
     foo <- function(x) {
         tStop <- union(subset(eventTime, eventTime <= max(x[, time])),
-                      max(x[, time]))
+                       max(x[, time]))
         tStart <- c(0, head(tStop, -1))
         st <- rep(0, length(tStop))
         st[tStop %in% x[x[, status] == 1, time]] <- 1
