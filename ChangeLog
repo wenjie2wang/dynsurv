@@ -1,3 +1,8 @@
+2016-12-24 Wenjie Wang <wenjie.2.wang@uconn.edu>
+
+	* Added the generation of grid from the data provided, which allow
+	grid to be unspecified in the function call of bayesCox.
+
 2016-10-14 Wenjie Wang <wenjie.2.wang@uconn.edu>
 
 	* Fixed compilation error in Solaris: "The function "exp" must
