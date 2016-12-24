@@ -1,7 +1,9 @@
-^.*\.Rproj$
+\.Rproj$
 ^\.Rproj\.user$
 ^\.Rhistory$
 ^\.travis\.yml$
+\.tar\.gz$
+\.txt$
 ^Makefile$
 ^README\.md$
 ^NEWS\.md$
