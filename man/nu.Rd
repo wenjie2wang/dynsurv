@@ -3,7 +3,7 @@
 \name{nu}
 \alias{nu}
 \alias{nu.bayesCox}
-\title{Generic function for the latent variance}
+\title{Generic function for the latent variance of coefficients}
 \usage{
 nu(object, ...)
 
@@ -20,24 +20,34 @@ A data.frame with 4 columns \code{("Iter", "Model", "Cov",
 \code{Cov} contain the character values of the model type and covariates.
 }
 \description{
-Generic function for the latent variance
+Generic function for the latent variance of coefficients
 }
 \section{Methods (by class)}{
 \itemize{
 \item \code{bayesCox}: Extract Latent Variance from Bayesian Cox Model
 
-Extract latent variance from \code{bayesCox} fitting results, and summarize
-them into a data frame. It is applicable when \code{model="TimeVarying"} or
-\code{model="Dynamic"}, and \code{coef.prior=list(type="HAR1")}.
+Extract latent variance of coefficients from \code{bayesCox} fitting
+results, and summarize them into a data frame. It is applicable when
+\code{model="TimeVarying"} or \code{model="Dynamic"}, and
+\code{coef.prior=list(type="HAR1")}.
+
+For details, see section on prior model in Wang (2013) and Wang (2014).
+The latent variance of coefficients in prior model was denoted as omega
+in Wang (2013).
 }}
 \examples{
 ## See the examples in bayesCox.
 }
+\references{
+X. Wang, M.-H. Chen, and J. Yan (2013). Bayesian dynamic regression
+models for interval censored survival data with application to children
+dental health. Lifetime data analysis, 19(3), 297--316.
+
+X. Wang, X. Sinha, J. Yan, and M.-H. Chen (2014). Bayesian inference of
+interval-censored survival data. In: D. Chen, J. Sun, and K. Peace,
+Interval-censored time-to-event data: Methods and applications, 167--195.
+}
 \seealso{
 \code{\link{bayesCox}}, and \code{\link{plotNu}}.
 }
-\keyword{bayesCox}
-\keyword{extract}
-\keyword{latent}
-\keyword{variance}
 

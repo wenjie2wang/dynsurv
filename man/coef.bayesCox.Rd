@@ -25,7 +25,6 @@ summarize the posterior mean, posterior 2.5\% and 97.5\% quantiles into a
 data frame.
 }
 \examples{
-
 ## See the examples in bayesCox.
 }
 \seealso{

@@ -47,9 +47,7 @@ constructed based on the quantiles of all the pair difference between the
 survival curves from posterior sample at given credible level.
 }
 \examples{
-
 ## See the examples in bayesCox.
-
 }
 \seealso{
 \code{\link{bayesCox}}, \code{\link{survCurve}}, and

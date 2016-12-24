@@ -46,7 +46,6 @@ the reference paper. These authors implemented their algorithm into a
 not be stable compared to \code{coxph}.
 }
 \examples{
-
 \dontrun{
 ## Attach the veteran data from the survival package
 mydata <- survival::veteran

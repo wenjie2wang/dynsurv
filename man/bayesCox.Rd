@@ -4,10 +4,9 @@
 \alias{bayesCox}
 \title{Fit Bayesian Cox Model for Interval Censored Survival Data}
 \usage{
-bayesCox(formula, data, grid, out,
-         model = c("TimeIndep", "TimeVarying", "Dynamic"),
-         base.prior = list(), coef.prior = list(),
-         gibbs = list(), control = list())
+bayesCox(formula, data, grid = NULL, out = "mcmc.txt", model =
+         c("TimeIndep", "TimeVarying", "Dynamic"), base.prior = list(),
+         coef.prior = list(), gibbs = list(), control = list())
 }
 \arguments{
 \item{formula}{A formula object, with the response on the left of a '~'
@@ -17,9 +16,17 @@ object as returned by the \code{Surv} function.}
 \item{data}{A data.frame in which to interpret the variables named in the
 \code{formula}.}
 
-\item{grid}{Vector of pre-specified time grid points.}
+\item{grid}{Vector of pre-specified time grid points for model fitting.
+It will be automatically set up from data if it is left unspecified
+in the function call. By default, it consists of all the unique
+finite endpoints of the censoring intervals after time zero.  The
+\code{grid} specified in the function call must be sorted, and covers
+all the finite non-zero endpoints of the censoring intervals.}
 
-\item{out}{Name of Markov chain Monte Carlo (MCMC) samples output file.}
+\item{out}{Name of Markov chain Monte Carlo (MCMC) samples output file.
+Each row contains one MCMC sample information. The file is needed for
+those functions further summarizing estimation results in this
+package.}
 
 \item{model}{Model type to fit.}
 
@@ -29,10 +36,10 @@ object as returned by the \code{Surv} function.}
 \code{intercept = TRUE}.}
 
 \item{coef.prior}{List of options for prior of coefficient beta. Use
-\code{list(type = "Normal", mean = 0, sd = 1)} for \code{TimeIndep} model;
-\code{list(type = "AR1", sd = 1)} for \code{TimeVarying} and \code{Dynamic}
-models; \code{list(type = "HAR1", shape = 2, scale = 1)} for
-\code{TimeVarying} and \code{Dynamic} models.}
+\code{list(type = "Normal", mean = 0, sd = 1)} for \code{TimeIndep}
+model; \code{list(type = "AR1", sd = 1)} for \code{TimeVarying} and
+\code{Dynamic} models; \code{list(type = "HAR1", shape = 2, scale =
+1)} for \code{TimeVarying} and \code{Dynamic} models.}
 
 \item{gibbs}{List of options for Gibbs sampler.}
 
@@ -49,6 +56,15 @@ model. The baseline hazards are allowed to be either time-varying or
 dynamic.
 }
 \details{
+For application, it is recommended that users preprocess the data by
+rounding down (up) the left (right) endpoints of the censoring intervals
+to at most three significant digits and leave the \code{grid} unspecified
+in the function call to reduce probably unnecessary computational burden.
+It also helps avoid possible errors caused by mispecifed \code{grid}. For
+example, the left endpoints can be rounded down in the nearest 0.1 unit
+of time by \code{left <- floor(left * 10) / 10} and the right endpoints
+can similarly be rounded up by \code{right <- ceiling(right * 10) / 10}.
+
 To use default hyper parameters in the specification of either
 \code{base.prior} or \code{coef.prior}, one only has to supply the name of
 the prior, e.g., \code{list(type = "Gamma")}, \code{list(type = "HAR1")}.
@@ -77,7 +93,6 @@ The \code{control} argument is a list of components:
 }
 }
 \examples{
-
 \dontrun{
 ############################################################################
 ### Attach one of the following two data sets
@@ -86,21 +101,21 @@ The \code{control} argument is a list of components:
 ## breast cancer data
 data(bcos) ## attach bcos and bcos.grid
 mydata <- bcos
-mygrid <- bcos.grid
+## mygrid <- bcos.grid
 myformula <- Surv(left, right, type = "interval2") ~ trt
 
 ## tooth data
 ## data(tooth) ## load tooth and tooth.grid
 ## mydata <- tooth
 ## mygrid <- tooth.grid
-## myformula <- Surv(left, right, type = "interval2") ~ dmf + sex
+## myformula <- Surv(left, rightInf, type = "interval2") ~ dmf + sex
 
 ############################################################################
 ### Fit Bayesian Cox models
 ############################################################################
 
 ## Fit time-independent coefficient model
-fit0 <- bayesCox(myformula, mydata, mygrid, out = "tiCox.txt",
+fit0 <- bayesCox(myformula, mydata, out = "tiCox.txt",
                  model = "TimeIndep",
                  base.prior = list(type = "Gamma", shape = 0.1, rate = 0.1),
                  coef.prior = list(type = "Normal", mean = 0, sd = 1),
@@ -109,7 +124,7 @@ fit0 <- bayesCox(myformula, mydata, mygrid, out = "tiCox.txt",
 plotCoef(coef(fit0, level = 0.9))
 
 ## Fit time-varying coefficient model
-fit1 <- bayesCox(myformula, mydata, mygrid, out = "tvCox.txt",
+fit1 <- bayesCox(myformula, mydata, out = "tvCox.txt",
                  model = "TimeVarying",
                  base.prior = list(type = "Gamma", shape = 0.1, rate = 0.1),
                  coef.prior = list(type = "AR1", sd = 1),
@@ -118,7 +133,7 @@ fit1 <- bayesCox(myformula, mydata, mygrid, out = "tvCox.txt",
 plotCoef(coef(fit1))
 
 ## Fit dynamic coefficient model with time-varying baseline hazards
-fit2 <- bayesCox(myformula, mydata, mygrid, out = "dynCox1.txt",
+fit2 <- bayesCox(myformula, mydata, out = "dynCox1.txt",
                  model = "Dynamic",
                  base.prior = list(type = "Gamma", shape = 0.1, rate = 0.1),
                  coef.prior = list(type = "HAR1", shape = 2, scale = 1),
@@ -133,7 +148,7 @@ plotNu(nu(fit2))
 plotCoef(rbind(coef(fit0), coef(fit1), coef(fit2)))
 
 ## Fit dynamic coefficient model with dynamic hazards (in log scales)
-fit3 <- bayesCox(myformula, mydata, mygrid, out = "dynCox2.txt",
+fit3 <- bayesCox(myformula, mydata, out = "dynCox2.txt",
                  model = "Dynamic",
                  base.prior = list(type = "Const"),
                  coef.prior = list(type = "HAR1", shape = 2, scale = 1),
@@ -146,7 +161,7 @@ plotJumpHist(jump(fit3))
 plotNu(nu(fit3))
 
 ## Plot the estimated survival function and hazard function
-newDat <- bcos[c(1, 47), ]
+newDat <- bcos[c(1L, 47L), ]
 row.names(newDat) <- c("Rad", "RadChem")
 plotSurv(survCurve(fit3, newdata = newDat, type = "survival"),
          legendName = "Treatment", conf.int = TRUE)
@@ -156,8 +171,17 @@ plotSurv(survDiff(fit3, newdata = newDat, type = "cumhaz"),
 
 }
 \references{
+X. Wang, M.-H. Chen, and J. Yan (2013). Bayesian dynamic regression
+models for interval censored survival data with application to children
+dental health. Lifetime data analysis, 19(3), 297--316.
+
+X. Wang, X. Sinha, J. Yan, and M.-H. Chen (2014). Bayesian inference of
+interval-censored survival data. In: D. Chen, J. Sun, and K. Peace,
+Interval-censored time-to-event data: Methods and applications, 167--195.
+
 X. Wang, M.-H. Chen, and J. Yan (2011). Bayesian dynamic
-regression models for interval censored survival data. Under review.
+regression models for interval censored survival data. Technical Report 13,
+Department of Statistics, University of Connecticut.
 
 D. Sinha, M.-H. Chen, and S.K. Ghosh (1999). Bayesian analysis and model
 selection for interval-censored survival data. \emph{Biometrics} 55(2),
@@ -165,10 +189,10 @@ selection for interval-censored survival data. \emph{Biometrics} 55(2),
 }
 \seealso{
 \code{\link{coef.bayesCox}}, \code{\link{jump.bayesCox}},
-\code{\link{nu.bayesCox}}, \code{\link{plotCoef}},
-\code{\link{plotJumpTrace}}, \code{\link{plotNu}},
-\code{\link{survCurve}}, \code{\link{survDiff}}, and
-\code{\link{plotSurv}}.
+    \code{\link{nu.bayesCox}}, \code{\link{plotCoef}},
+    \code{\link{plotJumpTrace}}, \code{\link{plotNu}},
+    \code{\link{survCurve}}, \code{\link{survDiff}}, and
+    \code{\link{plotSurv}}.
 }
 \keyword{Bayesian}
 \keyword{Cox}

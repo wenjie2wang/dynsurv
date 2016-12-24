@@ -29,7 +29,6 @@ It essentially expand the break points, and then call function
     \code{coxph} in package \code{survival}
 }
 \examples{
-
 ## See the examples in splineCox.
 }
 \seealso{

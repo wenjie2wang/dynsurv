@@ -39,9 +39,7 @@ objects returned by function \code{survCurve} or \code{survDiff}.  By using
 customized properly.
 }
 \examples{
-
 ## See the examples in bayesCox.
-
 }
 \seealso{
 \code{\link{bayesCox}}, \code{\link{survCurve}}, and

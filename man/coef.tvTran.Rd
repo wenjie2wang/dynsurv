@@ -25,9 +25,7 @@ Extract coefficient values from \code{tvTran} fitting results, and
 summarize the point estimate and 95\% credible band into a data frame.
 }
 \examples{
-
 ## See the examples in tvTran.
-
 }
 \seealso{
 \code{\link{tvTran}}, and \code{\link{plotCoef}}.

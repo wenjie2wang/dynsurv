@@ -46,15 +46,21 @@ The estimated survival curve is a step function representing the posterior
 mean survival proportion at the given time grid from the posterior sample.
 The credible interval for the survival curve is constructed based on the
 quantiles of all the survival curves from posterior sample at given credible
-level.
+level. More details were available in Section posterior computation of
+Wang (2016).
 }
 \examples{
-
 ## See the examples in bayesCox.
-
+}
+\references{
+Wang, W., Chen, M. H., Chiou, S. H., Lai, H. C., Wang, X., Yan, J.,
+& Zhang, Z. (2016). Onset of persistent pseudomonas aeruginosa infection in
+children with cystic fibrosis with interval censored data.
+\emph{BMC Medical Research Methodology}, 16(1), 122.
 }
 \seealso{
-\code{\link{bayesCox}}, \code{\link{survDiff}}, and
+\code{\link{bayesCox}},
+\code{\link{survDiff}}, and
 \code{\link{plotSurv}}.
 }
 
