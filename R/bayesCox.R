@@ -94,7 +94,7 @@
 ##' \eqn{(k + 2 * k * p + p)} represents the indicator of whether there is
 ##' a jump of the covariate coefficients at the time grid.  Similar with Part 2,
 ##' the first k numbers' sub-sequence is for the first covariate, the second
-##' \eqn{k} numbers' sub-sequence is for the second covariate, and so on.}
+##' \eqn{k} numbers' sub-sequence is for the second covariate, and so on.}}
 ##' For the model with time-independent coefficients, the output file only
 ##' has Part 1 and Part 2 in each row; For time-varying coefficient model,
 ##' the output file has Part 1, 2, and 3; The output file for the dynamic

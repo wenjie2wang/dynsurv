@@ -4,9 +4,10 @@
 \alias{bayesCox}
 \title{Fit Bayesian Cox Model for Interval Censored Survival Data}
 \usage{
-bayesCox(formula, data, grid = NULL, out = "mcmc.txt", model =
-         c("TimeIndep", "TimeVarying", "Dynamic"), base.prior = list(),
-         coef.prior = list(), gibbs = list(), control = list())
+bayesCox(formula, data, grid = NULL, out = "mcmc.txt",
+         model = c("TimeIndep", "TimeVarying", "Dynamic"),
+         base.prior = list(), coef.prior = list(),
+         gibbs = list(), control = list())
 }
 \arguments{
 \item{formula}{A formula object, with the response on the left of a '~'
@@ -26,7 +27,7 @@ all the finite non-zero endpoints of the censoring intervals.}
 \item{out}{Name of Markov chain Monte Carlo (MCMC) samples output file.
 Each row contains one MCMC sample information. The file is needed for
 those functions further summarizing estimation results in this
-package.}
+package. See Section Details for details.}
 
 \item{model}{Model type to fit.}
 
@@ -71,26 +72,61 @@ the prior, e.g., \code{list(type = "Gamma")}, \code{list(type = "HAR1")}.
 
 The \code{gibbs} argument is a list of components:
 \describe{
-    \item{iter:}{number of iterations, default 3000;}
-    \item{burn:}{number of burning, default 500;}
-    \item{thin:}{number of thinning, default 1;}
-    \item{verbose:}{a logical value, default \code{TRUE}. If
+    \item{iter:}{Number of iterations, default 3000;}
+    \item{burn:}{Number of burning, default 500;}
+    \item{thin:}{Number of thinning, default 1;}
+    \item{verbose:}{A logical value, default \code{TRUE}. If
         \code{TRUE}, print the iteration;}
-    \item{nReport:}{print frequency, default 100.}
+    \item{nReport:}{Print frequency, default 100.}
 }
 
 The \code{control} argument is a list of components:
 \describe{
-    \item{intercept:}{a logical value, default \code{FALSE}. If
+    \item{intercept:}{A logical value, default \code{FALSE}. If
         \code{TRUE}, the model will estimate the intercept, which is the
         log of baseline hazards. If \code{TRUE}, please remember to turn
         off the direct estimation of baseline hazards, i.e.,
         \code{base.prior = list(type = "Const")}}
-    \item{a0:}{multiplier for initial variance in time-varying or dynamic
+    \item{a0:}{Multiplier for initial variance in time-varying or dynamic
         models, default 100;}
-    \item{eps0:}{size of auxiliary uniform latent variable in dynamic model,
+    \item{eps0:}{Size of auxiliary uniform latent variable in dynamic model,
         default 1.}
 }
+
+For users interested in extracting MCMC sampling information from the
+output files, the detail of the output files is presented as follows: Let
+\eqn{k} denote the number of time points (excluding time zero) specified
+in grid, and \eqn{p} denote the number of covariates.  Then the each
+sample saved in each row consists of the following possible parts.
+\describe{
+    \item{Part 1:}{The first \eqn{k} numbers represent the jump size of
+baseline hazard function at each time grid.  If we take the column mean
+of the first \eqn{k} columns of the output file, we will get the same
+numbers with \code{obj$est$lambda}, where \code{obj} is the \code{bayesCox}
+object returned by the function.}
+    \item{Part 2:}{The sequence from \eqn{(k + 1) to (k + k * p)}
+represent the coefficients of covariates at the time grid.  The first
+\eqn{k} numbers in the sequence are the coefficients for the first covaraite
+at the time grid; The second \eqn{k} numbers' sub-sequence are the
+coefficients for the second covariate and so on.}
+    \item{Part 3:}{The sequence from \eqn{(k + k * p + 1)} to
+\eqn{(k + k * p + p)} represents the sampled latent variance of
+coefficients.}
+    \item{Part 4:}{The sequence from \eqn{(k + k * p + p + 1)} to
+\eqn{(k + 2 * k * p + p)} represents the indicator of whether there is
+a jump of the covariate coefficients at the time grid.  Similar with Part 2,
+the first k numbers' sub-sequence is for the first covariate, the second
+\eqn{k} numbers' sub-sequence is for the second covariate, and so on.}}
+For the model with time-independent coefficients, the output file only
+has Part 1 and Part 2 in each row; For time-varying coefficient model,
+the output file has Part 1, 2, and 3; The output file for the dynamic
+model has all the four parts.  Note that the dynamic baseline hazard will
+be taken as one covariate.  So \eqn{p} needs being replaced with
+\eqn{(p + 1)} for model with dynamic baseline hazard rate.
+No function in the package actually needs the Part 1 from the output file
+now; The Part 2 is used by function \code{coef} and \code{survCurve};
+The Part 3 is needed by function \code{nu}; Function \code{jump} extracts
+the Part 4.
 }
 \examples{
 \dontrun{

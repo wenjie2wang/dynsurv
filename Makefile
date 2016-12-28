@@ -53,4 +53,4 @@ updateHeader: $(cprt)
 
 .PHONY: clean
 clean:
-	rm -rf *~ */*~ *.Rhistroy *.tar.gz *.Rcheck/ .\#*
+	rm -rf *~ */*~ src/*.o *.Rhistroy *.tar.gz *.Rcheck/ .\#*
