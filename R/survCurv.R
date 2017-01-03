@@ -1,7 +1,7 @@
 ################################################################################
 ##
 ##   R package dynsurv by Wenjie Wang, Ming-Hui Chen, Xiaojing Wang, and Jun Yan
-##   Copyright (C) 2011-2016
+##   Copyright (C) 2011-2017
 ##
 ##   This file is part of the R package dynsurv.
 ##
@@ -57,17 +57,21 @@
 ##'     function \code{survCurve} and \code{survDiff}. This option would be
 ##'     quite helpful if the number of MCMC sample is large.
 ##' @param ... Other arguments for further usage.
+##'
 ##' @return A data frame with column: "Low", "Mid", "High", "Time", "Design",
 ##' and "type", and attribute, "surv" valued as "survCurve".
+##'
 ##' @seealso
 ##' \code{\link{bayesCox}},
 ##' \code{\link{survDiff}}, and
 ##' \code{\link{plotSurv}}.
+##'
 ##' @references
 ##' Wang, W., Chen, M. H., Chiou, S. H., Lai, H. C., Wang, X., Yan, J.,
 ##' & Zhang, Z. (2016). Onset of persistent pseudomonas aeruginosa infection in
 ##' children with cystic fibrosis with interval censored data.
 ##' \emph{BMC Medical Research Methodology}, 16(1), 122.
+##'
 ##' @examples
 ##' ## See the examples in bayesCox.
 ##' @importFrom stats model.frame model.matrix delete.response terms setNames
@@ -75,23 +79,6 @@
 ##' @export
 survCurve <- function(object, newdata, type = c("survival", "cumhaz"),
                       level = 0.95, centered = FALSE, cache = FALSE, ...){
-
-    ## NOTE:
-    ##
-    ## The construction of crediable band fails for time-varying model
-    ## and dynamic model with time-varying model at reference level.
-    ## This is bacause covariates at reference level are all set to be 0.
-    ## And the posterior sample of lambda is not included in outputs
-    ## from function bayesCox.
-    ##
-    ## It may be fixed later. Then this function can be expanded to other
-    ## two models completely.
-
-    ## ONLY applicable to Bayesian dynamic Cox model with dynamic hazard
-    if (! (object$control$intercept & object$model == "Dynamic")) {
-        stop(paste("'survCurve' is only applicable to",
-                   "Bayesian dynamic Cox model with dynamic hazard."))
-    }
 
     ## nonsense, just to suppress Note from R CMD check --as-cran
     `(Intercept)` <- NULL
@@ -103,16 +90,16 @@ survCurve <- function(object, newdata, type = c("survival", "cumhaz"),
     if (missing(newdata)) {
         X <- matrix(0, nrow = 1, ncol = nBeta)
         colnames(X) <- object[["cov.names"]]
-        ## if (object$control$intercept)
-        X[, "intercept"] <- 1
+        if (object$control$intercept)
+            X[, "intercept"] <- 1
         rownames(X) <- "Baseline"
     } else {
         mf <- stats::model.frame(Terms, newdata, xlev = object$xlevels)
         X <- stats::model.matrix(Terms, mf)
         ## remove intercept and deplicated rows
-        X <- unique(base::subset(X, select = -`(Intercept)`))
-        ## if (object$control$intercept)
-        X <- cbind(intercept = 1, X)
+        X <- unique(base::subset(X, select = - `(Intercept)`))
+        if (object$control$intercept)
+            X <- cbind(intercept = 1, X)
         if (ncol(X) != nBeta) {
             stop(paste("The number of input covariates does not",
                        "match with the 'bayesCox' object"))
@@ -121,51 +108,56 @@ survCurve <- function(object, newdata, type = c("survival", "cumhaz"),
     nDesign <- nrow(X)
 
     ## check or generate cache and ms
-    cacheName <- paste(substring(object$out, 1, nchar(object$out) - 4),
+    cacheName <- paste(substring(object$out, 1L, nchar(object$out) - 4L),
                        "cache", sep = "_")
-    cacheOut <- paste(cacheName, ".RData", sep = "")
+    cacheOut <- paste0(cacheName, ".RData")
     if (! file.exists(cacheOut)) {
         ms <- as.matrix(read.table(file = object$out))
         dimnames(ms) <- NULL
         ms <- ms[seq(object$gibbs$burn + 1, nrow(ms), by = object$gibbs$thin), ]
         assign(cacheName, ms)
-        if (cache) save(list = cacheName, file = cacheOut)
+        if (cache)
+            save(list = cacheName, file = cacheOut)
     } else {
         load(cacheOut)
-        if (! cacheName %in% ls()) {
+        if (! cacheName %in% ls())
             stop("Cache file does not match. Please remove local cache files.")
-        }
         assign("ms", get(cacheName))
     }
 
     iter <- nrow(ms)
     bGrid <- c(0, object$grid)
-    K <- length(bGrid) - 1
+    K <- length(object$grid)
     deltaT <- diff(bGrid)
+    h0Mat <- ms[, seq_len(K), drop = FALSE]
     cK <- ifelse(object$model == "TimeIndep", 1, K)
     betaMat <- as.matrix(ms[, seq(K + 1, K + nBeta * cK)])
 
     ## function to generate ht and Ht for each design
-    foo <- function(oneX){
+    compHt <- function(oneX) {
         oneX <- matrix(oneX, nrow = nBeta)
-        tempHt <- tempht <- matrix(0, ncol = cK + 1, nrow = iter)
+        expXbeta <- matrix(0, ncol = cK, nrow = iter)
         ## for j_th time point on the grid
-        for (j in seq(2, cK + 1)) {
-            betat <- betaMat[, seq(j - 1, by = cK, length.out = nBeta)]
-            tempht[, j] <- object$est$lambda[j - 1] *
-                exp(rowMeans(betat %*% oneX))
-            tempHt[, j] <- as.matrix(tempht[, 2 : j]) %*% deltaT[seq(j - 1)]
+        for (j in seq_len(cK)) {
+            betat <- betaMat[, seq(j, by = cK, length.out = nBeta)]
+            expXbeta[, j] <- exp(rowMeans(betat %*% oneX))
         }
-        tempHt
+        ht <- h0Mat * as.numeric(expXbeta)
+        Ht <- matrix(0, ncol = K + 1L, nrow = iter)
+        for (i in seq_len(iter)) {
+            Ht[i, - 1L] <- cumsum(ht[i, ] * deltaT)
+        }
+        Ht
     }
+
     if (centered) {
-        Ht <- foo(oneX = t(X))
+        Ht <- compHt(oneX = t(X))
         nDesign <- 1
     } else {
-        Ht <- matrix(NA, nrow = iter, ncol = (cK + 1) * nDesign)
+        Ht <- matrix(NA, nrow = iter, ncol = (K + 1) * nDesign)
         for (i in seq(nDesign)) {
-            Ht[, seq(1 + (i - 1) * (cK + 1), i * (cK + 1))] <-
-                foo(oneX = X[i, ])
+            Ht[, seq(1 + (i - 1) * (K + 1), i * (K + 1))] <-
+                compHt(oneX = X[i, ])
         }
     }
 
@@ -176,11 +168,11 @@ survCurve <- function(object, newdata, type = c("survival", "cumhaz"),
         HtQT <- data.frame(t(apply(Ht, 2, ciBand, level = level)))
         colnames(HtQT) <- c("Low", "Mid", "High")
         HtQT$Time <- rep(bGrid, times = nDesign)
-        HtQT$Design <- if (centered) {
+        HtQT$Design <- if (centered)
                            "centered"
-                       } else {
-                           factor(rep(rownames(X), each = cK + 1))
-                       }
+                       else
+                           factor(rep(rownames(X), each = K + 1))
+
         HtQT$type <- "cumhaz"
         attr(HtQT, "surv") <- "survCurve"
         return(HtQT)
@@ -190,11 +182,11 @@ survCurve <- function(object, newdata, type = c("survival", "cumhaz"),
     StQT <- data.frame(t(apply(St, 2, ciBand, level = level)))
     colnames(StQT) <- c("Low", "Mid", "High")
     StQT$Time <- rep(bGrid, times = nDesign)
-    StQT$Design <- if (centered) {
+    StQT$Design <- if (centered)
                        "centered"
-                   } else {
-                       factor(rep(rownames(X), each = cK + 1))
-                   }
+                   else
+                       factor(rep(rownames(X), each = K + 1))
+
     StQT$type <- "survival"
     attr(StQT, "surv") <- "survCurve"
     ## return
@@ -218,7 +210,8 @@ survCurve <- function(object, newdata, type = c("survival", "cumhaz"),
 ##' survival curves from posterior sample at given credible level.
 ##'
 ##' @aliases survDiff
-##' @usage survDiff(object, newdata, type = c("survival", "cumhaz"),
+##' @usage
+##' survDiff(object, newdata, type = c("survival", "cumhaz"),
 ##'          level = 0.95, cache = FALSE, ...)
 ##'
 ##' @param object An object returned by function \code{bayesCox}.
@@ -237,21 +230,21 @@ survCurve <- function(object, newdata, type = c("survival", "cumhaz"),
 ##' @param ... Other arguments for further usage.
 ##' @return A data frame with column: "Low", "Mid", "High", "Time", "Design",
 ##'     and "type", and attribute, "surv" valued as "survDiff".
-##' @seealso \code{\link{bayesCox}}, \code{\link{survCurve}}, and
-##' \code{\link{plotSurv}}.
+##'
+##' @references
+##' Wang, W., Chen, M. H., Chiou, S. H., Lai, H. C., Wang, X., Yan, J.,
+##' & Zhang, Z. (2016). Onset of persistent pseudomonas aeruginosa infection in
+##' children with cystic fibrosis with interval censored data.
+##' \emph{BMC Medical Research Methodology}, 16(1), 122.
+##' @seealso
+##' \code{\link{bayesCox}}, \code{\link{survCurve}}, and \code{\link{plotSurv}}.
 ##' @examples
 ##' ## See the examples in bayesCox.
 ##' @importFrom stats model.frame model.matrix delete.response terms
 ##' @importFrom utils read.table
 ##' @export
-survDiff <- function (object, newdata, type = c("survival", "cumhaz"),
-                      level = 0.95, cache = FALSE, ...) {
-
-    ## ONLY applicable to Bayesian dynamic Cox model with dynamic hazard
-    if (! (object$control$intercept & object$model == "Dynamic")) {
-        stop(paste("'survCurve' is only applicable to",
-                   "Bayesian dynamic Cox model with dynamic hazard."))
-    }
+survDiff <- function(object, newdata, type = c("survival", "cumhaz"),
+                     level = 0.95, cache = FALSE, ...) {
 
     ## nonsense, just to suppress Note from R CMD check --as-cran
     `(Intercept)` <- NULL
@@ -267,8 +260,8 @@ survDiff <- function (object, newdata, type = c("survival", "cumhaz"),
         X <- stats::model.matrix(Terms, mf)
         ## remove intercept and deplicated rows
         X <- unique(base::subset(X, select = -`(Intercept)`))
-        ## if (object$control$intercept)
-        X <- cbind(intercept = 1, X)
+        if (object$control$intercept)
+            X <- cbind(intercept = 1, X)
         if (ncol(X) != nBeta) {
             stop(paste("The number of input covariates does not",
                        "match with the 'bayesCox' object"))
@@ -299,27 +292,33 @@ survDiff <- function (object, newdata, type = c("survival", "cumhaz"),
 
     iter <- nrow(ms)
     bGrid <- c(0, object$grid)
-    K <- length(bGrid) - 1
+    K <- length(object$grid)
     deltaT <- diff(bGrid)
+    h0Mat <- ms[, seq_len(K), drop = FALSE]
     cK <- ifelse(object$model == "TimeIndep", 1, K)
     nBeta <- length(object$cov.names)
     betaMat <- as.matrix(ms[, seq(K + 1, K + nBeta * cK)])
+
     ## function to generate ht and Ht for each design
-    foo <- function(oneX){
+    compHt <- function(oneX) {
         oneX <- matrix(oneX, nrow = nBeta)
-        tempHt <- tempht <- matrix(0, ncol = cK + 1, nrow = iter)
+        expXbeta <- matrix(0, ncol = cK, nrow = iter)
         ## for j_th time point on the grid
-        for(j in seq(2, cK + 1)){
-            betat <- betaMat[, seq(j - 1, by = cK, length.out = nBeta)]
-            tempht[, j] <- object$est$lambda[j - 1] *
-                exp(rowMeans(betat %*% oneX))
-            tempHt[, j] <- as.matrix(tempht[, 2 : j]) %*% deltaT[seq(j - 1)]
+        for (j in seq_len(cK)) {
+            betat <- betaMat[, seq(j, by = cK, length.out = nBeta)]
+            expXbeta[, j] <- exp(rowMeans(betat %*% oneX))
         }
-        tempHt
+        ht <- h0Mat * as.numeric(expXbeta)
+        Ht <- matrix(0, ncol = K + 1L, nrow = iter)
+        for (i in seq_len(iter)) {
+            Ht[i, - 1L] <- cumsum(ht[i, ] * deltaT)
+        }
+        Ht
     }
-    res1 <- foo(oneX = X[1, ])
-    res2 <- foo(oneX = X[2, ])
-    Designdiff <- paste(rownames(X)[2], rownames(X)[1], sep=" vs. ")
+
+    res1 <- compHt(oneX = X[1L, ])
+    res2 <- compHt(oneX = X[2L, ])
+    Designdiff <- paste(rownames(X)[2L], rownames(X)[1L], sep = " vs. ")
 
     ## function type
     type <- match.arg(type)
@@ -360,8 +359,10 @@ survDiff <- function (object, newdata, type = c("survival", "cumhaz"),
 ##' customized properly.
 ##'
 ##' @aliases plotSurv
-##' @usage plotSurv(object, legendName = "", conf.int = FALSE, smooth = FALSE,
+##' @usage
+##' plotSurv(object, legendName = "", conf.int = FALSE, smooth = FALSE,
 ##'          lty, col, ...)
+##'
 ##' @param object An object returned by function \code{survCurve} or
 ##'     \code{survDiff}.
 ##' @param legendName An optional name for the figure legend.
@@ -376,8 +377,10 @@ survDiff <- function (object, newdata, type = c("survival", "cumhaz"),
 ##' @param col An optional character or numeric vector indicating line colors
 ##'     specified to different groups.
 ##' @param ... Other arguments for future usage.
+##'
 ##' @return A \code{ggplot} object.
-##' @seealso \code{\link{bayesCox}}, \code{\link{survCurve}}, and
+##' @seealso
+##' \code{\link{bayesCox}}, \code{\link{survCurve}}, and
 ##' \code{\link{survDiff}}.
 ##' @examples
 ##' ## See the examples in bayesCox.
@@ -399,16 +402,15 @@ plotSurv <- function(object, legendName = "", conf.int = FALSE,
     nDesign <- length(levels(Design))
 
     ## set line types and colors
-    lty <- if (missing(lty)) {
+    lty <- if (missing(lty))
                setNames(rep(1, nDesign), levels(Design))
-           } else {
+           else
                setNames(lty[seq(nDesign)], levels(Design))
-           }
-    col <- if (missing(col)) {
+
+    col <- if (missing(col))
                gg_color_hue(nDesign)
-           } else {
+           else
                col[seq(nDesign)]
-           }
 
     ## initialize ggplot object
     p <- ggplot(data = object, aes_string(x = "Time"))
@@ -416,65 +418,65 @@ plotSurv <- function(object, legendName = "", conf.int = FALSE,
     if (! smooth) {
         if (nDesign == 1) {
             p <-  p + geom_step(mapping = aes(x = Time, y = Mid))
-            if (conf.int) {
+
+            if (conf.int)
                 p <- p +
                     geom_step(mapping = aes(x = Time, y = Low),
                               linetype = "3313") +
                     geom_step(mapping = aes(x = Time, y = High),
                               linetype = "3313")
-            }
         } else {
             p <- p + geom_step(mapping = aes(x = Time, y = Mid, color = Design,
                                              linetype = Design)) +
                 scale_color_manual(values = col, name = legendName) +
                 scale_linetype_manual(values = lty, name = legendName)
-            if (conf.int) {
+
+            if (conf.int)
                 p <- p +
                     geom_step(mapping = aes(x = Time, y = Low, color = Design),
                               linetype = "3313") +
                     geom_step(mapping = aes(x = Time, y = High, color = Design),
                               linetype = "3313")
-            }
         }
     } else {
         if (nDesign == 1) {
             p <-  p + geom_line(mapping = aes(x = Time, y = Mid))
-            if (conf.int) {
+
+            if (conf.int)
                 p <- p +
                     geom_line(mapping = aes(x = Time, y = Low),
                               linetype = "3313") +
                     geom_line(mapping = aes(x = Time, y = High),
                               linetype = "3313")
-            }
         } else {
             p <- p + geom_line(mapping = aes(x = Time, y = Mid, color = Design,
                                              linetype = Design)) +
                 scale_color_manual(values = col, name = legendName) +
                 scale_linetype_manual(values = lty, name = legendName)
-            if (conf.int) {
+
+            if (conf.int)
                 p <- p +
                     geom_line(mapping = aes(x = Time, y = Low, color = Design),
                               linetype = "3313") +
                     geom_line(mapping = aes(x = Time, y = High, color = Design),
                               linetype = "3313")
-            }
         }
     }
+    type <- unique(object$type)[1L]
     if (attr(object, "surv") == "survDiff") {
-        if (all(unique(object$type) == "survival")) {
-            p <- p + ylab("Estimated Survival Proportion Difference") +
-                ggtitle(unique(Design))
-        } else if (all(unique(object$type) == "cumhaz")) {
-            p <- p + ylab("Estimated Cumulative Hazard Difference") +
-                ggtitle(unique(Design))
-        }
+        p <- if (type == "survival")
+                 p + ylab("Estimated Survival Proportion Difference") +
+                     ggtitle(unique(Design))
+             else
+                 p + ylab("Estimated Cumulative Hazard Difference") +
+                     ggtitle(unique(Design))
     } else if (attr(object, "surv") == "survCurve") {
-        if (all(unique(object$type) == "survival")) {
-            p <- p + ylab("Estimated Survival Proportion")
-        } else if (all(unique(object$type) == "cumhaz")) {
-            p <- p + ylab("Estimated Cumulative Hazard")
-        }
-    }
+        p <- if (type == "survival")
+                 p + ylab("Estimated Survival Proportion")
+             else
+                 p + ylab("Estimated Cumulative Hazard")
+    } else
+        stop("Unknown 'surv' attribute.")
     p
 }
 
@@ -483,15 +485,16 @@ plotSurv <- function(object, legendName = "", conf.int = FALSE,
 ### internal functions =========================================================
 ## function to compute ci and posterior mean
 ##' @importFrom stats quantile
-ciBand <- function(x, level = 0.95){
-    c(quantile(x, probs = (1 - level) / 2, names = FALSE), mean(x),
-      quantile(x, probs = 1 - (1 - level) / 2, names = FALSE))
+ciBand <- function(x, level = 0.95) {
+    lev <- (1 - level) / 2
+    c(quantile(x, probs = lev, names = FALSE), mean(x),
+      quantile(x, probs = 1 - lev, names = FALSE))
 }
 
 
 ## function to emulate the default colors used in ggplot2
 ##' @importFrom grDevices hcl
-gg_color_hue <- function(n){
+gg_color_hue <- function(n) {
     hues = seq(15, 375, length = n + 1)
-    hcl(h = hues, l = 65, c = 100)[1 : n]
+    hcl(h = hues, l = 65, c = 100)[seq_len(n)]
 }
