@@ -1,7 +1,7 @@
 ################################################################################
 ##
 ##   R package dynsurv by Wenjie Wang, Ming-Hui Chen, Xiaojing Wang, and Jun Yan
-##   Copyright (C) 2011-2016
+##   Copyright (C) 2011-2017
 ##
 ##   This file is part of the R package dynsurv.
 ##
@@ -74,27 +74,30 @@
 ##' For users interested in extracting MCMC sampling information from the
 ##' output files, the detail of the output files is presented as follows: Let
 ##' \eqn{k} denote the number of time points (excluding time zero) specified
-##' in grid, and \eqn{p} denote the number of covariates.  Then the each
-##' sample saved in each row consists of the following possible parts.
+##' in grid, \eqn{ck} equal \eqn{1} for model with time-invariant coefficients;
+##' \eqn{ck} equal \eqn{k} otherwise, and \eqn{p} denote the number of
+##' covariates.  Then the each sample saved in each row consists of the
+##' following possible parts.
 ##' \describe{
 ##'     \item{Part 1:}{The first \eqn{k} numbers represent the jump size of
 ##' baseline hazard function at each time grid.  If we take the column mean
 ##' of the first \eqn{k} columns of the output file, we will get the same
 ##' numbers with \code{obj$est$lambda}, where \code{obj} is the \code{bayesCox}
 ##' object returned by the function.}
-##'     \item{Part 2:}{The sequence from \eqn{(k + 1) to (k + k * p)}
+##'     \item{Part 2:}{The sequence from \eqn{(k + 1) to (k + ck * p)}
 ##' represent the coefficients of covariates at the time grid.  The first
 ##' \eqn{k} numbers in the sequence are the coefficients for the first covaraite
 ##' at the time grid; The second \eqn{k} numbers' sub-sequence are the
 ##' coefficients for the second covariate and so on.}
-##'     \item{Part 3:}{The sequence from \eqn{(k + k * p + 1)} to
-##' \eqn{(k + k * p + p)} represents the sampled latent variance of
+##'     \item{Part 3:}{The sequence from \eqn{(k + ck * p + 1)} to
+##' \eqn{(k + ck * p + p)} represents the sampled latent variance of
 ##' coefficients.}
-##'     \item{Part 4:}{The sequence from \eqn{(k + k * p + p + 1)} to
-##' \eqn{(k + 2 * k * p + p)} represents the indicator of whether there is
+##'     \item{Part 4:}{The sequence from \eqn{(k + ck * p + p + 1)} to
+##' \eqn{(k + 2 * ck * p + p)} represents the indicator of whether there is
 ##' a jump of the covariate coefficients at the time grid.  Similar with Part 2,
 ##' the first k numbers' sub-sequence is for the first covariate, the second
-##' \eqn{k} numbers' sub-sequence is for the second covariate, and so on.}}
+##' \eqn{k} numbers' sub-sequence is for the second covariate, and so on.}
+##' }
 ##' For the model with time-independent coefficients, the output file only
 ##' has Part 1 and Part 2 in each row; For time-varying coefficient model,
 ##' the output file has Part 1, 2, and 3; The output file for the dynamic
@@ -127,7 +130,9 @@
 ##'     Each row contains one MCMC sample information. The file is needed for
 ##'     those functions further summarizing estimation results in this
 ##'     package. See Section Details for details.
-##' @param model Model type to fit.
+##' @param model Model type to fit. Available options are \code{"TimeIndep"},
+##'     \code{"TimeVarying"}, and \code{"Dynamic"}. Partial matching on the
+##'     name is allowed.
 ##' @param base.prior List of options for prior of baseline lambda. Use
 ##'     \code{list(type = "Gamma", shape = 0.1, rate = 0.1)} for all models;
 ##'     \code{list(type = "Const", value = 1)} for \code{Dynamic} model when
@@ -165,18 +170,21 @@
 ##' @keywords Bayesian Cox dynamic interval censor
 ##' @examples
 ##' \dontrun{
+##' library(dynsurv)
+##' set.seed(1216)
+##'
 ##' ############################################################################
 ##' ### Attach one of the following two data sets
 ##' ############################################################################
 ##'
-##' ## breast cancer data
-##' data(bcos) ## attach bcos and bcos.grid
+##' ### breast cancer data
+##' data(bcos)       # attach bcos and bcos.grid
 ##' mydata <- bcos
 ##' ## mygrid <- bcos.grid
 ##' myformula <- Surv(left, right, type = "interval2") ~ trt
 ##'
-##' ## tooth data
-##' ## data(tooth) ## load tooth and tooth.grid
+##' ### tooth data
+##' ## data(tooth)   # attach tooth and tooth.grid
 ##' ## mydata <- tooth
 ##' ## mygrid <- tooth.grid
 ##' ## myformula <- Surv(left, rightInf, type = "interval2") ~ dmf + sex
@@ -186,34 +194,34 @@
 ##' ############################################################################
 ##'
 ##' ## Fit time-independent coefficient model
-##' fit0 <- bayesCox(myformula, mydata, out = "tiCox.txt",
-##'                  model = "TimeIndep",
+##' fit0 <- bayesCox(myformula, mydata, out = "tiCox.txt", model = "TimeIndep",
 ##'                  base.prior = list(type = "Gamma", shape = 0.1, rate = 0.1),
 ##'                  coef.prior = list(type = "Normal", mean = 0, sd = 1),
 ##'                  gibbs = list(iter = 100, burn = 20, thin = 1,
-##'                               verbose = TRUE, nReport = 5))
+##'                               verbose = TRUE, nReport = 20))
 ##' plotCoef(coef(fit0, level = 0.9))
+##' plotSurv(survCurve(fit0), conf.int = TRUE)
 ##'
 ##' ## Fit time-varying coefficient model
-##' fit1 <- bayesCox(myformula, mydata, out = "tvCox.txt",
-##'                  model = "TimeVarying",
+##' fit1 <- bayesCox(myformula, mydata, out = "tvCox.txt", model = "TimeVary",
 ##'                  base.prior = list(type = "Gamma", shape = 0.1, rate = 0.1),
 ##'                  coef.prior = list(type = "AR1", sd = 1),
 ##'                  gibbs = list(iter = 100, burn = 20, thin = 1,
-##'                               verbose = TRUE, nReport = 5))
+##'                               verbose = TRUE, nReport = 20))
 ##' plotCoef(coef(fit1))
+##' plotSurv(survCurve(fit1), conf.int = TRUE)
 ##'
 ##' ## Fit dynamic coefficient model with time-varying baseline hazards
-##' fit2 <- bayesCox(myformula, mydata, out = "dynCox1.txt",
-##'                  model = "Dynamic",
+##' fit2 <- bayesCox(myformula, mydata, out = "dynCox1.txt", model = "Dynamic",
 ##'                  base.prior = list(type = "Gamma", shape = 0.1, rate = 0.1),
 ##'                  coef.prior = list(type = "HAR1", shape = 2, scale = 1),
 ##'                  gibbs = list(iter = 100, burn = 20, thin = 1,
-##'                               verbose = TRUE, nReport = 5))
+##'                               verbose = TRUE, nReport = 20))
 ##' plotCoef(coef(fit2))
 ##' plotJumpTrace(jump(fit2))
 ##' plotJumpHist(jump(fit2))
 ##' plotNu(nu(fit2))
+##' plotSurv(survCurve(fit2), conf.int = TRUE)
 ##'
 ##' ## Plot the coefficient estimates from three models together
 ##' plotCoef(rbind(coef(fit0), coef(fit1), coef(fit2)))
@@ -230,16 +238,16 @@
 ##' plotJumpTrace(jump(fit3))
 ##' plotJumpHist(jump(fit3))
 ##' plotNu(nu(fit3))
+##' plotSurv(survCurve(fit3), conf.int = TRUE)
 ##'
-##' ## Plot the estimated survival function and hazard function
-##' newDat <- bcos[c(1L, 47L), ]
-##' row.names(newDat) <- c("Rad", "RadChem")
+##' ## Plot the estimated survival function for given new data
+##' newDat <- data.frame(trt = c("Rad", "RadChem"))
+##' row.names(newDat) <- unique(newDat$trt)
 ##' plotSurv(survCurve(fit3, newdata = newDat, type = "survival"),
 ##'          legendName = "Treatment", conf.int = TRUE)
-##' plotSurv(survDiff(fit3, newdata = newDat, type = "cumhaz"),
+##' plotSurv(survDiff(fit3, newdata = newDat, type = "survival"),
 ##'          legendName = "Treatment", conf.int = TRUE, smooth = TRUE)
 ##' }
-##'
 ##' @importFrom stats model.frame model.matrix .getXlevels
 ##' @importFrom utils tail
 ##' @export bayesCox
