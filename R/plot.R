@@ -1,7 +1,7 @@
 ################################################################################
 ##
 ##   R package dynsurv by Wenjie Wang, Ming-Hui Chen, Xiaojing Wang, and Jun Yan
-##   Copyright (C) 2011-2016
+##   Copyright (C) 2011-2017
 ##
 ##   This file is part of the R package dynsurv.
 ##

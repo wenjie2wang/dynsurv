@@ -49,7 +49,7 @@ updateHeader: $(cprt)
 	sed -i "s/Copyright (C) 2011-[0-9]*/Copyright (C) 2011-$$yr/" $$Rfile;\
 	done;\
 	dt=$$(date +"%Y-%m-%d");\
-	sed -i "s/Date: [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/Date: $$dt/" DESCRIPTION;
+	sed -i "s/Date: [0-9]\{4\}-[0-9]\{1,2\}-[0-9]\{1,2\}/Date: $$dt/" DESCRIPTION;
 
 .PHONY: clean
 clean:
