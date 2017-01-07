@@ -34,7 +34,6 @@ or manipulate the data frame first before calling \code{plotCoef}, e.g.,
 \code{plotCoef(subset(coef(fit), Time > 2 & Time < 10))}.
 }
 \examples{
-
 ## See the examples in bayesCox, splineCox, and tvTran.
 }
 \seealso{

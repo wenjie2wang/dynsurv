@@ -12,7 +12,8 @@ bayesCox(formula, data, grid = NULL, out = "mcmc.txt",
 \arguments{
 \item{formula}{A formula object, with the response on the left of a '~'
 operator, and the terms on the right. The response must be a survival
-object as returned by the \code{Surv} function.}
+object as returned by the function \code{Surv} with \code{type =
+"interval2"}. \code{help(Surv)} for details.}
 
 \item{data}{A data.frame in which to interpret the variables named in the
 \code{formula}.}
@@ -20,9 +21,12 @@ object as returned by the \code{Surv} function.}
 \item{grid}{Vector of pre-specified time grid points for model fitting.
 It will be automatically set up from data if it is left unspecified
 in the function call. By default, it consists of all the unique
-finite endpoints of the censoring intervals after time zero.  The
-\code{grid} specified in the function call must be sorted, and covers
-all the finite non-zero endpoints of the censoring intervals.}
+finite endpoints (rounded to two significant numbers) of the
+censoring intervals after time zero.  The \code{grid} specified in
+the function call determines the location of possible jumps. It should
+be sorted increasingly and cover all the finite non-zero endpoints of
+the censoring intervals. Inappropriate \code{grid} specified will be
+taken care by the function internally.}
 
 \item{out}{Name of Markov chain Monte Carlo (MCMC) samples output file.
 Each row contains one MCMC sample information. The file is needed for
@@ -59,15 +63,6 @@ model. The baseline hazards are allowed to be either time-varying or
 dynamic.
 }
 \details{
-For application, it is recommended that users preprocess the data by
-rounding down (up) the left (right) endpoints of the censoring intervals
-to at most three significant digits and leave the \code{grid} unspecified
-in the function call to reduce probably unnecessary computational burden.
-It also helps avoid possible errors caused by mispecifed \code{grid}. For
-example, the left endpoints can be rounded down in the nearest 0.1 unit
-of time by \code{left <- floor(left * 10) / 10} and the right endpoints
-can similarly be rounded up by \code{right <- ceiling(right * 10) / 10}.
-
 To use default hyper parameters in the specification of either
 \code{base.prior} or \code{coef.prior}, one only has to supply the name of
 the prior, e.g., \code{list(type = "Gamma")}, \code{list(type = "HAR1")}.
@@ -110,7 +105,7 @@ numbers with \code{obj$est$lambda}, where \code{obj} is the \code{bayesCox}
 object returned by the function.}
     \item{Part 2:}{The sequence from \eqn{(k + 1) to (k + ck * p)}
 represent the coefficients of covariates at the time grid.  The first
-\eqn{k} numbers in the sequence are the coefficients for the first covaraite
+\eqn{k} numbers in the sequence are the coefficients for the first covariate
 at the time grid; The second \eqn{k} numbers' sub-sequence are the
 coefficients for the second covariate and so on.}
     \item{Part 3:}{The sequence from \eqn{(k + ck * p + 1)} to
@@ -145,7 +140,7 @@ set.seed(1216)
 ### breast cancer data
 data(bcos)       # attach bcos and bcos.grid
 mydata <- bcos
-## mygrid <- bcos.grid
+mygrid <- bcos.grid
 myformula <- Surv(left, right, type = "interval2") ~ trt
 
 ### tooth data
@@ -165,7 +160,11 @@ fit0 <- bayesCox(myformula, mydata, out = "tiCox.txt", model = "TimeIndep",
                  gibbs = list(iter = 100, burn = 20, thin = 1,
                               verbose = TRUE, nReport = 20))
 plotCoef(coef(fit0, level = 0.9))
-plotSurv(survCurve(fit0), conf.int = TRUE)
+
+## Plot the estimated survival function for given new data
+newDat <- data.frame(trt = c("Rad", "RadChem"))
+row.names(newDat) <- unique(newDat$trt)
+plotSurv(survCurve(fit0, newDat), conf.int = TRUE)
 
 ## Fit time-varying coefficient model
 fit1 <- bayesCox(myformula, mydata, out = "tvCox.txt", model = "TimeVary",
@@ -192,12 +191,11 @@ plotSurv(survCurve(fit2), conf.int = TRUE)
 plotCoef(rbind(coef(fit0), coef(fit1), coef(fit2)))
 
 ## Fit dynamic coefficient model with dynamic hazards (in log scales)
-fit3 <- bayesCox(myformula, mydata, out = "dynCox2.txt",
-                 model = "Dynamic",
+fit3 <- bayesCox(myformula, mydata, out = "dynCox2.txt", model = "Dynamic",
                  base.prior = list(type = "Const"),
                  coef.prior = list(type = "HAR1", shape = 2, scale = 1),
                  gibbs = list(iter = 100, burn = 20, thin = 1,
-                              verbose = TRUE, nReport=5),
+                              verbose = TRUE, nReport = 20),
                  control = list(intercept = TRUE))
 plotCoef(coef(fit3))
 plotJumpTrace(jump(fit3))
@@ -205,9 +203,7 @@ plotJumpHist(jump(fit3))
 plotNu(nu(fit3))
 plotSurv(survCurve(fit3), conf.int = TRUE)
 
-## Plot the estimated survival function for given new data
-newDat <- data.frame(trt = c("Rad", "RadChem"))
-row.names(newDat) <- unique(newDat$trt)
+## Plot the estimated survival function and the difference
 plotSurv(survCurve(fit3, newdata = newDat, type = "survival"),
          legendName = "Treatment", conf.int = TRUE)
 plotSurv(survDiff(fit3, newdata = newDat, type = "survival"),

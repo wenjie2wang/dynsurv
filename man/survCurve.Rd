@@ -35,7 +35,7 @@ A data frame with column: "Low", "Mid", "High", "Time", "Design",
 and "type", and attribute, "surv" valued as "survCurve".
 }
 \description{
-\code{survCurve} returns estimated suvival function or cumulative function
+\code{survCurve} returns estimated survival function or cumulative function
 from posterior sample. Note that the function is currently only
 applicable to the Bayesian dynamic Cox model with dynamic hazard, where the
 control argument is specified to be \code{control = list(intercept = TRUE)}

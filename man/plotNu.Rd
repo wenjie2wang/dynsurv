@@ -22,7 +22,6 @@ prior is used for the \code{bayesCox} model. It is applicable when
 function \code{nu}.
 }
 \examples{
-
 ## See the examples in bayesCox
 }
 \seealso{

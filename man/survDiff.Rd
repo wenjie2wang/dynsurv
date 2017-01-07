@@ -33,7 +33,7 @@ A data frame with column: "Low", "Mid", "High", "Time", "Design",
     and "type", and attribute, "surv" valued as "survDiff".
 }
 \description{
-\code{survDiff} returns estimated suvival function or cumulative function
+\code{survDiff} returns estimated survival function or cumulative function
 from posterior estimates. Note that currently, the function is only
 applicable to the Bayesian dynamic Cox model with dynamic hazard, where the
 control argument is specified to be \code{control = list(intercept = TRUE)}

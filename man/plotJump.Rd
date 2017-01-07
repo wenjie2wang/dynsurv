@@ -24,9 +24,7 @@ A \code{ggplot} object.
 data frame is returned by function \code{jump}.
 }
 \examples{
-
 ## See the examples in bayesCox
-
 }
 \seealso{
 \code{\link{jump.bayesCox}}.
