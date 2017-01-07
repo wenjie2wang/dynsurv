@@ -46,7 +46,6 @@
 ##' \code{\link{coef.tvTran}}.
 ##' @keywords plot coefficient
 ##' @examples
-##'
 ##' ## See the examples in bayesCox, splineCox, and tvTran.
 ##' @importFrom ggplot2 ggplot aes_string geom_step geom_line facet_wrap
 ##' facet_grid ylab theme
@@ -61,9 +60,9 @@ plotCoef <- function(object, smooth = FALSE, ...) {
             geom_step(aes_string(y = "High"), direction = "vh", linetype = 2) +
             geom_step(aes_string(y = "Low"), direction = "vh", linetype = 2)
     else
-       p <- p + geom_line(aes_string(y = "Mid")) +
-           geom_line(aes_string(y = "High"), linetype = 2) +
-           geom_line(aes_string(y = "Low"), linetype = 2)
+        p <- p + geom_line(aes_string(y = "Mid")) +
+            geom_line(aes_string(y = "High"), linetype = 2) +
+            geom_line(aes_string(y = "Low"), linetype = 2)
 
     if (length(levels(factor(object$Model))) == 1)
         p <- p + facet_wrap(~ Cov, scales = "free_y")
@@ -91,9 +90,7 @@ plotCoef <- function(object, smooth = FALSE, ...) {
 ##' @seealso \code{\link{jump.bayesCox}}.
 ##' @keywords plot jump
 ##' @examples
-##'
 ##' ## See the examples in bayesCox
-##'
 ##' @name plotJump
 NULL
 
@@ -121,14 +118,14 @@ plotJumpTrace <- function(object, ...) {
 ##' @importFrom grid unit
 ##' @export
 plotJumpHist <- function(object, ...) {
-  ## p <- ggplot(data = object, aes(x = factor(Count))) +
-  p <- ggplot(data = object, aes_string(x = "Count")) +
-    ##   stat_bin(aes(y  = ..count../sum(..count..))) +
-    stat_bin(aes_string(y  =  "..density..")) +
-      facet_wrap(~ Cov) +
+    ## p <- ggplot(data = object, aes(x = factor(Count))) +
+    p <- ggplot(data = object, aes_string(x = "Count")) +
+        ##   stat_bin(aes(y  = ..count../sum(..count..))) +
+        stat_bin(aes_string(y  =  "..density..")) +
+        facet_wrap(~ Cov) +
         xlab("Pieces of Coefficient") + ylab("Relative Frequency") +
-          theme(plot.margin = unit(rep(0, 4), "lines"))
-  p
+        theme(plot.margin = unit(rep(0, 4), "lines"))
+    p
 }
 
 
@@ -150,24 +147,23 @@ plotJumpHist <- function(object, ...) {
 ##' @seealso \code{\link{nu.bayesCox}}.
 ##' @keywords plot latent variance
 ##' @examples
-##'
 ##' ## See the examples in bayesCox
 ##' @importFrom ggplot2 ggplot aes_string stat_bin xlab ylab theme facet_wrap
 ##' facet_grid
 ##' @importFrom grid unit
 ##' @export
 plotNu <- function(object, ...) {
-  cnt <- "..density.."
-  ## p <- ggplot(data = object, aes_string(x = "Value")) +
-  p <- ggplot(data = object, aes_string(x = "Value")) +
-      ##  stat_bin(aes(y  = ..count../sum(..count..))) +
-      stat_bin(aes_string(y  =  cnt)) +
-      xlab("Nu") + ylab("Relative Frequency") +
-      theme(plot.margin = unit(rep(0, 4), "lines"))
+    cnt <- "..density.."
+    ## p <- ggplot(data = object, aes_string(x = "Value")) +
+    p <- ggplot(data = object, aes_string(x = "Value")) +
+        ##  stat_bin(aes(y  = ..count../sum(..count..))) +
+        stat_bin(aes_string(y  =  cnt)) +
+        xlab("Nu") + ylab("Relative Frequency") +
+        theme(plot.margin = unit(rep(0, 4), "lines"))
 
-  if (length(levels(factor(object$Model))) == 1)
-      p <- p + facet_wrap(~ Cov)
-  else
-      p <- p + facet_grid(Cov ~ Model)
-  p
+    if (length(levels(factor(object$Model))) == 1)
+        p <- p + facet_wrap(~ Cov)
+    else
+        p <- p + facet_grid(Cov ~ Model)
+    p
 }

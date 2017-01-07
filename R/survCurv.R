@@ -19,12 +19,12 @@
 
 
 
-### Generate the surviva curves for dynamic model with dynamic hazard.
+### Generate the survival curves for dynamic model with dynamic hazard.
 ### read out file into R (possibly the most time-consuming part)
 
 ##' Estimated Survival Function or Cumulative Hazard Function
 ##'
-##' \code{survCurve} returns estimated suvival function or cumulative function
+##' \code{survCurve} returns estimated survival function or cumulative function
 ##' from posterior sample. Note that the function is currently only
 ##' applicable to the Bayesian dynamic Cox model with dynamic hazard, where the
 ##' control argument is specified to be \code{control = list(intercept = TRUE)}
@@ -197,7 +197,7 @@ survCurve <- function(object, newdata, type = c("survival", "cumhaz"),
 
 ##' Estimated Difference Between Survival or Cumulative Hazard Functions
 ##'
-##' \code{survDiff} returns estimated suvival function or cumulative function
+##' \code{survDiff} returns estimated survival function or cumulative function
 ##' from posterior estimates. Note that currently, the function is only
 ##' applicable to the Bayesian dynamic Cox model with dynamic hazard, where the
 ##' control argument is specified to be \code{control = list(intercept = TRUE)}
