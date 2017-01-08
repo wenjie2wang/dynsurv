@@ -1,13 +1,23 @@
+2017-01-08 Wenjie Wang <wenjie.2.wang@uconn.edu>
+
+	* Added adjustment for endpoints of censoring intervals from `grid`
+	specified in the function call of `bayesCox`.
+
+	* Added compatibility of function `survCurve` to all available
+	models from function `bayesCox`.
+
+	* Changed package version to 0.3-5.
+
 2016-12-24 Wenjie Wang <wenjie.2.wang@uconn.edu>
 
-	* Added the generation of grid from the data provided, which allow
-	grid to be unspecified in the function call of bayesCox.
+	* Added the generation of `grid` from the data provided, which
+	allow `grid` to be unspecified in the function call of `bayesCox`.
 
 	* Changed package version to 0.3-4.
 
 2016-10-14 Wenjie Wang <wenjie.2.wang@uconn.edu>
 
-	* Fixed compilation error in Solaris: "The function "exp" must
+	* Fixed compilation error in Solaris: "The function `exp` must
 	have a prototype" by replacing `exp` with `std::exp`.
 
 	* Fixed possibly invalid URL for tooth24.RData.
@@ -31,20 +41,21 @@
 	inside extern "C" by commenting out the extern "C" in rng.h and
 	GibbsSampler.h.
 
-	* Fixed print function for bayesCox object.
+	* Fixed print function for `bayesCox` object.
 
 	* Fixed invalid url for tooth dataset.
 
-	* Added formula and xlevels to bayesCox object.
+	* Added formula and xlevels to `bayesCox` object.
 
-	* Added optional arguement to coef.bayesCox, coef.tvTran, and
-	coef.splineCox to allow user to specify credible level by matching
-	"..." argument with possible "level" argument.
+	* Added optional arguement to `coef.bayesCox`, `coef.tvTran`, and
+	`coef.splineCox` to allow user to specify credible level by
+	matching "..." argument with possible "level" argument.
 
-	* Added function survCuvre, survDiff, and plotSurv to estimate and
-	plot the survival function, cumulative hazard function, and their
-	pair difference for Bayesian dynamic model with dynamic hazard
-	from posterior sample. Specific examples are added to bayesCox.
+	* Added function `survCuvre`, `survDiff`, and `plotSurv` to
+	estimate and plot the survival function, cumulative hazard
+	function, and their pair difference for Bayesian dynamic model
+	with dynamic hazard from posterior sample. Specific examples are
+	added to `bayesCox`.
 
 	* Added Roxygen2 inline documentation for all exported function.
 
