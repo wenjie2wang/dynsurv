@@ -54,12 +54,12 @@ See [package help manual][7] for details and demonstration.
 
 ## License
 
-The R package reda is free software: You can redistribute it and/or modify it
+The R package dynsurv is free software: You can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the Free
 Software Foundation, either version 3 of the License, or any later version (at
 your option).  See the [GNU General Public License][8] for details.
 
-The R package reda is distributed in the hope that it will be useful, but
+The R package dynsurv is distributed in the hope that it will be useful, but
 WITHOUT ANY WARRANTY without even the implied warranty of MERCHANTABILITY or
 FITNESS FOR A PARTICULAR PURPOSE.
 
