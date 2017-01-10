@@ -308,12 +308,14 @@ bayesCox <- function(formula, data, grid = NULL, out = "mcmc.txt",
     ## for possibly - Inf or NA left
     tmpIdx <- eventIdx == 2
     LRX[tmpIdx, 1L] <- 0
-    ## for exact event times
-    tmpIdx <- eventIdx == 1
-    LRX[tmpIdx, 2L] <- LRX[tmpIdx, 1L]
+
     ## for right censoring
     tmpIdx <- eventIdx == 0
     LRX[tmpIdx, 2L] <- Inf
+
+    ## for exact event times
+    tmpIdx <- eventIdx == 1
+    exactTimes <- LRX[tmpIdx, 2L] <- LRX[tmpIdx, 1L]
 
     ## record coveriate names
     cov.names <- colnames(mm)[- 1L]
@@ -335,33 +337,30 @@ bayesCox <- function(formula, data, grid = NULL, out = "mcmc.txt",
         right_ <- ceiling(LRX[, "time2"] * roundPow) / roundPow
         finiteRight <- right_[! (is.infinite(right_) | is.na(right_))]
         ## set up grid from the data
-        grid <- sort(unique(c(left_, finiteRight)))
-        ## make sure the grid does not contain zero
-        grid <- grid[grid > 0]
-
-        LRX[, "time1"] <- left_
-        LRX[, "time2"] <- right_
-    } else {
-        ## make sure all grid points great than zero, finite and sorted
-        if (any(tmpIdx <- is.na(grid) | is.infinite(grid)))
-            grid <- grid[! tmpIdx]
-        if (any(tmpIdx <- grid <= 0))
-            grid <- sort(unique(grid[! tmpIdx]))
-        if (all(tmpIdx <- is.infinite(LRX[, "time2"])))
-            stop("Subjects are all right censored.")
-        finiteRight <- max(LRX[! tmpIdx, "time2"])
-        if (tail(grid, 1L) < finiteRight) {
-            warning(paste("grid' was expanded to cover all the finite endpoint",
-                          "of censoring intervals."))
-            grid <- c(grid, finiteRight)
-        }
-        ## round the left (right) endpoints down (up)
-        ## to the closest grid point including zero
-        toLeft <- stats::stepfun(grid, c(0, grid))
-        toRight <- stats::stepfun(grid, c(grid, Inf))
-        LRX[, "time1"] <- toLeft(LRX[, "time1"])
-        LRX[, "time2"] <- toRight(LRX[, "time2"])
+        grid <- unique(c(left_, finiteRight))
     }
+
+    ## prepare data based on the grid
+    ## make sure all grid points great than zero, finite and sorted
+    if (any(tmpIdx <- is.na(grid) | is.infinite(grid)))
+        grid <- grid[! tmpIdx]
+    ## add exact event times to the grid
+    if (any(tmpIdx <- grid <= 0))
+        grid <- sort(unique(c(grid[! tmpIdx], exactTimes)))
+    if (all(tmpIdx <- is.infinite(LRX[, "time2"])))
+        stop("Subjects are all right censored.")
+    finiteRight <- max(LRX[! tmpIdx, "time2"])
+    if (tail(grid, 1L) < finiteRight) {
+        warning(paste("grid' was expanded to cover all the finite endpoint",
+                      "of censoring intervals."))
+        grid <- c(grid, finiteRight)
+    }
+    ## round the left (right) endpoints down (up)
+    ## to the closest grid point including zero
+    toLeft <- stats::stepfun(grid, c(0, grid))
+    toRight <- stats::stepfun(grid, c(grid, Inf))
+    LRX[, "time1"] <- toLeft(LRX[, "time1"])
+    LRX[, "time2"] <- toRight(LRX[, "time2"])
 
     LRX[is.infinite(LRX[, 2L]), 2L] <- max(tail(grid, 1L), 999)
     LRX[is.na(LRX[, 2L]), 2L] <- max(tail(grid, 1L), 999)
