@@ -5,6 +5,9 @@ version := $(shell grep "Version" DESCRIPTION | sed "s/Version: //")
 pkg := $(shell grep "Package" DESCRIPTION | sed "s/Package: //")
 tar := $(pkg)_$(version).tar.gz
 checkLog := $(pkg).Rcheck/00check.log
+citation := inst/CITATION
+yr := $(shell date +"%Y")
+dt := $(shell date +"%Y-%m-%d")
 
 # rmd := vignettes/$(pkg)-intro.Rmd
 # vignettes := vignettes/$(pkg)-intro.html
@@ -20,7 +23,7 @@ build: $(tar)
 # .PHONY: preview
 # preview: $(vignettes)
 
-$(tar): $(objects)
+$(tar): $(objects) updateMeta
 	Rscript -e "library(methods); devtools::document();";
 	R CMD build $(dir)
 
@@ -35,21 +38,21 @@ install: $(tar)
 	R CMD INSTALL $(tar)
 
 ## update copyright year in HEADER, R script and date in DESCRIPTION
-.PHONY: updateHeader
-updateHeader: $(cprt)
-	yr=$$(date +"%Y");\
-	sed -i "s/Copyright (C) 2011-[0-9]\{4\}/Copyright (C) 2011-$$yr/" $(cprt);\
-# add HEADER file if there is no header
-	for Rfile in R/*.R; do \
-	if ! grep -e 'Copyright (C)' $$Rfile ;\
-	then cat $(cprt) $$Rfile > tmp ;\
+.PHONY: updateMeta
+updateMeta: $(cprt)
+	@sed -i "s/Copyright (C) 2011-[0-9]\{4\}/Copyright (C) 2011-$(yr)/" $(cprt)
+	@for Rfile in R/*.R; do \
+	if ! grep -q 'Copyright (C)' $$Rfile;\
+	then cat $(cprt) $$Rfile > tmp;\
 	mv tmp $$Rfile;\
 	fi;\
-	yr=$$(date +"%Y");\
-	sed -i "s/Copyright (C) 2011-[0-9]*/Copyright (C) 2011-$$yr/" $$Rfile;\
-	done;\
-	dt=$$(date +"%Y-%m-%d");\
-	sed -i "s/Date: [0-9]\{4\}-[0-9]\{1,2\}-[0-9]\{1,2\}/Date: $$dt/" DESCRIPTION;
+	sed -i "s/Copyright (C) 2011-[0-9]*/Copyright (C) 2011-$(yr)/" $$Rfile;\
+	done;
+	@sed -i "s/Date: [0-9]\{4\}-[0-9]\{1,2\}-[0-9]\{1,2\}/Date: $(dt)/" DESCRIPTION
+	@sed -i "s/version [0-9]\.[0-9]-[0-9]\(\.[0-9][0-9]*\)*/version $(version)/" $(citation)
+	@sed -i "s/20[0-9]\{2\}/$(yr)/" $(citation)
+
+
 
 .PHONY: clean
 clean:
