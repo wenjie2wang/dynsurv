@@ -239,4 +239,3 @@ selection for interval-censored survival data. \emph{Biometrics} 55(2),
 \keyword{censor}
 \keyword{dynamic}
 \keyword{interval}
-

@@ -3,6 +3,7 @@
 \name{jump}
 \alias{jump}
 \alias{jump.bayesCox}
+\alias{jump}
 \title{Generic function for jump information}
 \usage{
 jump(object, ...)
@@ -31,6 +32,7 @@ Extract number of coefficient pieces from \code{bayesCox} fitting results,
 and summarize them into a data frame. It is only applicable when
 \code{model="Dynamic"} is specified.
 }}
+
 \examples{
 ## See the examples in bayesCox
 }
@@ -41,4 +43,3 @@ and summarize them into a data frame. It is only applicable when
 \keyword{bayesCox}
 \keyword{extract}
 \keyword{jump}
-

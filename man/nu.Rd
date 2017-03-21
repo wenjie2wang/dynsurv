@@ -35,6 +35,7 @@ For details, see section on prior model in Wang (2013) and Wang (2014).
 The latent variance of coefficients in prior model was denoted as omega
 in Wang (2013).
 }}
+
 \examples{
 ## See the examples in bayesCox.
 }
@@ -50,4 +51,3 @@ Interval-censored time-to-event data: Methods and applications, 167--195.
 \seealso{
 \code{\link{bayesCox}}, and \code{\link{plotNu}}.
 }
-

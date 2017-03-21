@@ -72,4 +72,3 @@ covariates. \emph{Computer Methods and Programs in Biomedicine} 81,
 \keyword{Cox}
 \keyword{censor}
 \keyword{right}
-

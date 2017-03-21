@@ -33,4 +33,3 @@ for regression analysis of interval-censored failure time data.
 \emph{Biometrics} 41: 731-740.
 }
 \keyword{datasets}
-

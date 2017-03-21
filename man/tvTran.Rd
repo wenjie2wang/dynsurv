@@ -65,4 +65,3 @@ covariate effects. \emph{Biometrika} 94(3), 719--733.
 \keyword{censor}
 \keyword{right}
 \keyword{transformation}
-

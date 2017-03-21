@@ -33,4 +33,3 @@ data frame.
 \keyword{bayesCox}
 \keyword{coefficient}
 \keyword{extract}
-

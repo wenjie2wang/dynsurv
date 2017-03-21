@@ -37,4 +37,3 @@ It essentially expand the break points, and then call function
 \keyword{coefficient}
 \keyword{extract}
 \keyword{splineCox}
-

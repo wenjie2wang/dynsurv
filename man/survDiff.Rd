@@ -58,4 +58,3 @@ children with cystic fibrosis with interval censored data.
 \seealso{
 \code{\link{bayesCox}}, \code{\link{survCurve}}, and \code{\link{plotSurv}}.
 }
-

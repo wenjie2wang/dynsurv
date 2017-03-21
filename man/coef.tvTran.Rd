@@ -33,4 +33,3 @@ summarize the point estimate and 95\% credible band into a data frame.
 \keyword{coefficient}
 \keyword{extract}
 \keyword{tvTran}
-

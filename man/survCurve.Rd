@@ -63,4 +63,3 @@ children with cystic fibrosis with interval censored data.
 \code{\link{survDiff}}, and
 \code{\link{plotSurv}}.
 }
-

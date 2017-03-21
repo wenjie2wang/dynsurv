@@ -45,4 +45,3 @@ customized properly.
 \code{\link{bayesCox}}, \code{\link{survCurve}}, and
 \code{\link{survDiff}}.
 }
-

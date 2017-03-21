@@ -42,4 +42,3 @@ or manipulate the data frame first before calling \code{plotCoef}, e.g.,
 }
 \keyword{coefficient}
 \keyword{plot}
-

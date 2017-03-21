@@ -17,4 +17,3 @@ right censored survival data. Three major approaches are implemented:
     data using estimating equations.
 }
 }
-

@@ -2,8 +2,8 @@
 % Please edit documentation in R/plot.R
 \name{plotJump}
 \alias{plotJump}
-\alias{plotJumpHist}
 \alias{plotJumpTrace}
+\alias{plotJumpHist}
 \title{Plot Jump Information in Bayesian Dynamic Model}
 \usage{
 plotJumpTrace(object, ...)
@@ -31,4 +31,3 @@ data frame is returned by function \code{jump}.
 }
 \keyword{jump}
 \keyword{plot}
-

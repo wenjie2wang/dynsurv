@@ -30,4 +30,3 @@ function \code{nu}.
 \keyword{latent}
 \keyword{plot}
 \keyword{variance}
-
