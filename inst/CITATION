@@ -6,12 +6,12 @@ citEntry(entry = "Manual",
                              as.person("Ming-Hui Chen"),
                              as.person("Wenjie Wang"),
                              as.person("Jun Yan")),
-         Note =	"{R} package version 0.3-5.9000",
+         Note =	"{R} package version 0.3-6",
          Year =	"2017",
          Url = "https://CRAN.R-project.org/package=dynsurv",
 
          textVersion = paste("Wang, X., Chen, M.-H., Wang, W., Yan, J. (2017).",
                              "dynsurv: Dynamic Models for Survival Data.",
-                             "R package version 0.3-5.9000.",
+                             "R package version 0.3-6.",
                              "https://CRAN.R-project.org/package=dynsurv")
 )
