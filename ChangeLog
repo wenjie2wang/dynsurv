@@ -1,3 +1,12 @@
+2017-11-14 Wenjie Wang <wenjie.2.wang@uconn.edu>
+
+	* Added exact event times to the grid.
+
+	* Fixed the dependency of the whole survival package by importing
+	the survival package and exporting the function `survival::Surv`.
+
+	* Changed package version to 0.3-6.
+
 2017-01-08 Wenjie Wang <wenjie.2.wang@uconn.edu>
 
 	* Added adjustment for endpoints of censoring intervals from `grid`
