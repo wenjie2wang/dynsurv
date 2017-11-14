@@ -1,6 +1,6 @@
 Package: dynsurv
 Title: Dynamic Models for Survival Data
-Version: 0.3-5.9000
+Version: 0.3-6
 Date: 2017-11-14
 Authors@R: c(
     person(given = "Wenjie", family = "Wang",
@@ -12,7 +12,7 @@ Authors@R: c(
     person(given = "Jun", family = "Yan",
            email = "jun.yan@uconn.edu", role = "aut")
     )
-Description: Functions to fit time-varying coefficient models for interval
+Description: Functions fitting time-varying coefficient models for interval
     censored and right censored survival data. Three major approaches are
     implemented: 1) Bayesian Cox model with time-independent, time-varying or
     dynamic coefficients for right censored and interval censored data; 2)
