@@ -1,7 +1,7 @@
 Package: dynsurv
 Title: Dynamic Models for Survival Data
 Version: 0.3-5.9000
-Date: 2017-03-21
+Date: 2017-11-14
 Authors@R: c(
     person(given = "Wenjie", family = "Wang",
            email = "wenjie.2.wang@uconn.edu", role = c("cre", "aut")),
@@ -20,8 +20,7 @@ Description: Functions to fit time-varying coefficient models for interval
     Transformation model with time-varying coefficients for right censored data
     using estimating equations.
 Depends:
-    R (>= 3.0.2),
-    survival
+    R (>= 3.0.2)
 Imports:
     ggplot2,
     grDevices,
@@ -30,6 +29,7 @@ Imports:
     plyr,
     reshape,
     stats,
+    survival,
     utils
 LinkingTo: BH (>= 1.54.0-2)
 License: GPL (>= 3)

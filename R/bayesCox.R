@@ -351,7 +351,7 @@ bayesCox <- function(formula, data, grid = NULL, out = "mcmc.txt",
         stop("Subjects are all right censored.")
     finiteRight <- max(LRX[! tmpIdx, "time2"])
     if (tail(grid, 1L) < finiteRight) {
-        warning(paste("grid' was expanded to cover all the finite endpoint",
+        warning(paste("The grid was expanded to cover all the finite endpoint",
                       "of censoring intervals."))
         grid <- c(grid, finiteRight)
     }
