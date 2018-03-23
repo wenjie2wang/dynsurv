@@ -1,7 +1,7 @@
 Package: dynsurv
 Title: Dynamic Models for Survival Data
-Version: 0.3-6
-Date: 2017-11-14
+Version: 0.3-6.9000
+Date: 2018-03-22
 Authors@R: c(
     person(given = "Wenjie", family = "Wang",
            email = "wenjie.2.wang@uconn.edu", role = c("cre", "aut")),
