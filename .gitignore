@@ -8,3 +8,9 @@ src/*.so
 test/
 *.*~
 *~
+
+# ignore tags
+TAGS
+GTAGS
+GRTAGS
+GPATH

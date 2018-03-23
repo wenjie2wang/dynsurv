@@ -11,3 +11,7 @@
 ^LICENSE$
 ^dev$
 ^test$
+^TAGS$
+^GTAGS$
+^GRTAGS$
+^GPATH$

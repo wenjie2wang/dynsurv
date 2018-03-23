@@ -1,6 +1,5 @@
 objects := $(wildcard R/*.R) DESCRIPTION
 # man := $(wildcard man/*.Rd) NAMESPACE
-dir := $(shell pwd)
 version := $(shell grep "Version" DESCRIPTION | sed "s/Version: //")
 pkg := $(shell grep "Package" DESCRIPTION | sed "s/Package: //")
 tar := $(pkg)_$(version).tar.gz
@@ -30,7 +29,7 @@ $(tar): $(objects)
 	else make -s updateMeta;\
 	fi;\
 	Rscript -e "library(methods); devtools::document();";
-	R CMD build $(dir)
+	R CMD build .
 
 $(checkLog): $(tar)
 	R CMD check --as-cran $(tar)
@@ -45,7 +44,7 @@ $(checkLog): $(tar)
 .PHONY: updateMeta
 updateMeta:
 	@echo "Updating date, version, and copyright year"
-	@sed -i "s/Copyright (C) 2011-[0-9]\{4\}/Copyright (C) 2011-$(yr)/" $(cprt)
+	@sed -i "s/Copyright (C) 2011-[0-9]*/Copyright (C) 2011-$(yr)/" $(cprt)
 	@for Rfile in R/*.R; do \
 	if ! grep -q 'Copyright (C)' $$Rfile;\
 	then cat $(cprt) $$Rfile > tmp;\
@@ -56,6 +55,12 @@ updateMeta:
 	@sed -i "s/Date: [0-9]\{4\}-[0-9]\{1,2\}-[0-9]\{1,2\}/Date: $(dt)/" DESCRIPTION
 	@sed -i "s/version [0-9]\.[0-9]-[0-9]\(\.[0-9][0-9]*\)*/version $(version)/" $(citation)
 	@sed -i "s/20[0-9]\{2\}/$(yr)/" $(citation)
+
+## make tags
+.PHONY: TAGS
+TAGS:
+	Rscript -e "utils::rtags(path = 'R', ofile = 'TAGS')"
+	gtags
 
 .PHONY: clean
 clean:
