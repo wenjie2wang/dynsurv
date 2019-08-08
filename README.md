@@ -8,13 +8,11 @@ models for interval censored and right censored survival data.
 
 Three major approaches are implemented:
 
-1) Bayesian Cox model with time-independent, time-varying or dynamic
-coefficients for right censored and interval censored data;
-
-2) Spline based time-varying coefficient Cox model for right censored data;
-
-3) Transformation model with time-varying coefficients for right censored data
-using estimating equations.
+1. Bayesian Cox model with time-independent, time-varying or dynamic
+   coefficients for right censored and interval censored data;
+1. Spline based time-varying coefficient Cox model for right censored data;
+1. Transformation model with time-varying coefficients for right censored data
+   using estimating equations.
 
 
 ## Installation
@@ -32,10 +30,10 @@ install.packages("dynsurv")
 
 The latest version of package is under development at [GitHub][6] in branch
 'dev'.  If it is able to pass the building check by Travis CI, you may consider
-installing the latest version with the help of **devtools** by
+installing the latest version with the help of **remotes** by
 
 ```R
-devtools::install_github("wenjie2wang/dynsurv", ref = "dev")
+remotes::install_github("wenjie2wang/dynsurv", ref = "dev", upgrade = FALSE)
 ```
 
 or cloning this reposotory to local and install by makefile.
