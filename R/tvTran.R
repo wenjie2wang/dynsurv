@@ -107,7 +107,7 @@ tvTran <- function(formula, data, control = list()) {
         rsEst <- matrix(0, R, (nBeta + 1) * K)
 
         ## Indicator matrix: I(time_i <=  eTime_j) * I(status_i == 1)
-        indMat <- outer(rsp[, "time"], eTime, "< = ") * rsp[, "status"]
+        indMat <- outer(rsp[, "time"], eTime, "<=") * rsp[, "status"]
 
         for (r in 1:R) {
             zeta <- rnorm(N)
@@ -120,8 +120,8 @@ tvTran <- function(formula, data, control = list()) {
 
     ## Return list
     rl <- list(call = Call, eTime = eTime, control = control,
-              N = N, K = K, nBeta = nBeta, cov.names = cov.names,
-              pEst = pEst, rsEst = rsEst)
+               N = N, K = K, nBeta = nBeta, cov.names = cov.names,
+               pEst = pEst, rsEst = rsEst)
     class(rl) <- "tvTran"
 
     rl
