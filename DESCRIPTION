@@ -1,10 +1,12 @@
 Package: dynsurv
 Title: Dynamic Models for Survival Data
 Version: 0.3-6.9000
-Date: 2018-03-22
+Date: 2019-08-07
 Authors@R: c(
     person(given = "Wenjie", family = "Wang",
-           email = "wenjie.2.wang@uconn.edu", role = c("cre", "aut")),
+           email = "wenjie.2.wang@uconn.edu",
+           role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0003-0363-3180")),
     person(given = "Ming-Hui", family = "Chen",
            email = "ming-hui.chen@uconn.edu", role = "aut"),
     person(given = "Xiaojing", family = "Wang",
@@ -38,4 +40,4 @@ LazyData: Yes
 NeedsCompilation: yes
 URL: https://github.com/wenjie2wang/dynsurv
 BugReports: https://github.com/wenjie2wang/dynsurv/issues
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1

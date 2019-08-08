@@ -3,7 +3,6 @@
 \name{jump}
 \alias{jump}
 \alias{jump.bayesCox}
-\alias{jump}
 \title{Generic function for jump information}
 \usage{
 jump(object, ...)
