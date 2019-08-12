@@ -60,10 +60,9 @@ plotCoef(subset(coef(fit), Time > 15 & Time < 175), smooth = TRUE)
 }
 }
 \references{
-A. Perperoglou, S. le Cessie, and H.C. van Houwelingen (2006).
-A fast routine for fitting Cox models with time varying effects of the
-covariates. \emph{Computer Methods and Programs in Biomedicine} 81,
-154--161.
+Perperoglou, A., le Cessie, S., & van Houwelingen, H. C. (2006). A fast
+routine for fitting Cox models with time varying effects of the
+covariates. Computer Methods and Programs in Biomedicine, 81(2), 154--161.
 }
 \seealso{
 \code{\link{coef.splineCox}}, \code{\link{plotCoef}}.

@@ -56,8 +56,8 @@ plotCoef(subset(coef(fit), Time > 15 & Time < 175))
 }
 }
 \references{
-L. Peng, and Y. Huang (2007). Survival analysis with temporal
-covariate effects. \emph{Biometrika} 94(3), 719--733.
+Peng, L. and Huang, Y. (2007). Survival analysis with temporal covariate
+effects. \emph{Biometrika} 94(3), 719--733.
 }
 \seealso{
 \code{\link{coef.tvTran}}, \code{\link{plotCoef}}.

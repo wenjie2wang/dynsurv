@@ -49,8 +49,12 @@
 ##' @param control List of control options.
 ##' @return An object of S3 class \code{tvTran} representing the fit.
 ##' @seealso \code{\link{coef.tvTran}}, \code{\link{plotCoef}}.
-##' @references L. Peng, and Y. Huang (2007). Survival analysis with temporal
-##' covariate effects. \emph{Biometrika} 94(3), 719--733.
+##'
+##' @references
+##'
+##' Peng, L. and Huang, Y. (2007). Survival analysis with temporal covariate
+##' effects. \emph{Biometrika} 94(3), 719--733.
+##'
 ##' @keywords transformation right censor
 ##' @examples
 ##' \dontrun{
@@ -159,7 +163,7 @@ tvTran_lite <- function(X, dNMat, YMat, offSetMat) {
 
         ## Solve time-varying coefficients at time t_i
         res <- nleqslv(b0, f, preExpXb = preExpXb, dN = dNMat[, k],
-                      Y = YMat[, k], offSet = offSetMat[k, ], xscalm = "auto")
+                       Y = YMat[, k], offSet = offSetMat[k, ], xscalm = "auto")
         beta <- res$x
         termCode[k] <- res$termcd
         betaMat[k, ] <- beta
