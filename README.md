@@ -3,7 +3,7 @@
 [![CRAN_Status_Badge][1]][2]
 [![Build Status][3]][5]
 
-The R package **dynsurv** provides functions to fit time-varying coefficient
+The R package **dynsurv** provides functions fitting time-varying coefficient
 models for interval censored and right censored survival data.
 
 Three major approaches are implemented:
@@ -28,12 +28,12 @@ install.packages("dynsurv")
 
 [![Build Status][4]][5]
 
-The latest version of package is under development at [GitHub][6] in branch
-'dev'.  If it is able to pass the building check by Travis CI, you may consider
-installing the latest version with the help of **remotes** by
+The latest version of package is under development at [GitHub][6].  If it is
+able to pass the building check by Travis CI, you may consider installing the
+latest version with the help of **remotes** by
 
 ```R
-remotes::install_github("wenjie2wang/dynsurv", ref = "dev", upgrade = FALSE)
+remotes::install_github("wenjie2wang/dynsurv", upgrade = FALSE)
 ```
 
 or cloning this reposotory to local and install by makefile.
@@ -62,11 +62,11 @@ WITHOUT ANY WARRANTY without even the implied warranty of MERCHANTABILITY or
 FITNESS FOR A PARTICULAR PURPOSE.
 
 
-[1]: http://www.r-pkg.org/badges/version/dynsurv
+[1]: https://www.r-pkg.org/badges/version/dynsurv
 [2]: https://CRAN.R-project.org/package=dynsurv
 [3]: https://travis-ci.org/wenjie2wang/dynsurv.svg?branch=master
 [4]: https://travis-ci.org/wenjie2wang/dynsurv.svg?branch=dev
 [5]: https://travis-ci.org/wenjie2wang/dynsurv
 [6]: https://github.com/wenjie2wang/dynsurv
-[7]: http://wenjie-stat.me/dynsurv/dynsurv.pdf
-[8]: http://www.gnu.org/licenses/
+[7]: https://wenjie-stat.me/dynsurv/dynsurv.pdf
+[8]: https://www.gnu.org/licenses/
