@@ -1,3 +1,7 @@
+2019-08-27 Wenjie Wang <wenjie.2.wang@uconn.edu>
+
+	* Fixed call of `<=` in function `tvTran`.
+
 2017-11-14 Wenjie Wang <wenjie.2.wang@uconn.edu>
 
 	* Added exact event times to the grid.
