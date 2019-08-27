@@ -1,7 +1,7 @@
 Package: dynsurv
 Title: Dynamic Models for Survival Data
 Version: 0.3-7
-Date: 2019-08-12
+Date: 2019-08-27
 Authors@R: c(
     person(given = "Wenjie", family = "Wang",
            email = "wenjie.2.wang@uconn.edu",
@@ -41,6 +41,7 @@ License: GPL (>= 3)
 LazyLoad: Yes
 LazyData: Yes
 NeedsCompilation: yes
+Encoding: UTF-8
 URL: https://github.com/wenjie2wang/dynsurv
 BugReports: https://github.com/wenjie2wang/dynsurv/issues
 RoxygenNote: 6.1.1
