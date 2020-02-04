@@ -3,7 +3,6 @@
 \docType{package}
 \name{dynsurv}
 \alias{dynsurv}
-\alias{dynsurv-package}
 \title{dynsurv: Time-varying coefficient models for interval censored data.}
 \description{
 Functions to fit time-varying coefficient models for interval censored and
