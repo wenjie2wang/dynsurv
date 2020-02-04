@@ -35,19 +35,16 @@ A data frame with column: "Low", "Mid", "High", "Time", "Design",
 and "type", and attribute, "surv" valued as "survCurve".
 }
 \description{
-\code{survCurve} returns estimated survival function or cumulative function
-from posterior sample. Note that the function is currently only
-applicable to the Bayesian dynamic Cox model with dynamic hazard, where the
-control argument is specified to be \code{control = list(intercept = TRUE)}
-in function \code{bayesCox}.
+Estimated survival function or cumulative hazard function from posterior
+sample for an object returned by function \code{bayesCox}.
 }
 \details{
 The estimated survival curve is a step function representing the posterior
 mean survival proportion at the given time grid from the posterior sample.
 The credible interval for the survival curve is constructed based on the
 quantiles of all the survival curves from posterior sample at given credible
-level. More details were available in Section posterior computation of
-Wang (2016).
+level. More details were available in Section posterior computation of Wang
+(2016).
 }
 \examples{
 ## See the examples in bayesCox.
