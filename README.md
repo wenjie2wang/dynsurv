@@ -1,4 +1,4 @@
-# R Package dynsurv
+# dynsurv
 
 [![CRAN_Status_Badge][1]][2]
 [![Build Status][3]][5]
@@ -40,15 +40,15 @@ or cloning this reposotory to local and install by makefile.
 
 ```
 git clone https://github.com/wenjie2wang/dynsurv.git
-cd dynsurv
-make install
+make -C dynsurv install
 ```
 
+## Get Started
 
-## Usage
-
-See [package help manual][7] for details and demonstration.
-
+```
+library(dynsurv)
+?bayesCox
+```
 
 ## License
 
@@ -68,5 +68,4 @@ FITNESS FOR A PARTICULAR PURPOSE.
 [4]: https://travis-ci.org/wenjie2wang/dynsurv.svg?branch=dev
 [5]: https://travis-ci.org/wenjie2wang/dynsurv
 [6]: https://github.com/wenjie2wang/dynsurv
-[7]: https://wenjie-stat.me/dynsurv/dynsurv.pdf
 [8]: https://www.gnu.org/licenses/
