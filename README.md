@@ -33,14 +33,7 @@ able to pass the building check by Travis CI, you may consider installing the
 latest version with the help of **remotes** by
 
 ```R
-remotes::install_github("wenjie2wang/dynsurv", upgrade = FALSE)
-```
-
-or cloning this reposotory to local and install by makefile.
-
-```
-git clone https://github.com/wenjie2wang/dynsurv.git
-make -C dynsurv install
+remotes::install_github("wenjie2wang/dynsurv", upgrade = "never")
 ```
 
 ## Get Started
