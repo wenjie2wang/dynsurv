@@ -5,7 +5,8 @@
 \alias{tooth}
 \alias{tooth.grid}
 \title{Tooth Data}
-\format{\code{tooth} is a data frame with 4,386 observations and 7 columns
+\format{
+\code{tooth} is a data frame with 4,386 observations and 7 columns
 \describe{
     \item{id:}{children's id;}
     \item{left:}{left censoring time;}
@@ -18,7 +19,8 @@
     \item{rightNA:}{right censoring time where infinity is coded as
         \code{NA}.}
 }
-\code{tooth.grid} is a numeric vector of grid time points.}
+\code{tooth.grid} is a numeric vector of grid time points.
+}
 \source{
 Adapted from the data set available at
 \url{http://grass.upc.edu/en/software/tooth24}.
