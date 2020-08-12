@@ -1,17 +1,14 @@
 citHeader("To cite dynsurv in publications use:")
 
-citEntry(entry = "Manual",
-         Title = "{dynsurv}: {D}ynamic Models for Survival Data",
-         Author = personList(as.person("Xiaojing Wang"),
-                             as.person("Ming-Hui Chen"),
-                             as.person("Wenjie Wang"),
-                             as.person("Jun Yan")),
-         Note =	"{R} package version 0.3-8.9000",
-         Year =	"2020",
-         Url = "https://CRAN.R-project.org/package=dynsurv",
-
-         textVersion = paste("Wang, X., Chen, M.-H., Wang, W., Yan, J. (2020).",
-                             "dynsurv: Dynamic Models for Survival Data.",
-                             "R package version 0.3-8.9000.",
-                             "https://CRAN.R-project.org/package=dynsurv")
+bibentry(
+    key = "dynsurv-package",
+    bibtype = "Manual",
+    title = "{dynsurv}: {D}ynamic Models for Survival Data",
+    author = personList(as.person("Wenjie Wang"),
+                        as.person("Ming-Hui Chen"),
+                        as.person("Xiaojing Wang"),
+                        as.person("Jun Yan")),
+    year = "2020",
+    url = "https://CRAN.R-project.org/package=dynsurv",
+    note = "{R} package version 0.3-8.9000-8.9000-8.9000-8.9000-8.9000"
 )
