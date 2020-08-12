@@ -18,25 +18,9 @@
 ################################################################################
 
 
-
-## ##' Print an object.
-## ##'
-## ##' An S3 class generic function that displays certain object.
-## ##'
-## ##' For \code{bayesCox} (\code{tvTran}, or \code{splineCox}) object,
-## ##' it prints out the brief summary of the fitted model.
-## ##'
-## ##' @param x An object used to dispatch a method.
-## ##' @param ... Other arguments.
-
-
-
-### Print bayesCox object ======================================================
-## ## ' @rdname print
-## ## ' @aliases print.bayesCox
 ##' @export
-print.bayesCox <- function(x, ...) {
-
+print.bayesCox <- function(x, ...)
+{
     cat("\nCall:\n")
     dput(x$call)
 
@@ -73,12 +57,11 @@ print.bayesCox <- function(x, ...) {
 
     cat("\nBayesian measures of model fitting:\n")
     print(data.frame(x$measure), row.names = FALSE)
+    ## return x invisibly
+    invisible(x)
 }
 
 
-### Print tvTran object ========================================================
-## ##' @rdname print
-## ##' @aliases print.tvTran
 ##' @export
 print.tvTran <- function(x, ...) {
 
@@ -95,12 +78,11 @@ print.tvTran <- function(x, ...) {
 
     colnames(est) <- c("interval", x$cov.names)
     print(est, digits = max(options()$digits - 4, 3))
+    ## return x invisibly
+    invisible(x)
 }
 
 
-### Print splineCox object =====================================================
-## ##' @rdname print
-## ##' @aliases print.splineCox
 ##' @export
 print.splineCox <- function(x, ...) {
 
@@ -113,4 +95,6 @@ print.splineCox <- function(x, ...) {
     cat("\nFit results for the expanded data returned by coxph:\n")
     print(x$coxph.fit)
     cat("\n")
+    ## return x invisibly
+    invisible(x)
 }
