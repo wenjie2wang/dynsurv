@@ -48,7 +48,7 @@ else
     sed -i -E "$regexp2" DESCRIPTION
 
     # update version and year in citation
-    regexp3="s/version ([0-9]+\.*)+/version $version/"
+    regexp3="s/version ([0-9-]+\.*)+/version $version/"
     sed -i -E "$regexp3" $citation
     # restrict the search and only update the year of package
     regexp4="/dynsurv-package/,/^\)$/ s/20[0-9]{2}/$yr/"
