@@ -114,7 +114,6 @@ nu <- function(object, ...) UseMethod("nu", object)
 ##' ## See the examples in bayesCox.
 ##' @importFrom utils read.table
 ##' @importFrom stats model.frame
-##' @importFrom reshape melt melt.data.frame
 ##' @export
 nu.bayesCox <- function(object, ...) {
     ## Monte Carlo samples
@@ -126,11 +125,15 @@ nu.bayesCox <- function(object, ...) {
     K <- length(object$grid)
     covNms <- object$cov.names
     nBeta <- length(covNms)
-
     nuMat <- as.matrix(ms[, seq((1 + nBeta) * K + 1, (1 + nBeta) * K + nBeta)])
     res <- data.frame(1 : iter, object$model, nuMat)
     colnames(res) <- c("Iter", "Model", covNms)
-    res <- reshape::melt.data.frame(res, c("Iter", "Model"))
-    colnames(res) <- c("Iter", "Model", "Cov", "Value")
+    res <- stats::reshape(res,
+                          varying = seq.int(3, ncol(res)),
+                          v.names = "Value",
+                          timevar = "Cov",
+                          idvar = c("Iter", "Model"),
+                          direction = "long")
+    attr(res, "reshapeLong") <- NULL
     res
 }

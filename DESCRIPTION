@@ -30,7 +30,6 @@ Imports:
     grDevices,
     grid,
     nleqslv,
-    reshape,
     splines2,
     stats,
     survival,
