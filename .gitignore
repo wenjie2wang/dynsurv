@@ -4,6 +4,7 @@
 *.tar.gz
 src/*.o
 src/*.so
+working/
 *.Rcheck/
 test/
 *.*~

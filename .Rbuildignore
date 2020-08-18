@@ -6,6 +6,7 @@
 ^GRTAGS$
 ^GTAGS$
 ^LICENSE$
+^working$
 ^Makefile$
 ^NEWS\.md$
 ^README\.md$
