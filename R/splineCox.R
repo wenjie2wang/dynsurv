@@ -35,7 +35,7 @@
 ##'         and maximun finite event time or censoring time will be
 ##'         specified.}
 ##' }
-##' @usage splineCox(formula, data, control = list())
+##'
 ##' @param formula A formula object, with the response on the left of a '~'
 ##' operator, and the terms on the right. The response must be a survival
 ##' object as returned by the \code{Surv} function.
@@ -57,6 +57,7 @@
 ##' covariates. Computer Methods and Programs in Biomedicine, 81(2), 154--161.
 ##'
 ##' @keywords B-spline Cox right censor
+##'
 ##' @examples
 ##' \dontrun{
 ##' ## Attach the veteran data from the survival package
@@ -72,6 +73,7 @@
 ##' }
 ##' @importFrom stats model.matrix model.frame as.formula
 ##' @importFrom survival coxph
+##' @importFrom splines2 bSpline
 ##' @export
 splineCox <- function(formula, data, control = list()) {
 
@@ -122,7 +124,7 @@ splineCox <- function(formula, data, control = list()) {
     newDF <- expand(DF, id = "id", time = "time", status = "status")
 
     ## B-spline basis matrix
-    Ft <- do.call("bs", c(list(x = newDF$tStop), basis))
+    Ft <- do.call(splines2::bSpline, c(list(x = newDF$tStop), basis))
 
     newFml <- as.formula(paste("survival::Surv(tStart, tStop, status) ~ ",
                                paste(paste(FtNms, names(mf)[-1], sep = ""),
@@ -142,7 +144,6 @@ splineCox <- function(formula, data, control = list()) {
 ### Utility functions ==========================================================
 ## Expand row, require package plyr
 ##' @importFrom utils head
-##' @importFrom plyr ddply
 expand <- function(data, id = "id", time = "time", status = "status") {
 
     pos <- match(c(id, time, status), names(data))
@@ -162,7 +163,7 @@ expand <- function(data, id = "id", time = "time", status = "status") {
               st = st, row.names = NULL)
     }
 
-    res <- plyr::ddply(data, id, foo)
+    res <- do.call(rbind, by(data, data$id, foo))
     names(res)[ncol(res)] <- status
     res
 }

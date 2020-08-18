@@ -1,7 +1,7 @@
 Package: dynsurv
 Title: Dynamic Models for Survival Data
 Version: 0.3-8.9000
-Date: 2020-08-12
+Date: 2020-08-17
 Authors@R: c(
     person(given = "Wenjie", family = "Wang",
            email = "wang@wwenjie.org",
@@ -10,8 +10,7 @@ Authors@R: c(
     person(given = "Ming-Hui", family = "Chen", role = "aut"),
     person(given = "Xiaojing", family = "Wang", role = "aut"),
     person(given = "Jun", family = "Yan", role = "aut",
-           comment = c(ORCID = "0000-0003-4401-7296")
-           )
+           comment = c(ORCID = "0000-0003-4401-7296"))
     )
 Description: Time-varying coefficient models for interval censored and
     right censored survival data including
@@ -31,8 +30,8 @@ Imports:
     grDevices,
     grid,
     nleqslv,
-    plyr,
     reshape,
+    splines2,
     stats,
     survival,
     utils
