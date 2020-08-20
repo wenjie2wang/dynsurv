@@ -15,11 +15,10 @@
 ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ##
 
-################################################################################
 
-##' Read the MCMC Samples from \code{bayesCox}
+##' Get the MCMC Samples from \code{bayesCox}
 ##'
-##' Read the output text file that contains MCMC samples produced by
+##' Returns the MCMC samples produced by
 ##' \code{bayesCox} into data frames.
 ##'
 ##' @param object A \code{bayesCox} object
@@ -35,9 +34,9 @@
 ##' @importFrom stats reshape
 ##'
 ##' @export
-read.bayesCox <- function(object,
-                          parts = c("h0", "coef"),
-                          ...)
+bayesCoxMcmc <- function(object,
+                         parts = c("h0", "coef"),
+                         ...)
 {
     if (! is.bayesCox(object)) {
         stop("The input must be a 'bayesCox' object.")
@@ -155,6 +154,6 @@ read.bayesCox <- function(object,
             nu = nuDat,
             jump = jumpDat
         ),
-        class = c("bayesCox_mcmc")
+        class = c("bayesCoxMcmc")
     )
 }
