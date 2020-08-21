@@ -98,31 +98,27 @@
 ##' The Part 3 is needed by function \code{nu}; Function \code{jump} extracts
 ##' the Part 4.
 ##'
-##' @usage
-##' bayesCox(formula, data, grid = NULL, out = "mcmc.txt",
-##'          model = c("TimeIndep", "TimeVarying", "Dynamic"),
-##'          base.prior = list(), coef.prior = list(),
-##'          gibbs = list(), control = list())
-##'
 ##' @param formula A formula object, with the response on the left of a '~'
 ##'     operator, and the terms on the right. The response must be a survival
 ##'     object as returned by the function \code{Surv} with \code{type =
 ##'     "interval2"}. \code{help(Surv)} for details.
 ##' @param data A data.frame in which to interpret the variables named in the
 ##'     \code{formula}.
-##' @param grid Vector of pre-specified time grid points for model fitting.
-##'     It will be automatically set up from data if it is left unspecified
-##'     in the function call. By default, it consists of all the unique
-##'     finite endpoints (rounded to two significant numbers) of the
-##'     censoring intervals after time zero.  The \code{grid} specified in
-##'     the function call determines the location of possible jumps. It should
-##'     be sorted increasingly and cover all the finite non-zero endpoints of
-##'     the censoring intervals. Inappropriate \code{grid} specified will be
-##'     taken care by the function internally.
-##' @param out Name of Markov chain Monte Carlo (MCMC) samples output file.
-##'     Each row contains one MCMC sample information. The file is needed for
-##'     those functions further summarizing estimation results in this
-##'     package. See Section Details for details.
+##' @param grid Vector of pre-specified time grid points for model fitting.  It
+##'     will be automatically set up from data if it is left unspecified in the
+##'     function call. By default, it consists of all the unique finite
+##'     endpoints (rounded to two significant numbers) of the censoring
+##'     intervals after time zero.  The \code{grid} specified in the function
+##'     call determines the location of possible jumps. It should be sorted
+##'     increasingly and cover all the finite non-zero endpoints of the
+##'     censoring intervals. Inappropriate \code{grid} specified will be taken
+##'     care by the function internally.
+##' @param out An optional character string specifying the name of Markov chain
+##'     Monte Carlo (MCMC) samples output file.  By default, the MCMC samples
+##'     will be output to a temporary directory set by \code{tempdir} and saved
+##'     in the returned \code{bayesCox} object after burning and thinning.  If
+##'     \code{out} is specified, the MCMC samples will be saved to the specified
+##'     text file.
 ##' @param model Model type to fit. Available options are \code{"TimeIndep"},
 ##'     \code{"TimeVarying"}, and \code{"Dynamic"}. Partial matching on the
 ##'     name is allowed.
@@ -137,6 +133,8 @@
 ##'     1)} for \code{TimeVarying} and \code{Dynamic} models.
 ##' @param gibbs List of options for Gibbs sampler.
 ##' @param control List of general control options.
+##' @param ... Other arguments that are for futher extension.
+##'
 ##' @return An object of S3 class \code{bayesCox} representing the fit.
 ##' @seealso \code{\link{coef.bayesCox}}, \code{\link{jump.bayesCox}},
 ##'     \code{\link{nu.bayesCox}}, \code{\link{plotCoef}},
@@ -160,17 +158,23 @@
 ##' D. Sinha, M.-H. Chen, and S.K. Ghosh (1999). Bayesian analysis and model
 ##' selection for interval-censored survival data. \emph{Biometrics} 55(2),
 ##' 585--590.
+##'
 ##' @keywords Bayesian Cox dynamic interval censor
+##'
 ##' @example inst/examples/ex-bayesCox.R
 ##'
 ##' @importFrom stats model.frame model.matrix .getXlevels stepfun
 ##' @importFrom utils tail
 ##'
 ##' @export
-bayesCox <- function(formula, data, grid = NULL, out = "mcmc.txt",
+bayesCox <- function(formula, data, grid = NULL, out = NULL,
                      model = c("TimeIndep", "TimeVarying", "Dynamic"),
-                     base.prior = list(), coef.prior = list(), gibbs = list(),
-                     control = list()) {
+                     base.prior = list(),
+                     coef.prior = list(),
+                     gibbs = list(),
+                     control = list(),
+                     ...)
+{
     Call <- match.call()
 
     ## Prepare prior information
@@ -291,16 +295,20 @@ bayesCox <- function(formula, data, grid = NULL, out = "mcmc.txt",
     }
     colnames(LRX) <- c("L", "R", cov.names)
 
+    ## if out is not specified, use the temp file
+    if (save_mcmc <- is.null(out)) {
+        out <- sprintf("%s.txt", tempfile())
+    }
+
     ## Prepare results holder
     K <- length(grid)
     nBeta <- length(cov.names)
     lambda <- rep(0, K)
-
-    if (model == "TimeIndep")
-        beta <- rep(0, nBeta)
-    else
-        beta <- rep(0, nBeta * K)
-
+    beta <- if (model == "TimeIndep") {
+                rep(0, nBeta)
+            } else {
+                rep(0, nBeta * K)
+            }
     nu <- rep(0, nBeta)
     jump <- rep(0, nBeta * K)
 
@@ -341,90 +349,123 @@ bayesCox <- function(formula, data, grid = NULL, out = "mcmc.txt",
     if (coef.prior$type != "HAR1")
         res$nu <- NULL
 
-    if (model != "Dynamic")
-        res$jump <- NULL
-    else
+    if (model == "Dynamic") {
         res$jump <- matrix(res$jump, K, nBeta)
+    } else {
+        res$jump <- NULL
+    }
 
-    ## Return list
-    rl <- list(call = Call, formula = formula, grid = grid, out = out,
-               model = model, LRX = LRX, base.prior = base.prior,
-               coef.prior = coef.prior, gibbs = gibbs,
-               control = control, xlevels = .getXlevels(mt, mf),
-               N = nrow(LRX), K = K, nBeta = nBeta, cov.names = cov.names,
-               est = list(lambda = res$lambda, beta = res$beta, nu = res$nu,
-                          jump = res$jump),
-               measure = list(LPML = res$LPML, DHat = res$DHat, DBar = res$DBar,
-                              pD = res$pD, DIC = res$DIC))
-    class(rl) <- "bayesCox"
-    rl
+    ## save the MCMC samples if out was not specified
+    if (save_mcmc) {
+        mcmc_list <- read_bayesCox(out, gibbs$burn, gibbs$thin)
+        out <- NULL
+    } else {
+        mcmc_list <- NULL
+    }
+
+    ## Return a list of class bayesCox
+    structure(list(
+        call = Call,
+        formula = formula,
+        grid = grid,
+        out = out,
+        model = model,
+        LRX = LRX,
+        base.prior = base.prior,
+        coef.prior = coef.prior,
+        gibbs = gibbs,
+        control = control,
+        xlevels = .getXlevels(mt, mf),
+        N = nrow(LRX),
+        K = K,
+        nBeta = nBeta,
+        cov.names = cov.names,
+        mcmc = mcmc_list,
+        est = list(lambda = res$lambda,
+                   beta = res$beta,
+                   nu = res$nu,
+                   jump = res$jump),
+        measure = list(LPML = res$LPML,
+                       DHat = res$DHat,
+                       DBar = res$DBar,
+                       pD = res$pD,
+                       DIC = res$DIC)
+    ), class = "bayesCox")
 }
 
 
 ### Internal functions =========================================================
 
 ## Baseline prior
-Gamma_fun <- function(shape = 0.1, rate = 0.1) {
+Gamma_fun <- function(shape = 0.1, rate = 0.1)
+{
     list(shape = shape, rate = rate)
 }
 
-Const_fun <- function(value = 1) {
+Const_fun <- function(value = 1)
+{
     list(value = value, value = value)
 }
 
-GammaProcess_fun <- function(mean = 0.1, ctrl = 1) {
+GammaProcess_fun <- function(mean = 0.1, ctrl = 1)
+{
     list(mean = mean, ctrl = ctrl)
 }
 
-bp_fun <- function(type = c("Gamma", "Const", "GammaProcess"), ...) {
+bp_fun <- function(type = c("Gamma", "Const", "GammaProcess"), ...)
+{
     type <- match.arg(type)
-
-    if (type == "Gamma")
-        hyper <- Gamma_fun(...)
-    if (type == "Const")
-        hyper <- Const_fun(...)
-    if (type == "GammaProcess")
-        hyper <- GammaProcess_fun(...)
-
+    hyper <- if (type == "Gamma") {
+                 Gamma_fun(...)
+             } else if (type == "Const") {
+                 Const_fun(...)
+             } else if (type == "GammaProcess") {
+                 GammaProcess_fun(...)
+             }
     list(type = type, hyper = hyper)
 }
 
 
 ## Coefficient prior
-Normal_fun <- function(mean = 0, sd = 1) {
+Normal_fun <- function(mean = 0, sd = 1)
+{
     list(mean = mean, sd = sd)
 }
-AR1_fun <- function(sd = 1) {
+AR1_fun <- function(sd = 1)
+{
     list(sd = sd, sd = sd)
 }
-HAR1_fun <- function(shape = 2, scale = 1) {
+HAR1_fun <- function(shape = 2, scale = 1)
+{
     list(shape = shape, scale = scale)
 }
 
-cp_fun <- function(type = c("Normal", "AR1", "HAR1"), ...) {
+cp_fun <- function(type = c("Normal", "AR1", "HAR1"), ...)
+{
     type <- match.arg(type)
-
-    if (type == "Normal")
-        hyper <- Normal_fun(...)
-    if (type == "AR1")
-        hyper <- AR1_fun(...)
-    if (type == "HAR1")
-        hyper <- HAR1_fun(...)
-
+    hyper <- if (type == "Normal") {
+                 Normal_fun(...)
+             } else if (type == "AR1") {
+                 AR1_fun(...)
+             } else if (type == "HAR1") {
+                 HAR1_fun(...)
+             }
     list(type = type, hyper = hyper)
 }
 
 
 ## Gibbs sampler control and general control
-gibbs_fun <- function(iter = 3000, burn = 500, thin = 1, verbose = TRUE,
-                      nReport = 100) {
-    list(iter = iter,
-         burn = burn,
-         thin = thin,
+gibbs_fun <- function(iter = 3000, burn = 500, thin = 1,
+                      verbose = TRUE, nReport = 100)
+{
+    list(iter = as.integer(iter),
+         burn = as.integer(burn),
+         thin = as.integer(thin),
          verbose = verbose,
-         nReport = nReport)
+         nReport = as.integer(nReport))
 }
 
-control_bfun <- function(intercept = FALSE, a0 = 100, eps0 = 1) {
+control_bfun <- function(intercept = FALSE, a0 = 100, eps0 = 1)
+{
     list(intercept = intercept, a0 = a0, eps0 = eps0)
 }
