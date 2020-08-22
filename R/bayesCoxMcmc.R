@@ -171,7 +171,8 @@ bc_beta <- function(ms, grid, model, cov.names)
     }
     betaDat <- rbindlist(lapply(seq_len(nBeta), function(j) {
         jj <- K + (j - 1) * cK + 1
-        out <- ms[, seq.int(jj, jj + cK - 1), drop = FALSE, with = FALSE]
+        idx <- seq.int(jj, jj + cK - 1)
+        out <- ms[, idx, drop = FALSE, with = FALSE]
         out$mcmc.sample <- sample_id
         out <- data.table::melt(out,
                                 idvars = "mcmc.sample",
@@ -180,7 +181,7 @@ bc_beta <- function(ms, grid, model, cov.names)
                                 value.name = "coef",
                                 variable.factor = TRUE)
         tmp <- data.table(
-            tmp = paste0("V", jj),
+            tmp = paste0("V", idx),
             time = grid
         )
         out <- merge(out, tmp, by = "tmp")
@@ -236,18 +237,20 @@ bc_jump <- function(ms, grid, model, cov.names)
         ## wide to long
         jumpDat <- rbindlist(lapply(seq_len(nBeta), function(j) {
             jj <- (j + nBeta) * K + nBeta + 1
-            out <- ms[, seq.int(jj, jj + K - 1), drop = FALSE, with = FALSE]
+            idx <- seq.int(jj, jj + K - 1)
+            out <- ms[, idx, drop = FALSE, with = FALSE]
             out$mcmc.sample <- sample_id
+            tmp <- data.table(
+                tmp = paste0("V", idx),
+                time = grid
+            )
             out <- melt(out,
                         idvars = "mcmc.sample",
                         measure.vars = seq_len(K),
                         variable.name = "tmp",
                         value.name = "jump",
                         variable.factor = TRUE)
-            tmp <- data.table(
-                tmp = paste0("V", jj),
-                time = grid
-            )
+
             out <- merge(out, tmp, by = "tmp")
             out$tmp <- NULL
             out$covariate <- cov.names[j]
