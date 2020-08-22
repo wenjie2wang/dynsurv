@@ -43,59 +43,19 @@ bayesCoxMcmc <- function(object,
     }
     parts <- match.arg(parts, choices = c("h0", "coef", "nu", "jump", "all"),
                        several.ok = TRUE)
-    ## Monte Carlo samples
-    ms <- read.table(file = object$out)
-    ms <- ms[seq.int(object$gibbs$burn + 1, nrow(ms), by = object$gibbs$thin), ]
-    row.names(ms) <- NULL
-    iter <- nrow(ms)
-    sample_id <- seq_len(iter)
-    ## dimension of baseline
-    grid_ <- object$grid
-    K <- length(grid_)
-    cK <- if (object$model == "TimeIndep") 1 else K
-    nBeta <- length(object$cov.names)
+    ms <- object$mcmc
+    if (is.null(ms)) {
+        ms <- read_bayesCox(object$out, object$gibbs$burn, object$gibbs$thin)
+    }
     ## baseline hazard
     h0Dat <- NULL
     if (any(c("h0", "all") %in% parts)) {
-        h0Dat <- ms[, seq_len(K), drop = FALSE]
-        h0Dat$mcmc.sample <- sample_id
-        h0Dat <- stats::reshape(h0Dat,
-                                idvar = "mcmc.sample",
-                                varying = seq_len(K),
-                                v.names = "h0",
-                                times = grid_,
-                                direction = "long")
-        h0Dat <- h0Dat[order(h0Dat$mcmc.sample), ]
-        row.names(h0Dat) <- NULL
-        attr(h0Dat, "reshapeLong") <- NULL
-        h0Dat <- h0Dat
+        h0Dat <- bc_h0(ms, object$grid, object$model, object$cov.names)
     }
     ## covariate coefficients
     betaDat <- NULL
     if (any(c("coef", "all") %in% parts)) {
-        betaDat <- do.call(rbind, lapply(seq_len(nBeta), function(j) {
-            jj <- K + (j - 1) * cK + 1
-            if (object$model != "TimeIndep") {
-                out <- ms[, seq.int(jj, jj + cK - 1), drop = FALSE]
-                out$mcmc.sample <- sample_id
-                out <- stats::reshape(out,
-                                      idvar = "mcmc.sample",
-                                      varying = seq_len(cK),
-                                      v.names = "coef",
-                                      times = grid_,
-                                      direction = "long")
-                out <- out[order(out$mcmc.sample), ]
-                attr(out, "reshapeLong") <- NULL
-            } else {
-                out <- ms[, jj, drop = FALSE]
-                out$mcmc.sample <- sample_id
-                colnames(out)[1L] <- "coef"
-                out <- out[, c("mcmc.sample", "coef")]
-            }
-            out$covariate <- object$cov.names[j]
-            row.names(out) <- NULL
-            out
-        }))
+        betaDat <- bc_beta(ms, object$grid, object$model, object$cov.names)
     }
     ## latent variance of coefficients
     nuDat <- NULL
@@ -103,20 +63,11 @@ bayesCoxMcmc <- function(object,
         ## only for time-varying and dynamic model and coef.prior = HAR1
         if (! object$model %in% c("TimeVarying", "Dynamic")) {
             warning(
-                "Latent variance of coefficients is only available for",
+                "Latent variance of coefficients is only available for ",
                 "the time-varying coefficient models or the dynamic models."
             )
         } else {
-            nuDat <- do.call(rbind, lapply(seq_len(nBeta), function(j) {
-                jj <- (1 + nBeta) * K + j
-                out <- ms[, jj, drop = FALSE]
-                out$mcmc.sample <- sample_id
-                colnames(out)[1L] <- "nu"
-                out <- out[, c("mcmc.sample", "nu")]
-                out$covariate <- object$cov.names[j]
-                row.names(out) <- NULL
-                out
-            }))
+            nuDat <- bc_nu(ms, object$grid, object$model, object$cov.names)
         }
     }
     ## jump
@@ -128,22 +79,7 @@ bayesCoxMcmc <- function(object,
                 "Jump indicators are only available for the dynamic models."
             )
         } else {
-            jumpDat <- do.call(rbind, lapply(seq_len(nBeta), function(j) {
-                jj <- (j + nBeta) * K + nBeta + 1
-                out <- ms[, seq.int(jj, jj + K - 1), drop = FALSE]
-                out$mcmc.sample <- sample_id
-                out <- stats::reshape(out,
-                                      idvar = "mcmc.sample",
-                                      varying = seq_len(K),
-                                      v.names = "jump",
-                                      times = grid_,
-                                      direction = "long")
-                out <- out[order(out$mcmc.sample), ]
-                attr(out, "reshapeLong") <- NULL
-                out$covariate <- object$cov.names[j]
-                row.names(out) <- NULL
-                out
-            }))
+            jumpDat <- bc_jump(ms, object$grid, object$model, object$cov.names)
         }
     }
     ## return
@@ -156,4 +92,169 @@ bayesCoxMcmc <- function(object,
         ),
         class = c("bayesCoxMcmc")
     )
+}
+
+
+### internal functions =======================================================
+## read mcmc outputs
+##' @importFrom data.table melt data.table
+read_bayesCox <- function(out, burn, thin)
+{
+    ms <- fread(
+        file = out,
+        sep = " ",
+        showProgress = FALSE,
+        verbose = FALSE
+    )
+    ms <- ms[seq.int(burn + 1, nrow(ms), by = thin), ]
+    row.names(ms) <- NULL
+    ms
+}
+
+## tidy mcmc
+##' @importFrom data.table melt data.table setnames rbindlist
+
+## baseline hazard function
+bc_h0 <- function(ms, grid, model, cov.names)
+{
+    ## set dimension
+    iter <- nrow(ms)
+    sample_id <- seq_len(iter)
+    K <- length(grid)
+    cK <- if (model == "TimeIndep") 1 else K
+    nBeta <- length(cov.names)
+    ## wide to long
+    h0Dat <- ms[, seq_len(K), drop = FALSE, with = FALSE]
+    h0Dat$mcmc.sample <- sample_id
+    h0Dat <- data.table::melt(h0Dat,
+                              idvars = "mcmc.sample",
+                              measure.vars = seq_len(K),
+                              variable.name = "tmp",
+                              value.name = "h0",
+                              variable.factor = FALSE)
+    tmp <- data.table(
+        tmp = paste0("V", seq_len(K)),
+        time = grid
+    )
+    h0Dat <- merge(h0Dat, tmp, by = "tmp")
+    h0Dat$tmp <- NULL
+    ## return
+    h0Dat[, c("mcmc.sample", "time", "h0"), with = FALSE]
+}
+
+## covariate coefficients
+bc_beta <- function(ms, grid, model, cov.names)
+{
+    ## set dimension
+    iter <- nrow(ms)
+    sample_id <- seq_len(iter)
+    K <- length(grid)
+    cK <- if (model == "TimeIndep") 1 else K
+    nBeta <- length(cov.names)
+    ## wide to long
+    if (model == "TimeIndep") {
+        idx <- seq.int(K + 1, K + nBeta)
+        betaDat <- ms[, idx, drop = FALSE, with = FALSE]
+        betaDat$mcmc.sample <- sample_id
+        betaDat <- data.table::melt(betaDat,
+                                    idvars = "mcmc.sample",
+                                    measure.vars = seq_len(nBeta),
+                                    variable.name = "covariate",
+                                    value.name = "coef",
+                                    variable.factor = TRUE)
+        betaDat$covariate <- factor(
+            betaDat$covariate,
+            levels = levels(betaDat$covariate),
+            labels = cov.names
+        )
+        return(betaDat)
+    }
+    betaDat <- rbindlist(lapply(seq_len(nBeta), function(j) {
+        jj <- K + (j - 1) * cK + 1
+        out <- ms[, seq.int(jj, jj + cK - 1), drop = FALSE, with = FALSE]
+        out$mcmc.sample <- sample_id
+        out <- data.table::melt(out,
+                                idvars = "mcmc.sample",
+                                measure.vars = seq_len(K),
+                                variable.name = "tmp",
+                                value.name = "coef",
+                                variable.factor = TRUE)
+        tmp <- data.table(
+            tmp = paste0("V", jj),
+            time = grid
+        )
+        out <- merge(out, tmp, by = "tmp")
+        out$tmp <- NULL
+        out$covariate <- cov.names[j]
+        row.names(out) <- NULL
+        out
+    }))
+    ## return
+    betaDat[, c("mcmc.sample", "time", "coef", "covariate"), with = FALSE]
+}
+
+## latent variance
+bc_nu <- function(ms, grid, model, cov.names)
+{
+    nuDat <- NULL
+    if (model %in% c("TimeVarying", "Dynamic")) {
+        ## set dimension
+        iter <- nrow(ms)
+        sample_id <- seq_len(iter)
+        K <- length(grid)
+        nBeta <- length(cov.names)
+        ## wide to long
+        nuDat <- ms[, seq.int((1 + nBeta) * K + 1, (1 + nBeta) * K + nBeta),
+                    with = FALSE]
+        nuDat$mcmc.sample <- sample_id
+        nuDat <- melt(nuDat,
+                      idvars = "mcmc.sample",
+                      measure.vars = seq_len(nBeta),
+                      variable.name = "covariate",
+                      value.name = "nu",
+                      variable.factor = TRUE)
+        nuDat$covariate <- factor(
+            nuDat$covariate,
+            levels = levels(nuDat$covariate),
+            labels = cov.names
+        )
+    }
+    ## return
+    nuDat
+}
+
+## jump
+bc_jump <- function(ms, grid, model, cov.names)
+{
+    jumpDat <- NULL
+    if (model == "Dynamic") {
+        ## set dimension
+        iter <- nrow(ms)
+        sample_id <- seq_len(iter)
+        K <- length(grid)
+        nBeta <- length(cov.names)
+        ## wide to long
+        jumpDat <- rbindlist(lapply(seq_len(nBeta), function(j) {
+            jj <- (j + nBeta) * K + nBeta + 1
+            out <- ms[, seq.int(jj, jj + K - 1), drop = FALSE, with = FALSE]
+            out$mcmc.sample <- sample_id
+            out <- melt(out,
+                        idvars = "mcmc.sample",
+                        measure.vars = seq_len(K),
+                        variable.name = "tmp",
+                        value.name = "jump",
+                        variable.factor = TRUE)
+            tmp <- data.table(
+                tmp = paste0("V", jj),
+                time = grid
+            )
+            out <- merge(out, tmp, by = "tmp")
+            out$tmp <- NULL
+            out$covariate <- cov.names[j]
+            row.names(out) <- NULL
+            out
+        }))
+    }
+    ## return
+    jumpDat
 }
