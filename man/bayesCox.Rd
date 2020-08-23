@@ -4,10 +4,18 @@
 \alias{bayesCox}
 \title{Fit Bayesian Cox Model for Interval Censored Survival Data}
 \usage{
-bayesCox(formula, data, grid = NULL, out = "mcmc.txt",
-         model = c("TimeIndep", "TimeVarying", "Dynamic"),
-         base.prior = list(), coef.prior = list(),
-         gibbs = list(), control = list())
+bayesCox(
+  formula,
+  data,
+  grid = NULL,
+  out = NULL,
+  model = c("TimeIndep", "TimeVarying", "Dynamic"),
+  base.prior = list(),
+  coef.prior = list(),
+  gibbs = list(),
+  control = list(),
+  ...
+)
 }
 \arguments{
 \item{formula}{A formula object, with the response on the left of a '~'
@@ -18,24 +26,26 @@ object as returned by the function \code{Surv} with \code{type =
 \item{data}{A data.frame in which to interpret the variables named in the
 \code{formula}.}
 
-\item{grid}{Vector of pre-specified time grid points for model fitting.
-It will be automatically set up from data if it is left unspecified
-in the function call. By default, it consists of all the unique
-finite endpoints (rounded to two significant numbers) of the
-censoring intervals after time zero.  The \code{grid} specified in
-the function call determines the location of possible jumps. It should
-be sorted increasingly and cover all the finite non-zero endpoints of
-the censoring intervals. Inappropriate \code{grid} specified will be
-taken care by the function internally.}
+\item{grid}{Vector of pre-specified time grid points for model fitting.  It
+will be automatically set up from data if it is left unspecified in the
+function call. By default, it consists of all the unique finite
+endpoints (rounded to two significant numbers) of the censoring
+intervals after time zero.  The \code{grid} specified in the function
+call determines the location of possible jumps. It should be sorted
+increasingly and cover all the finite non-zero endpoints of the
+censoring intervals. Inappropriate \code{grid} specified will be taken
+care by the function internally.}
 
-\item{out}{Name of Markov chain Monte Carlo (MCMC) samples output file.
-Each row contains one MCMC sample information. The file is needed for
-those functions further summarizing estimation results in this
-package. See Section Details for details.}
+\item{out}{An optional character string specifying the name of Markov chain
+Monte Carlo (MCMC) samples output file.  By default, the MCMC samples
+will be output to a temporary directory set by \code{tempdir} and saved
+in the returned \code{bayesCox} object after burning and thinning.  If
+\code{out} is specified, the MCMC samples will be preserved in the
+specified text file.}
 
 \item{model}{Model type to fit. Available options are \code{"TimeIndep"},
-\code{"TimeVarying"}, and \code{"Dynamic"}. Partial matching on the
-name is allowed.}
+\code{"TimeVarying"}, and \code{"Dynamic"}. Partial matching on the name
+is allowed.}
 
 \item{base.prior}{List of options for prior of baseline lambda. Use
 \code{list(type = "Gamma", shape = 0.1, rate = 0.1)} for all models;
@@ -45,12 +55,14 @@ name is allowed.}
 \item{coef.prior}{List of options for prior of coefficient beta. Use
 \code{list(type = "Normal", mean = 0, sd = 1)} for \code{TimeIndep}
 model; \code{list(type = "AR1", sd = 1)} for \code{TimeVarying} and
-\code{Dynamic} models; \code{list(type = "HAR1", shape = 2, scale =
-1)} for \code{TimeVarying} and \code{Dynamic} models.}
+\code{Dynamic} models; \code{list(type = "HAR1", shape = 2, scale = 1)}
+for \code{TimeVarying} and \code{Dynamic} models.}
 
 \item{gibbs}{List of options for Gibbs sampler.}
 
 \item{control}{List of general control options.}
+
+\item{...}{Other arguments that are for futher extension.}
 }
 \value{
 An object of S3 class \code{bayesCox} representing the fit.
@@ -129,31 +141,20 @@ The Part 3 is needed by function \code{nu}; Function \code{jump} extracts
 the Part 4.
 }
 \examples{
-\dontrun{
-
 library(dynsurv)
 set.seed(1216)
 
-### load one of the following two data sets
-
 ## breast cancer data
-data(bcos)       # load bcos and bcos.grid
+data(bcos)
 mydata <- bcos
-mygrid <- bcos.grid
 myformula <- Surv(left, right, type = "interval2") ~ trt
 
-## tooth data
-## data(tooth)   # load tooth and tooth.grid
-## mydata <- tooth
-## mygrid <- tooth.grid
-## myformula <- Surv(left, rightInf, type = "interval2") ~ dmf + sex
-
 ### Fit time-independent coefficient model
-fit0 <- bayesCox(myformula, mydata, out = "tiCox.txt", model = "TimeIndep",
+fit0 <- bayesCox(myformula, mydata, model = "TimeIndep",
                  base.prior = list(type = "Gamma", shape = 0.1, rate = 0.1),
                  coef.prior = list(type = "Normal", mean = 0, sd = 1),
-                 gibbs = list(iter = 100, burn = 20, thin = 1,
-                              verbose = TRUE, nReport = 20))
+                 gibbs = list(iter = 100, burn = 20, thin = 1, verbose = FALSE))
+
 ## plot coefficient estimates
 plotCoef(coef(fit0, level = 0.9))
 
@@ -162,29 +163,23 @@ newDat <- data.frame(trt = c("Rad", "RadChem"))
 row.names(newDat) <- unique(newDat$trt)
 plotSurv(survCurve(fit0, newDat), conf.int = TRUE)
 
-## optional: get MCMC samples for more estimates of interest
-mcmc_list <- read.bayesCox(fit0)
-str(mcmc_list)
-
 ### Fit time-varying coefficient model
-fit1 <- bayesCox(myformula, mydata, out = "tvCox.txt", model = "TimeVary",
+fit1 <- bayesCox(myformula, mydata, model = "TimeVary",
                  base.prior = list(type = "Gamma", shape = 0.1, rate = 0.1),
                  coef.prior = list(type = "AR1", sd = 1),
                  gibbs = list(iter = 100, burn = 20, thin = 1,
                               verbose = TRUE, nReport = 20))
+
 plotCoef(coef(fit1))
 plotSurv(survCurve(fit1), conf.int = TRUE)
 
-## optional: get MCMC samples for more estimates of interest
-mcmc_list <- read.bayesCox(fit1)
-str(mcmc_list)
-
 ### Fit dynamic coefficient model with time-varying baseline hazards
-fit2 <- bayesCox(myformula, mydata, out = "dynCox1.txt", model = "Dynamic",
+fit2 <- bayesCox(myformula, mydata, model = "Dynamic",
                  base.prior = list(type = "Gamma", shape = 0.1, rate = 0.1),
                  coef.prior = list(type = "HAR1", shape = 2, scale = 1),
                  gibbs = list(iter = 100, burn = 20, thin = 1,
                               verbose = TRUE, nReport = 20))
+
 plotCoef(coef(fit2))
 plotJumpTrace(jump(fit2))
 plotJumpHist(jump(fit2))
@@ -194,17 +189,14 @@ plotSurv(survCurve(fit2), conf.int = TRUE)
 ## Plot the coefficient estimates from three models together
 plotCoef(rbind(coef(fit0), coef(fit1), coef(fit2)))
 
-## optional: get MCMC samples for more estimates of interest
-mcmc_list <- read.bayesCox(fit2)
-str(mcmc_list)
-
 ### Fit dynamic coefficient model with dynamic hazards (in log scales)
-fit3 <- bayesCox(myformula, mydata, out = "dynCox2.txt", model = "Dynamic",
+fit3 <- bayesCox(myformula, mydata, model = "Dynamic",
                  base.prior = list(type = "Const"),
                  coef.prior = list(type = "HAR1", shape = 2, scale = 1),
                  gibbs = list(iter = 100, burn = 20, thin = 1,
                               verbose = TRUE, nReport = 20),
                  control = list(intercept = TRUE))
+
 plotCoef(coef(fit3))
 plotJumpTrace(jump(fit3))
 plotJumpHist(jump(fit3))
@@ -216,12 +208,6 @@ plotSurv(survCurve(fit3, newdata = newDat, type = "survival"),
          legendName = "Treatment", conf.int = TRUE)
 plotSurv(survDiff(fit3, newdata = newDat, type = "survival"),
          legendName = "Treatment", conf.int = TRUE, smooth = TRUE)
-
-## optional: get MCMC samples for more estimates of interest
-mcmc_list <- read.bayesCox(fit3, parts = "all")
-str(mcmc_list)
-
-}
 }
 \references{
 X. Wang, M.-H. Chen, and J. Yan (2013). Bayesian dynamic regression

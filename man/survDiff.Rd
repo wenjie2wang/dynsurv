@@ -4,8 +4,7 @@
 \alias{survDiff}
 \title{Estimated Difference Between Survival or Cumulative Hazard Functions}
 \usage{
-survDiff(object, newdata, type = c("survival", "cumhaz"),
-         level = 0.95, cache = FALSE, ...)
+survDiff(object, newdata, type = c("survival", "cumhaz"), level = 0.95, ...)
 }
 \arguments{
 \item{object}{An object returned by function \code{bayesCox}.}
@@ -20,11 +19,6 @@ estimated cumulative hazard function for the given \code{newdata}.}
 
 \item{level}{A numerical value between 0 and 1 indicating the level of
 cradible band.}
-
-\item{cache}{A logical value. If \code{TRUE}, the cache RData file will be
-generated in the working directory to improve the performance of
-function \code{survCurve} and \code{survDiff}. This option would be
-quite helpful if the number of MCMC sample is large.}
 
 \item{...}{Other arguments for further usage.}
 }
@@ -48,6 +42,7 @@ survival curves from posterior sample at given credible level.
 }
 \examples{
 ## See the examples in bayesCox.
+
 }
 \references{
 Wang, W., Chen, M. H., Chiou, S. H., Lai, H. C., Wang, X., Yan, J.,

@@ -26,6 +26,7 @@ data frame.
 }
 \examples{
 ## See the examples in bayesCox.
+
 }
 \seealso{
 \code{\link{bayesCox}}, and \code{\link{plotCoef}}.

@@ -4,8 +4,15 @@
 \alias{plotSurv}
 \title{Plot Survival Curves (or Cumulative Hazard Function) and their difference}
 \usage{
-plotSurv(object, legendName = "", conf.int = FALSE, smooth = FALSE,
-         lty, col, ...)
+plotSurv(
+  object,
+  legendName = "",
+  conf.int = FALSE,
+  smooth = FALSE,
+  lty,
+  col,
+  ...
+)
 }
 \arguments{
 \item{object}{An object returned by function \code{survCurve} or
@@ -40,6 +47,7 @@ customized properly.
 }
 \examples{
 ## See the examples in bayesCox.
+
 }
 \seealso{
 \code{\link{bayesCox}}, \code{\link{survCurve}}, and

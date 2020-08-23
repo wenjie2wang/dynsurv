@@ -38,6 +38,7 @@ in Wang (2013).
 
 \examples{
 ## See the examples in bayesCox.
+
 }
 \references{
 X. Wang, M.-H. Chen, and J. Yan (2013). Bayesian dynamic regression

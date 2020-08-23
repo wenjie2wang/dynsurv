@@ -34,6 +34,7 @@ and summarize them into a data frame. It is only applicable when
 
 \examples{
 ## See the examples in bayesCox
+
 }
 \seealso{
 \code{\link{bayesCox}}, \code{\link{plotJumpTrace}}, and

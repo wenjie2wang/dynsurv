@@ -30,6 +30,7 @@ It essentially expand the break points, and then call function
 }
 \examples{
 ## See the examples in splineCox.
+
 }
 \seealso{
 \code{\link{splineCox}}, and \code{\link{plotCoef}}.
