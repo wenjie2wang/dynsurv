@@ -42,7 +42,7 @@ print.bayesCox <- function(x, ...)
         beta <- outer(rep(1, x$K), x$est$beta)
 
     cat("\nBayesian point estimates:\n")
-    est <- data.frame(paste0("(", c(0, head(x$grid, -1)), ", ",
+    est <- data.frame(paste0("(", c(0, x$grid[- length(x$grid)]), ", ",
                              x$grid, "]"),
                       cbind(log(x$est$lambda), beta, x$est$jump))
     estNames <- c("interval", "logLambda",
@@ -70,9 +70,9 @@ print.tvTran <- function(x, ...) {
     print(data.frame(x$control), row.names = FALSE)
 
     cat("\nCoefficient estimates:\n")
-    est <- data.frame(paste0("(", c(0, head(x$eTime, -1)), ", ",
+    est <- data.frame(paste0("(", c(0, x$eTime[- length(x$eTime)]), ", ",
                              x$eTime, "]"),
-                      matrix(x$pEst[seq(1, x$nBeta * x$K)], nrow = x$K))
+                      matrix(x$pEst[seq_len(x$nBeta * x$K)], nrow = x$K))
 
     colnames(est) <- c("interval", x$cov.names)
     print(est, digits = max(options()$digits - 4, 3))

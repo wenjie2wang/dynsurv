@@ -142,10 +142,9 @@ splineCox <- function(formula, data, control = list()) {
 
 
 ### Utility functions ==========================================================
-## Expand row, require package plyr
-##' @importFrom utils head
-expand <- function(data, id = "id", time = "time", status = "status") {
-
+##' @importFrom data.table rbindlist
+expand <- function(data, id = "id", time = "time", status = "status")
+{
     pos <- match(c(id, time, status), names(data))
     if (length(pos) !=  3)
         stop("Variable names not match!\n")
@@ -155,7 +154,7 @@ expand <- function(data, id = "id", time = "time", status = "status") {
     foo <- function(x) {
         tStop <- union(subset(eventTime, eventTime <= max(x[, time])),
                        max(x[, time]))
-        tStart <- c(0, head(tStop, -1))
+        tStart <- c(0, tStop[- length(tStop)])
         st <- rep(0, length(tStop))
         st[tStop %in% x[x[, status] == 1, time]] <- 1
 
@@ -163,12 +162,13 @@ expand <- function(data, id = "id", time = "time", status = "status") {
               st = st, row.names = NULL)
     }
 
-    res <- do.call(rbind, by(data, data$id, foo))
+    res <- data.table::rbindlist(by(data, data$id, foo))
     names(res)[ncol(res)] <- status
     res
 }
 
-control_sfun <- function(df = 5, knots = NULL, boundary = NULL) {
+control_sfun <- function(df = 5, knots = NULL, boundary = NULL)
+{
     list(df = df, knots = knots, boundary = boundary)
 }
 

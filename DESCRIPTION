@@ -1,7 +1,7 @@
 Package: dynsurv
 Title: Dynamic Models for Survival Data
-Version: 0.3-8.9000
-Date: 2020-08-17
+Version: 0.4-0.9000
+Date: 2020-08-22
 Authors@R: c(
     person(given = "Wenjie", family = "Wang",
            email = "wang@wwenjie.org",
@@ -26,14 +26,16 @@ Description: Time-varying coefficient models for interval censored and
 Depends:
     R (>= 3.0.2)
 Imports:
+    data.table,
     ggplot2,
     grDevices,
     grid,
     nleqslv,
     splines2,
     stats,
-    survival,
-    utils
+    survival
+Suggests:
+    tinytest
 LinkingTo: BH (>= 1.54.0-2)
 License: GPL (>= 3)
 LazyLoad: Yes

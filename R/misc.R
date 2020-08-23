@@ -15,7 +15,6 @@
 ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 ##
 
-################################################################################
 
 ##' Is \code{bayesCox} Class Object
 ##'
