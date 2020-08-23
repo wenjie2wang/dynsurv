@@ -67,4 +67,8 @@ plotSurv(survDiff(fit3, newdata = newDat, type = "survival"),
          legendName = "Treatment", conf.int = TRUE, smooth = TRUE)
 
 ## extract MCMC samples
-mcmc_list <- bayesCoxMcmc(fit3, part = "all")
+mcmc_list <- bayesCoxMcmc(fit3, part = "coef")
+posterior_coef <- mcmc_list$coef
+## posterior probabilities of hazard ratio of RadChem (vs. Rad)
+## greater than 1 at time 10
+posterior_coef[covariate == "trtRadChem" & time == 10, mean(exp(coef) > 1)]
