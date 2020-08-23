@@ -117,11 +117,11 @@
 ##'     Monte Carlo (MCMC) samples output file.  By default, the MCMC samples
 ##'     will be output to a temporary directory set by \code{tempdir} and saved
 ##'     in the returned \code{bayesCox} object after burning and thinning.  If
-##'     \code{out} is specified, the MCMC samples will be saved to the specified
-##'     text file.
+##'     \code{out} is specified, the MCMC samples will be preserved in the
+##'     specified text file.
 ##' @param model Model type to fit. Available options are \code{"TimeIndep"},
-##'     \code{"TimeVarying"}, and \code{"Dynamic"}. Partial matching on the
-##'     name is allowed.
+##'     \code{"TimeVarying"}, and \code{"Dynamic"}. Partial matching on the name
+##'     is allowed.
 ##' @param base.prior List of options for prior of baseline lambda. Use
 ##'     \code{list(type = "Gamma", shape = 0.1, rate = 0.1)} for all models;
 ##'     \code{list(type = "Const", value = 1)} for \code{Dynamic} model when
@@ -129,8 +129,8 @@
 ##' @param coef.prior List of options for prior of coefficient beta. Use
 ##'     \code{list(type = "Normal", mean = 0, sd = 1)} for \code{TimeIndep}
 ##'     model; \code{list(type = "AR1", sd = 1)} for \code{TimeVarying} and
-##'     \code{Dynamic} models; \code{list(type = "HAR1", shape = 2, scale =
-##'     1)} for \code{TimeVarying} and \code{Dynamic} models.
+##'     \code{Dynamic} models; \code{list(type = "HAR1", shape = 2, scale = 1)}
+##'     for \code{TimeVarying} and \code{Dynamic} models.
 ##' @param gibbs List of options for Gibbs sampler.
 ##' @param control List of general control options.
 ##' @param ... Other arguments that are for futher extension.
@@ -164,7 +164,6 @@
 ##' @example inst/examples/ex-bayesCox.R
 ##'
 ##' @importFrom stats model.frame model.matrix .getXlevels stepfun
-##' @importFrom utils tail
 ##'
 ##' @export
 bayesCox <- function(formula, data, grid = NULL, out = NULL,
@@ -266,19 +265,26 @@ bayesCox <- function(formula, data, grid = NULL, out = NULL,
 
     ## prepare data based on the grid
     ## make sure all grid points great than zero, finite and sorted
-    if (any(tmpIdx <- is.na(grid) | is.infinite(grid)))
-        grid <- grid[! tmpIdx]
+    grid <- grid[! (is.na(grid) | is.infinite(grid))]
+    ## exclude non-positive points
+    grid <- grid[! grid <= 0]
     ## add exact event times to the grid
-    if (any(tmpIdx <- grid <= 0))
-        grid <- sort(unique(c(grid[! tmpIdx], exactTimes)))
-    if (all(tmpIdx <- is.infinite(LRX[, "time2"])))
-        stop("Subjects are all right censored.")
-    finiteRight <- max(LRX[! tmpIdx, "time2"])
-    if (tail(grid, 1L) < finiteRight) {
-        warning("The grid was expanded to cover all the finite endpoint",
-                "of censoring intervals.")
-        grid <- c(grid, finiteRight)
+    if (length(exactTimes) > 0) {
+        grid <- unique(c(grid, exactTimes))
     }
+    if (all(tmpIdx <- is.infinite(LRX[, "time2"]))) {
+        stop("Subjects are all right censored.")
+    }
+    finiteRight <- max(LRX[! tmpIdx, "time2"])
+    if (max(grid) < finiteRight) {
+        warning("The grid was expanded to cover all the finite endpoint ",
+                "of censoring intervals.")
+        grid <- unique(c(grid, finiteRight))
+    }
+
+    ## make sure grid is sorted and consists of unique points
+    grid <- sort(unique(grid))
+
     ## round the left (right) endpoints down (up)
     ## to the closest grid point including zero
     toLeft <- stats::stepfun(grid, c(0, grid))
@@ -286,8 +292,8 @@ bayesCox <- function(formula, data, grid = NULL, out = NULL,
     LRX[, "time1"] <- toLeft(LRX[, "time1"])
     LRX[, "time2"] <- toRight(LRX[, "time2"])
 
-    LRX[is.infinite(LRX[, 2L]), 2L] <- max(tail(grid, 1L), 999)
-    LRX[is.na(LRX[, 2L]), 2L] <- max(tail(grid, 1L), 999)
+    LRX[is.infinite(LRX[, 2L]), 2L] <- max(grid[length(grid)], 999)
+    LRX[is.na(LRX[, 2L]), 2L] <- max(grid[length(grid)], 999)
 
     if (control$intercept) {
         LRX <- cbind(LRX[, seq_len(2L)], 1, LRX[, - seq_len(2L)])

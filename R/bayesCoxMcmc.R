@@ -96,8 +96,9 @@ bayesCoxMcmc <- function(object,
 
 
 ### internal functions =======================================================
+
 ## read mcmc outputs
-##' @importFrom data.table melt data.table
+##' @importFrom data.table fread
 read_bayesCox <- function(out, burn, thin)
 {
     ms <- fread(

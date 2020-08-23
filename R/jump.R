@@ -40,40 +40,29 @@ jump <- function(object, ...) UseMethod("jump", object)
 ##' @keywords extract bayesCox jump
 ##' @examples
 ##' ## See the examples in bayesCox
+##'
 ##' @importFrom stats model.frame
+##'
 ##' @export
-jump.bayesCox <- function(object, ...) {
+jump.bayesCox <- function(object, ...)
+{
+    ## nonsense to supprese checking notes
+    mcmc.sample <- covariate <- NULL
+
     ## Monte Carlo samples
-    ms <- as.matrix(read.table(file = object$out))
-    dimnames(ms) <- NULL
-    ms <- ms[seq(object$gibbs$burn + 1, nrow(ms), by = object$gibbs$thin), ]
-    iter <- nrow(ms)
-
-    grid <- object$grid
-    K <- length(grid)
-    covNms <- object$cov.names
-    nBeta <- length(covNms)
-
-    jumpMat <- as.matrix(ms[, seq((1 + nBeta) * K + nBeta + 1,
-    (1 + 2 * nBeta) * K + nBeta)])
-
-    ## Number of jumps for each iteration
-    csMat <- diag(1, nBeta, nBeta)
-    csMat <- as.matrix(csMat[rep(1 : nBeta, each = K), ])
-    iterJump <- data.frame(c(jumpMat %*% csMat), rep(1:iter, nBeta),
-                           rep(covNms, each = iter))
-    colnames(iterJump) <- c("Count", "Iter", "Cov")
-    iterJump$Cov <- factor(iterJump$Cov,
-                           levels = as.character(unique(iterJump$Cov)))
-
-    ## Number of jumps at each time grid point
-    ## timeJump <- data.frame(colMeans(jumpMat), rep(grid, nBeta),
-    ##                        rep(covNms, each = K))
-    ## colnames(timeJump) <- c("Jump", "Time", "Cov")
-    ## timeJump <- timeJump[-seq(K, nBeta * K, by = K), ]
-    ## list(iterJump = iterJump, timeJump = timeJump)
-
-    iterJump
+    ms <- object$mcmc
+    if (is.null(ms)) {
+        ms <- read_bayesCox(out = object$out,
+                            burn = object$gibbs$burn,
+                            thin = object$gibbs$thin)
+    }
+    out <- bc_jump(ms, object$grid, object$model, object$cov.names)
+    out <- out[, list(Count = sum(jump)), by = list(mcmc.sample, covariate)]
+    data.table::setnames(out, c("mcmc.sample", "covariate"), c("Iter", "Cov"))
+    out$Model <- object$model
+    out$Cov <- factor(out$Cov, levels = object$cov.names)
+    ## return
+    out[, c("Iter", "Cov", "Model", "Count")]
 }
 
 
@@ -112,28 +101,24 @@ nu <- function(object, ...) UseMethod("nu", object)
 ##' Interval-censored time-to-event data: Methods and applications, 167--195.
 ##' @examples
 ##' ## See the examples in bayesCox.
-##' @importFrom utils read.table
+##'
 ##' @importFrom stats model.frame
+##'
 ##' @export
-nu.bayesCox <- function(object, ...) {
+nu.bayesCox <- function(object, ...)
+{
     ## Monte Carlo samples
-    ms <- as.matrix(read.table(file = object$out))
-    dimnames(ms) <- NULL
-    ms <- ms[seq(object$gibbs$burn + 1, nrow(ms), by = object$gibbs$thin), ]
-    iter <- nrow(ms)
-
-    K <- length(object$grid)
-    covNms <- object$cov.names
-    nBeta <- length(covNms)
-    nuMat <- as.matrix(ms[, seq((1 + nBeta) * K + 1, (1 + nBeta) * K + nBeta)])
-    res <- data.frame(1 : iter, object$model, nuMat)
-    colnames(res) <- c("Iter", "Model", covNms)
-    res <- stats::reshape(res,
-                          varying = seq.int(3, ncol(res)),
-                          v.names = "Value",
-                          timevar = "Cov",
-                          idvar = c("Iter", "Model"),
-                          direction = "long")
-    attr(res, "reshapeLong") <- NULL
-    res
+    ms <- object$mcmc
+    if (is.null(ms)) {
+        ms <- read_bayesCox(out = object$out,
+                            burn = object$gibbs$burn,
+                            thin = object$gibbs$thin)
+    }
+    out <- bc_nu(ms, object$grid, object$model, object$cov.names)
+    data.table::setnames(out,
+                         c("mcmc.sample", "covariate", "nu"),
+                         c("Iter", "Cov", "Value"))
+    out$Model <- object$model
+    ## return
+    out[, c("Iter", "Model", "Cov", "Value")]
 }
