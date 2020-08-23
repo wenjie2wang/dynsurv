@@ -16,21 +16,21 @@
 ##
 
 
-#' dynsurv: Time-varying coefficient models for interval censored data.
-#'
-#' Functions to fit time-varying coefficient models for interval censored and
-#' right censored survival data. Three major approaches are implemented:
-#' \enumerate{
-#' \item Bayesian Cox model with time-independent, time-varying or dynamic
-#'     coefficients for right censored and interval censored data;
-#' \item Spline based time-varying coefficient Cox model for right censored
-#'     data;
-#' \item Transformation model with time-varying coefficients for right censored
-#'     data using estimating equations.
-#' }
-#'
-#' @docType package
-#' @name dynsurv
-#' @importFrom survival Surv
-#' @useDynLib dynsurv
+##' dynsurv: Time-varying coefficient models for interval censored data.
+##'
+##' Functions to fit time-varying coefficient models for interval censored and
+##' right censored survival data. Three major approaches are implemented:
+##' \enumerate{
+##' \item Bayesian Cox model with time-independent, time-varying or dynamic
+##'     coefficients for right censored and interval censored data;
+##' \item Spline based time-varying coefficient Cox model for right censored
+##'     data;
+##' \item Transformation model with time-varying coefficients for right censored
+##'     data using estimating equations.
+##' }
+##'
+##' @docType package
+##' @name dynsurv
+##' @importFrom survival Surv
+##' @useDynLib dynsurv
 NULL

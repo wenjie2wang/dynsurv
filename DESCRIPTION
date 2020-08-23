@@ -26,7 +26,7 @@ Description: Time-varying coefficient models for interval censored and
 Depends:
     R (>= 3.0.2)
 Imports:
-    data.table,
+    data.table (>= 1.9.8),
     ggplot2,
     grDevices,
     grid,

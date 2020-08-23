@@ -140,7 +140,7 @@ bc_h0 <- function(ms, grid, model, cov.names)
     h0Dat <- merge(h0Dat, tmp, by = "tmp")
     h0Dat$tmp <- NULL
     ## return
-    h0Dat[, c("mcmc.sample", "time", "h0"), with = FALSE]
+    h0Dat[, c("mcmc.sample", "time", "h0")]
 }
 
 ## covariate coefficients
@@ -191,8 +191,9 @@ bc_beta <- function(ms, grid, model, cov.names)
         row.names(out) <- NULL
         out
     }))
+    betaDat$covariate <- factor(betaDat$covariate, levels = cov.names)
     ## return
-    betaDat[, c("mcmc.sample", "time", "coef", "covariate"), with = FALSE]
+    betaDat[, c("mcmc.sample", "time", "coef", "covariate")]
 }
 
 ## latent variance
@@ -259,6 +260,7 @@ bc_jump <- function(ms, grid, model, cov.names)
             out
         }))
     }
+    jumpDat$covariate <- factor(jumpDat$covariate, levels = cov.names)
     ## return
-    jumpDat
+    jumpDat[, c("mcmc.sample", "time", "jump", "covariate")]
 }

@@ -65,3 +65,6 @@ plotSurv(survCurve(fit3, newdata = newDat, type = "survival"),
          legendName = "Treatment", conf.int = TRUE)
 plotSurv(survDiff(fit3, newdata = newDat, type = "survival"),
          legendName = "Treatment", conf.int = TRUE, smooth = TRUE)
+
+## extract MCMC samples
+mcmc_list <- bayesCoxMcmc(fit3, part = "all")

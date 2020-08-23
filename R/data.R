@@ -40,7 +40,7 @@
 ##' \code{bcos.grid} is a numeric vector of grid time points.
 ##' @references D.M. Finkelstein, and R.A. Wolfe (1985). A semiparametric model
 ##' for regression analysis of interval-censored failure time data.
-##' \emph{Biometrics} 41: 731-740.
+##' \emph{Biometrics} 41: 731--740.
 ##'
 ##' @keywords datasets
 ##' @examples
