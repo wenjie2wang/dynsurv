@@ -1,7 +1,7 @@
 Package: dynsurv
 Title: Dynamic Models for Survival Data
-Version: 0.4-0.9000
-Date: 2020-08-22
+Version: 0.4-0
+Date: 2020-08-23
 Authors@R: c(
     person(given = "Wenjie", family = "Wang",
            email = "wang@wwenjie.org",
@@ -34,8 +34,6 @@ Imports:
     splines2,
     stats,
     survival
-Suggests:
-    tinytest
 LinkingTo: BH (>= 1.54.0-2)
 License: GPL (>= 3)
 LazyLoad: Yes
