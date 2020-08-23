@@ -1,6 +1,27 @@
+2020-08-23 Wenjie Wang <wang@wwenjie.org>
+
+	* Added function `bayesCoxMcmc` for extracting MCMC samples from a
+	given `bayesCox` object.
+
+	* Added default `out` in function `bayesCox` to a temporary
+	directory.
+
+	* Fixed default grid generation for some cases.
+
+	* Removed argument `cache` from function `survCurve` and
+	`survDiff`.
+
+	* Removed package dependency reshape, plyr, and utils
+
+	* Added package dependency data.table and splines2
+
+	* Changed package version to 0.4-0.
+
 2019-08-27 Wenjie Wang <wenjie.2.wang@uconn.edu>
 
 	* Fixed call of `<=` in function `tvTran`.
+
+	* Changed package version to 0.3-7.
 
 2017-11-14 Wenjie Wang <wenjie.2.wang@uconn.edu>
 
