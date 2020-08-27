@@ -23,7 +23,7 @@
 }
 \source{
 Adapted from the data set available at
-\url{http://grass.upc.edu/en/software/tooth24}.
+\url{https://grass.upc.edu/en/software/tooth24}.
 }
 \description{
 The tooth data was from a longitudinal prospective dental study performed
