@@ -141,6 +141,8 @@ The Part 3 is needed by function \code{nu}; Function \code{jump} extracts
 the Part 4.
 }
 \examples{
+\dontrun{
+
 library(dynsurv)
 set.seed(1216)
 
@@ -215,6 +217,8 @@ posterior_coef <- mcmc_list$coef
 ## posterior probabilities of hazard ratio of RadChem (vs. Rad)
 ## greater than 1 at time 10
 posterior_coef[covariate == "trtRadChem" & time == 10, mean(exp(coef) > 1)]
+
+}
 }
 \references{
 X. Wang, M.-H. Chen, and J. Yan (2013). Bayesian dynamic regression
