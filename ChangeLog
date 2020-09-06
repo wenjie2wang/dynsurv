@@ -1,3 +1,9 @@
+2020-09-05 Wenjie Wang <wang@wwenjie.org>
+
+	* Removed checks of examples to pass CRAN checks on Soloris.
+
+	* Changed package version to 0.4-2
+
 2020-08-23 Wenjie Wang <wang@wwenjie.org>
 
 	* Added function `bayesCoxMcmc` for extracting MCMC samples from a
@@ -15,7 +21,7 @@
 
 	* Added package dependency data.table and splines2
 
-	* Changed package version to 0.4-0.
+	* Changed package version to 0.4-1.
 
 2019-08-27 Wenjie Wang <wenjie.2.wang@uconn.edu>
 
