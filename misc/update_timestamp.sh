@@ -13,21 +13,25 @@ else
     yr=$(date +%Y)
     dt=$(date +%Y-%m-%d)
     cprt_R=misc/copyright.R
-    cprt_cpp=misc/copyright.cpp
+    # cprt_cpp=misc/copyright.cpp
     citation=inst/CITATION
     version=$(grep "Version" DESCRIPTION | awk '{print $NF}')
 
     # update copyright year in the template headers
     regexp1="s/Copyright \(C\) 2011-[0-9]+/Copyright \(C\) 2011-$yr/"
     sed -i -E "$regexp1" $cprt_R
-    sed "s_#_/_g" $cprt_R > $cprt_cpp
+    # sed "s_#_/_g" $cprt_R > $cprt_cpp
 
     # update copyright year in all R scripts
     for Rfile in R/*.R
     do
-        if ! grep -q 'Copyright (C)' $Rfile; then
-            cat $cprt_R $Rfile > tmp
-            mv tmp $Rfile
+        if ! grep -q 'Copyright (C)' $Rfile;
+        then
+            if [ $Rfile != "R/RcppExports.R" ];
+            then
+                cat $cprt_R $Rfile > tmp
+                mv tmp $Rfile
+            fi
         fi
         sed -i -E "$regexp1" $Rfile
     done
