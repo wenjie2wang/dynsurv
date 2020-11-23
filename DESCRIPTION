@@ -1,7 +1,7 @@
 Package: dynsurv
 Title: Dynamic Models for Survival Data
-Version: 0.4-2
-Date: 2020-09-05
+Version: 0.4-3.9000
+Date: 2020-11-23
 Authors@R: c(
     person(given = "Wenjie", family = "Wang",
            email = "wang@wwenjie.org",

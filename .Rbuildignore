@@ -6,14 +6,15 @@
 ^GRTAGS$
 ^GTAGS$
 ^LICENSE$
-^working$
 ^Makefile$
 ^NEWS\.md$
 ^README\.md$
 ^TAGS$
 ^\.Rhistory$
 ^\.Rproj\.user$
+^\.github$
 ^\.travis\.yml$
 ^dev$
 ^misc$
 ^test$
+^working$
