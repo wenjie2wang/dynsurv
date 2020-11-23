@@ -1,7 +1,7 @@
 # dynsurv
 
-[![CRAN_Status_Badge][1]][2]
-[![Build Status][3]][5]
+[![CRAN_Status_Badge][r-pkg-badge]][cran-url]
+[![Build Status][gha-icon]][gha-url]
 
 The R package **dynsurv** provides functions fitting time-varying coefficient
 models for interval censored and right censored survival data.
@@ -17,7 +17,7 @@ Three major approaches are implemented:
 
 ## Installation
 
-You may install the released version from [CRAN][2].
+You may install the released version from [CRAN][cran-url].
 
 ```R
 install.packages("dynsurv")
@@ -26,13 +26,11 @@ install.packages("dynsurv")
 
 ## Development
 
-[![Build Status][4]][5]
-
-The latest version of package is under development at [GitHub][6].  If it is
-able to pass the building check by Travis CI, you may consider installing the
-latest version with the help of **remotes** by
+The latest version of package is under development at [GitHub][github-url].  If
+it is able to pass the automated package checks, one may install it by
 
 ```R
+if (! require(remotes)) install.packages("remotes")
 remotes::install_github("wenjie2wang/dynsurv", upgrade = "never")
 ```
 
@@ -45,20 +43,14 @@ library(dynsurv)
 
 ## License
 
-The R package dynsurv is free software: You can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the Free
-Software Foundation, either version 3 of the License, or any later version (at
-your option).  See the [GNU General Public License][8] for details.
-
-The R package dynsurv is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY without even the implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.
+[GNU General Public License][gpl] (≥ 3)
 
 
-[1]: https://www.r-pkg.org/badges/version/dynsurv
-[2]: https://CRAN.R-project.org/package=dynsurv
-[3]: https://travis-ci.org/wenjie2wang/dynsurv.svg?branch=master
-[4]: https://travis-ci.org/wenjie2wang/dynsurv.svg?branch=dev
-[5]: https://travis-ci.org/wenjie2wang/dynsurv
-[6]: https://github.com/wenjie2wang/dynsurv
-[8]: https://www.gnu.org/licenses/
+[r-pkg-badge]: https://www.r-pkg.org/badges/version/dynsurv
+[cran-url]: https://CRAN.R-project.org/package=dynsurv
+[github-url]: https://github.com/wenjie2wang/dynsurv
+[gha-icon]: https://github.com/wenjie2wang/dynsurv/workflows/R-CMD-check/badge.svg
+[gha-url]: https://github.com/wenjie2wang/dynsurv/actions
+[codecov]: https://codecov.io/gh/wenjie2wang/dynsurv
+[codecov-main]: https://codecov.io/gh/wenjie2wang/dynsurv/branch/main/graph/badge.svg
+[gpl]: https://www.gnu.org/licenses/
