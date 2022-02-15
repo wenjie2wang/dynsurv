@@ -194,7 +194,7 @@ coef.splineCox <- function(object, ...)
 
     curInd <- 1
     res <- data.frame()
-    for (j in seq_along(object$nBeta)) {
+    for (j in seq_len(object$nBeta)) {
         if (!object$is.tv[j]) {
             yMid <- rep(fit$coef[curInd], K)
             ySE <- sqrt(fit$var[curInd, curInd])
