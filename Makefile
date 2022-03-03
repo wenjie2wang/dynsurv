@@ -44,4 +44,4 @@ TAGS:
 
 .PHONY: clean
 clean:
-	@$(RM) -rf *~ */*~ src/*.o *.Rhistroy *.tar.gz *.Rcheck/ .\#*
+	@$(RM) -rf *~ */*~ src/*.o src/*.so *.Rhistroy *.tar.gz *.Rcheck/ .\#*
