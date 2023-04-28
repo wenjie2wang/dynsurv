@@ -25,13 +25,13 @@ Generic function for jump information
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{bayesCox}: Extract Jump Information from Bayesian Dyanmic Model
+\item \code{jump(bayesCox)}: Extract Jump Information from Bayesian Dyanmic Model
 
 Extract number of coefficient pieces from \code{bayesCox} fitting results,
 and summarize them into a data frame. It is only applicable when
 \code{model="Dynamic"} is specified.
-}}
 
+}}
 \examples{
 ## See the examples in bayesCox
 

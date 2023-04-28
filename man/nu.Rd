@@ -24,7 +24,7 @@ Generic function for the latent variance of coefficients
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{bayesCox}: Extract Latent Variance from Bayesian Cox Model
+\item \code{nu(bayesCox)}: Extract Latent Variance from Bayesian Cox Model
 
 Extract latent variance of coefficients from \code{bayesCox} fitting
 results, and summarize them into a data frame. It is applicable when
@@ -34,8 +34,8 @@ results, and summarize them into a data frame. It is applicable when
 For details, see section on prior model in Wang (2013) and Wang (2014).
 The latent variance of coefficients in prior model was denoted as omega
 in Wang (2013).
-}}
 
+}}
 \examples{
 ## See the examples in bayesCox.
 
