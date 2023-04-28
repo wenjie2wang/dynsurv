@@ -1,3 +1,10 @@
+2023-04-28 Wenjie Wang <wang@wwenjie.org>
+
+	* Fixed CRAN warning: "a function declaration without a
+	prototype is deprecated in all versions of C [-Wstrict-prototypes]".
+
+	* Changed package version to 0.4-4
+
 2022-02-15 Wenjie Wang <wang@wwenjie.org>
 
 	* Fixed `coef` method for `splineCox`
