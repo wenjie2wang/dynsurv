@@ -102,7 +102,7 @@ double perfunc(FUNBAG *lpdf, ENVELOPE *env, double x);
 void display(FILE *f, ENVELOPE *env);
 */
 
-double u_random();
+double u_random(void);
 
 /* *********************************************************************** */
 
@@ -899,9 +899,9 @@ double perfunc(FUNBAG *lpdf, ENVELOPE *env, double x)
 
 /* *********************************************************************** */
 
-double u_random()
 
 /* to return a standard uniform random number */
+double u_random(void)
 {
     double x;
     GetRNGstate();
