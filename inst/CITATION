@@ -1,5 +1,3 @@
-citHeader("To cite dynsurv in publications use:")
-
 bibentry(
     key = "dynsurv-package",
     bibtype = "Manual",
