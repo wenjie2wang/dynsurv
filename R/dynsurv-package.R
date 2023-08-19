@@ -31,5 +31,6 @@
 ##'
 ##' @docType package
 ##' @name dynsurv
+##' @aliases dynsurv-package
 ##' @useDynLib dynsurv
 NULL
