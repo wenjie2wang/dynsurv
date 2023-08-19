@@ -1,3 +1,9 @@
+2023-08-19 Wenjie Wang <wang@wwenjie.org>
+
+	* Fixed broken roxygen2 documentation.
+
+	* Changed package version to 0.4-5
+
 2023-04-28 Wenjie Wang <wang@wwenjie.org>
 
 	* Fixed CRAN warning: "a function declaration without a
