@@ -88,7 +88,7 @@ void GibbsSampler<M>::runGibbs(const Prior_type& prior,
 
     if (trace && (i % nReport == 0)) {
       //std::cout << "Iteration(" << i << ")" << std::endl;
-      Rprintf("Iteration(%d)\n", i);
+      Rprintf("Iteration(%u)\n", static_cast<unsigned int>(i));
     }
 
     pm_->gibbsKernel(prior, par);
