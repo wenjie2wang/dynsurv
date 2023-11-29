@@ -12,6 +12,7 @@
 ^TAGS$
 ^\.Rhistory$
 ^\.Rproj\.user$
+^\.clangd$
 ^\.github$
 ^\.travis\.yml$
 ^dev$

@@ -40,7 +40,6 @@ updateTimestamp:
 .PHONY: TAGS
 TAGS:
 	Rscript -e "utils::rtags(path = 'R', ofile = 'TAGS')"
-	gtags
 
 .PHONY: clean
 clean:

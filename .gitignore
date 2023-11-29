@@ -1,16 +1,16 @@
-*.Rproj.user
-*.Rproj
-.Rhistory
-*.tar.gz
-src/*.o
-src/*.so
-working/
 *.Rcheck/
-test/
-*.*~
+*.Rproj
+*.Rproj.user
+*.o
+*.so
+*.tar.gz
 *~
+.Rhistory
+test/
+working/
 
 # ignore tags
+.clangd
 TAGS
 GTAGS
 GRTAGS
