@@ -143,8 +143,8 @@ namespace ir {
 template <typename BasePrior, typename CoefPrior>
 struct CoxPrior
 {
-  CoxPrior<BasePrior, CoefPrior>(const BasePrior& bp,
-                                 const CoefPrior& cp)
+  CoxPrior(const BasePrior& bp,
+           const CoefPrior& cp)
     : base_prior(bp),
       coef_prior(cp) {}
 
@@ -158,9 +158,9 @@ struct CoxPrior
 template <typename BasePrior, typename CoefPrior, typename ThetaPrior>
 struct GORHPrior
 {
-  GORHPrior<BasePrior, CoefPrior, ThetaPrior>(const BasePrior& bp,
-      const CoefPrior& cp,
-      const ThetaPrior& tp)
+  GORHPrior(const BasePrior& bp,
+            const CoefPrior& cp,
+            const ThetaPrior& tp)
     : base_prior(bp),
       coef_prior(cp),
       theta_prior(tp) {}

@@ -25,7 +25,7 @@ namespace ir {
     {
     public :
       /* Class constructor */
-      DynamicModel<Prior, Par>(const boost::shared_ptr<IntRegData>& pd)
+      DynamicModel(const boost::shared_ptr<IntRegData>& pd)
         : IntRegModel<Prior, Par>(pd),
         a0_  (100.0),
         prob_(2, 0.35),

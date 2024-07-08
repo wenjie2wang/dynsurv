@@ -23,7 +23,7 @@ template <typename Prior, typename Par>
 class TimeIndepModel: virtual public IntRegModel<Prior, Par>
 {
 public :
-  TimeIndepModel<Prior, Par>(const boost::shared_ptr<IntRegData>& pd)
+  TimeIndepModel(const boost::shared_ptr<IntRegData>& pd)
     : IntRegModel<Prior, Par>(pd) {}
 
 protected :

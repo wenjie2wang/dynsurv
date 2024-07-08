@@ -6,7 +6,7 @@ bibentry(
                as.person("Ming-Hui Chen"),
                as.person("Xiaojing Wang"),
                as.person("Jun Yan")),
-    year = "2023",
+    year = "2024",
     url = "https://CRAN.R-project.org/package=dynsurv",
-    note = "{R} package version 0.4-6"
+    note = "{R} package version 0.4-7"
 )

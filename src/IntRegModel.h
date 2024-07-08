@@ -25,7 +25,7 @@ template <typename Prior, typename Par>
 class IntRegModel
 {
 public:
-  IntRegModel<Prior, Par>(const boost::shared_ptr<IntRegData>& pd);
+  IntRegModel(const boost::shared_ptr<IntRegData>& pd);
 
   //~IntRegModel() {};
 

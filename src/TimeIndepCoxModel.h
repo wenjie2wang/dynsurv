@@ -27,7 +27,7 @@ class TimeIndepCoxModel:
   public CoxModel<Prior, TimeIndepCoxPar>
 {
 public :
-  TimeIndepCoxModel<Prior>(const boost::shared_ptr<IntRegData>& pd)
+  TimeIndepCoxModel(const boost::shared_ptr<IntRegData>& pd)
     : IntRegModel<Prior, TimeIndepCoxPar>(pd),
       TimeIndepModel<Prior, TimeIndepCoxPar>(pd),
       CoxModel<Prior, TimeIndepCoxPar>(pd) {}

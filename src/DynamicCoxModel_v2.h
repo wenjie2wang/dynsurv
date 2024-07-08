@@ -23,7 +23,7 @@ class DynamicCoxModel_v2:
   public DynamicCoxModel<Prior>
 {
 public :
-  DynamicCoxModel_v2<Prior>(const boost::shared_ptr<IntRegData>& pd)
+  DynamicCoxModel_v2(const boost::shared_ptr<IntRegData>& pd)
     : IntRegModel<Prior, DynamicCoxPar>(pd),
       DynamicCoxModel<Prior>(pd) {}
 

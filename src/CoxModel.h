@@ -23,7 +23,7 @@ namespace ir {
     class CoxModel: virtual public IntRegModel<Prior, Par>
     {
     public :
-      CoxModel<Prior, Par>(const boost::shared_ptr<IntRegData>& pd)
+      CoxModel(const boost::shared_ptr<IntRegData>& pd)
         : IntRegModel<Prior, Par>(pd) {}
 
       typedef typename Prior::BasePrior_type BasePrior_type;

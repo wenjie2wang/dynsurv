@@ -17,3 +17,23 @@ right censored survival data. Three major approaches are implemented:
     data using estimating equations.
 }
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/wenjie2wang/dynsurv}
+  \item Report bugs at \url{https://github.com/wenjie2wang/dynsurv/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Wenjie Wang \email{wang@wwenjie.org} (\href{https://orcid.org/0000-0003-0363-3180}{ORCID})
+
+Authors:
+\itemize{
+  \item Ming-Hui Chen
+  \item Xiaojing Wang
+  \item Jun Yan (\href{https://orcid.org/0000-0003-4401-7296}{ORCID})
+}
+
+}
+\keyword{internal}

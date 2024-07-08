@@ -27,7 +27,7 @@ class TimeVaryingCoxModel:
   public CoxModel<Prior, TimeVaryingCoxPar>
 {
 public :
-  TimeVaryingCoxModel<Prior>(const boost::shared_ptr<IntRegData>& pd)
+  TimeVaryingCoxModel(const boost::shared_ptr<IntRegData>& pd)
     : IntRegModel<Prior, TimeVaryingCoxPar>(pd),
       TimeVaryingModel<Prior, TimeVaryingCoxPar>(pd),
       CoxModel<Prior, TimeVaryingCoxPar>(pd) {}

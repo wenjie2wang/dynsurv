@@ -24,7 +24,7 @@ template <typename Prior, typename Par>
 class TimeVaryingModel: virtual public IntRegModel<Prior, Par>
 {
 public :
-  TimeVaryingModel<Prior, Par>(const boost::shared_ptr<IntRegData>& pd)
+  TimeVaryingModel(const boost::shared_ptr<IntRegData>& pd)
     : IntRegModel<Prior, Par>(pd),
       a0_(100.0) {}
 
